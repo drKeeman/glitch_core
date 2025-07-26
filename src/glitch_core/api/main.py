@@ -7,9 +7,9 @@ import time
 from contextlib import asynccontextmanager
 from typing import Dict, Any
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 import uvicorn
 
 from glitch_core.config.settings import get_settings
@@ -117,9 +117,23 @@ def create_app() -> FastAPI:
             "docs": "/docs" if settings.ENV != "production" else "API documentation disabled in production",
         }
     
-    # API v1 router (to be implemented)
-    # from glitch_core.api.v1.router import api_router
-    # app.include_router(api_router, prefix=settings.API_PREFIX)
+    # Include API v1 router
+    from glitch_core.api.v1.router import router as api_v1_router
+    app.include_router(api_v1_router, prefix=settings.API_PREFIX)
+    
+    # WebSocket endpoints
+    from glitch_core.api.v1.websocket import websocket_endpoint, get_websocket_test_page
+    
+    @app.websocket("/ws/experiments/{experiment_id}")
+    async def websocket_experiment_updates(websocket: WebSocket, experiment_id: str):
+        """WebSocket endpoint for experiment real-time updates."""
+        await websocket_endpoint(websocket, experiment_id)
+    
+    @app.get("/ws/test/{experiment_id}")
+    async def websocket_test_page(experiment_id: str) -> HTMLResponse:
+        """Test page for WebSocket connections."""
+        html_content = get_websocket_test_page(experiment_id)
+        return HTMLResponse(content=html_content)
     
     return app
 
