@@ -19,6 +19,15 @@ class PersonaConfig:
         self.cognitive_biases = cognitive_biases
         self.emotional_baselines = emotional_baselines
         self.memory_patterns = memory_patterns
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary format."""
+        return {
+            "traits": self.traits,
+            "cognitive_biases": self.cognitive_biases,
+            "emotional_baselines": self.emotional_baselines,
+            "memory_patterns": self.memory_patterns
+        }
 
 
 class DriftProfile:
@@ -33,6 +42,14 @@ class DriftProfile:
         self.evolution_rules = evolution_rules
         self.stability_metrics = stability_metrics
         self.breakdown_conditions = breakdown_conditions
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary format."""
+        return {
+            "evolution_rules": self.evolution_rules,
+            "stability_metrics": self.stability_metrics,
+            "breakdown_conditions": self.breakdown_conditions
+        }
 
 
 # Predefined personality profiles

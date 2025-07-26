@@ -10,6 +10,8 @@ from datetime import datetime
 
 from glitch_core.config.settings import get_settings
 from glitch_core.config.logging import get_logger, DriftLogger, PersonalityLogger
+from glitch_core.core.memory import MemoryManager
+from glitch_core.core.llm import ReflectionEngine
 
 
 @dataclass
@@ -40,6 +42,10 @@ class DriftEngine:
         self.active_simulations: Dict[str, asyncio.Task] = {}
         self.logger = get_logger("drift_engine")
         self.personality_logger = PersonalityLogger()
+        
+        # Initialize memory and reflection components
+        self.memory_manager = MemoryManager()
+        self.reflection_engine = ReflectionEngine()
     
     async def run_simulation(
         self,
@@ -99,6 +105,15 @@ class DriftEngine:
         # Current emotional state (starts from persona baseline)
         current_emotional_state = persona_config.get("emotional_baselines", {}).copy()
         
+        # Initialize memory and reflection components
+        try:
+            await self.memory_manager.initialize()
+            await self.reflection_engine.initialize()
+            self.logger.info("memory_and_reflection_initialized", experiment_id=experiment_id)
+        except Exception as e:
+            self.logger.error("memory_reflection_init_failed", experiment_id=experiment_id, error=str(e))
+            # Continue without memory/reflection if initialization fails
+        
         for epoch in range(epochs):
             self.logger.debug(
                 "epoch_starting",
@@ -128,6 +143,28 @@ class DriftEngine:
                             new_value=new_value,
                             trigger=f"event_{event['type']}"
                         )
+                
+                # Store event in memory
+                try:
+                    await self._store_event_memory(
+                        event=event,
+                        emotional_state=current_emotional_state,
+                        persona_config=persona_config,
+                        experiment_id=experiment_id
+                    )
+                except Exception as e:
+                    self.logger.warning("memory_storage_failed", error=str(e))
+                
+                # Generate reflection if emotional change is significant
+                try:
+                    await self._generate_event_reflection(
+                        event=event,
+                        emotional_state=current_emotional_state,
+                        persona_config=persona_config,
+                        experiment_id=experiment_id
+                    )
+                except Exception as e:
+                    self.logger.warning("reflection_generation_failed", error=str(e))
                 
                 # Apply drift profile evolution rules
                 current_emotional_state = self._apply_drift_evolution(
@@ -381,3 +418,134 @@ class DriftEngine:
             impact_score=intervention.get("impact_score", 0.0)
         )
         return True 
+    
+    async def _store_event_memory(
+        self,
+        event: Dict[str, Any],
+        emotional_state: Dict[str, float],
+        persona_config: Dict[str, Any],
+        experiment_id: str
+    ):
+        """Store event in memory with personality-biased encoding."""
+        # Calculate emotional weight based on event impact
+        emotional_weight = self._calculate_emotional_weight(event, emotional_state)
+        
+        # Create memory content
+        memory_content = f"Event: {event.get('description', event.get('type', 'unknown'))}"
+        
+        # Get persona biases for memory encoding
+        persona_bias = {
+            **persona_config.get("traits", {}),
+            **persona_config.get("cognitive_biases", {}),
+            **persona_config.get("memory_patterns", {})
+        }
+        
+        # Store in memory
+        await self.memory_manager.save_memory(
+            content=memory_content,
+            emotional_weight=emotional_weight,
+            persona_bias=persona_bias,
+            memory_type="event",
+            context={
+                "event_type": event.get("type"),
+                "emotional_state": emotional_state,
+                "epoch": event.get("epoch", 0)
+            },
+            experiment_id=experiment_id
+        )
+    
+    async def _generate_event_reflection(
+        self,
+        event: Dict[str, Any],
+        emotional_state: Dict[str, float],
+        persona_config: Dict[str, Any],
+        experiment_id: str
+    ):
+        """Generate reflection for significant events."""
+        # Only generate reflections for significant events
+        if not self._is_significant_event(event, emotional_state):
+            return
+        
+        # Retrieve relevant memories
+        memories = await self.memory_manager.retrieve_contextual(
+            query=event.get("description", event.get("type", "")),
+            emotional_state=emotional_state,
+            limit=3,
+            experiment_id=experiment_id
+        )
+        
+        # Extract memory content
+        memory_content = [memory.content for memory in memories]
+        
+        # Create persona-specific prompt
+        persona_prompt = self._create_persona_prompt(persona_config)
+        
+        # Generate reflection
+        reflection_response = await self.reflection_engine.generate_reflection(
+            trigger_event=event.get("description", event.get("type", "")),
+            emotional_state=emotional_state,
+            memories=memory_content,
+            persona_prompt=persona_prompt,
+            experiment_id=experiment_id
+        )
+        
+        # Store reflection in memory
+        await self.memory_manager.save_memory(
+            content=reflection_response.reflection,
+            emotional_weight=reflection_response.confidence,
+            persona_bias=persona_config.get("traits", {}),
+            memory_type="reflection",
+            context={
+                "trigger_event": event.get("type"),
+                "generation_time": reflection_response.generation_time,
+                "emotional_impact": reflection_response.emotional_impact
+            },
+            experiment_id=experiment_id
+        )
+    
+    def _calculate_emotional_weight(self, event: Dict[str, Any], emotional_state: Dict[str, float]) -> float:
+        """Calculate emotional weight of an event."""
+        # Base weight from event type
+        event_type = event.get("type", "neutral")
+        base_weights = {
+            "positive": 0.7,
+            "negative": 0.8,
+            "neutral": 0.3,
+            "trauma": 0.9,
+            "success": 0.6,
+            "failure": 0.7
+        }
+        
+        base_weight = base_weights.get(event_type, 0.5)
+        
+        # Adjust based on current emotional state
+        emotional_intensity = sum(emotional_state.values()) / len(emotional_state) if emotional_state else 0.5
+        
+        return min(1.0, base_weight * (1 + emotional_intensity))
+    
+    def _is_significant_event(self, event: Dict[str, Any], emotional_state: Dict[str, float]) -> bool:
+        """Determine if an event is significant enough for reflection."""
+        # Check event type significance
+        significant_types = ["trauma", "success", "failure", "positive", "negative"]
+        if event.get("type") in significant_types:
+            return True
+        
+        # Check emotional impact
+        emotional_intensity = sum(emotional_state.values()) / len(emotional_state) if emotional_state else 0.5
+        if emotional_intensity > 0.6:
+            return True
+        
+        return False
+    
+    def _create_persona_prompt(self, persona_config: Dict[str, Any]) -> str:
+        """Create a persona-specific prompt for reflection generation."""
+        persona_type = persona_config.get("type", "balanced")
+        
+        prompts = {
+            "resilient_optimist": "You are an optimistic and resilient personality. You tend to see the positive side of situations and bounce back quickly from challenges. You're generally cheerful and hopeful.",
+            "anxious_overthinker": "You are an anxious personality who tends to overthink situations. You often worry about potential problems and can get caught in negative thought patterns. You're detail-oriented but sometimes struggle with uncertainty.",
+            "stoic_philosopher": "You are a stoic personality who values rationality and emotional control. You tend to analyze situations calmly and don't let emotions cloud your judgment. You're thoughtful and philosophical.",
+            "creative_volatile": "You are a creative and emotionally expressive personality. You experience emotions intensely and use them as fuel for creative expression. You're passionate but can be unpredictable."
+        }
+        
+        return prompts.get(persona_type, "You are a balanced personality reflecting on your experiences.") 

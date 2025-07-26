@@ -57,11 +57,13 @@ class Settings(BaseSettings):
     
     # Database URLs
     QDRANT_URL: str = Field(default="http://localhost:6333")
+    QDRANT_TIMEOUT: int = Field(default=30)
     REDIS_URL: str = Field(default="redis://localhost:6379")
     
     # LLM Configuration
     OLLAMA_URL: str = Field(default="http://localhost:11434")
     OLLAMA_MODEL: str = Field(default="llama3.2:3b")
+    OLLAMA_TIMEOUT: int = Field(default=30)
     
     # WebSocket Configuration
     WS_HEARTBEAT_INTERVAL: int = Field(default=30)
