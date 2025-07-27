@@ -177,27 +177,27 @@ class PatternDetector:
         return emotion_arrays
     
     def _detect_change_points(self, values: List[float]) -> List[int]:
-        """Detect change points in a time series using statistical methods."""
-        if len(values) < 5:
+        """Detect significant change points in a time series."""
+        if len(values) < 3:
             return []
         
-        # Convert to numpy array
-        arr = np.array(values)
-        
-        # Calculate z-scores for outlier detection
-        z_scores = zscore(arr)
+        # Calculate z-scores for change detection
+        z_scores = np.abs(zscore(values))
         
         # Find points where z-score exceeds threshold
         threshold = 2.0
         change_points = np.where(np.abs(z_scores) > threshold)[0]
         
+        # Convert numpy array to Python list
+        change_points = change_points.tolist() if hasattr(change_points, 'tolist') else list(change_points)
+        
         # Filter out consecutive points (keep only the first in a cluster)
         filtered_points = []
         for point in change_points:
             if not filtered_points or point - filtered_points[-1] > 3:
-                filtered_points.append(point)
+                filtered_points.append(int(point))
         
-        return filtered_points.tolist()
+        return filtered_points
     
     def _detect_stability_breakdowns(self, stability_scores: List[float]) -> List[int]:
         """Detect points where stability breaks down."""

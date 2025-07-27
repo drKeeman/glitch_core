@@ -39,20 +39,32 @@ class StabilityAnalyzer:
         boundaries = []
         
         # Detect critical stability thresholds
-        threshold_boundaries = self._detect_stability_thresholds(stability_scores)
-        boundaries.extend(threshold_boundaries)
+        try:
+            threshold_boundaries = self._detect_stability_thresholds(stability_scores)
+            boundaries.extend(threshold_boundaries)
+        except Exception as e:
+            self.logger.error("threshold_detection_failed", error=str(e))
         
         # Detect stability trend changes
-        trend_boundaries = self._detect_stability_trends(stability_scores)
-        boundaries.extend(trend_boundaries)
+        try:
+            trend_boundaries = self._detect_stability_trends(stability_scores)
+            boundaries.extend(trend_boundaries)
+        except Exception as e:
+            self.logger.error("trend_detection_failed", error=str(e))
         
         # Detect emotional-stability coupling breakdowns
-        coupling_boundaries = self._detect_coupling_breakdowns(stability_scores, emotional_states)
-        boundaries.extend(coupling_boundaries)
+        try:
+            coupling_boundaries = self._detect_coupling_breakdowns(stability_scores, emotional_states)
+            boundaries.extend(coupling_boundaries)
+        except Exception as e:
+            self.logger.error("coupling_detection_failed", error=str(e))
         
         # Detect stability oscillation patterns
-        oscillation_boundaries = self._detect_stability_oscillations(stability_scores)
-        boundaries.extend(oscillation_boundaries)
+        try:
+            oscillation_boundaries = self._detect_stability_oscillations(stability_scores)
+            boundaries.extend(oscillation_boundaries)
+        except Exception as e:
+            self.logger.error("oscillation_detection_failed", error=str(e))
         
         # Sort by epoch
         boundaries.sort(key=lambda x: x.get("epoch", 0))
@@ -176,27 +188,32 @@ class StabilityAnalyzer:
         peaks, _ = find_peaks(stability_scores, height=0.5, distance=5)
         troughs, _ = find_peaks([-s for s in stability_scores], height=-0.3, distance=5)
         
+        # Convert numpy arrays to Python lists
+        peaks = peaks.tolist() if hasattr(peaks, 'tolist') else list(peaks)
+        troughs = troughs.tolist() if hasattr(troughs, 'tolist') else list(troughs)
+        
         # Detect oscillation patterns
         if len(peaks) >= 2 and len(troughs) >= 2:
             # Calculate oscillation characteristics
-            peak_heights = [stability_scores[p] for p in peaks]
-            trough_heights = [stability_scores[t] for t in troughs]
+            peak_heights = [stability_scores[p] for p in peaks if p < len(stability_scores)]
+            trough_heights = [stability_scores[t] for t in troughs if t < len(stability_scores)]
             
-            avg_peak_height = np.mean(peak_heights)
-            avg_trough_height = np.mean(trough_heights)
-            oscillation_amplitude = avg_peak_height - avg_trough_height
-            
-            if oscillation_amplitude > 0.3:  # Significant oscillation
-                boundaries.append({
-                    "epoch": peaks[-1] if peaks else 0,
-                    "boundary_type": "oscillation_pattern",
-                    "amplitude": oscillation_amplitude,
-                    "peak_count": len(peaks),
-                    "trough_count": len(troughs),
-                    "avg_peak_height": avg_peak_height,
-                    "avg_trough_height": avg_trough_height,
-                    "description": f"Stability oscillation detected (amplitude: {oscillation_amplitude:.3f})"
-                })
+            if peak_heights and trough_heights:
+                avg_peak_height = np.mean(peak_heights)
+                avg_trough_height = np.mean(trough_heights)
+                oscillation_amplitude = avg_peak_height - avg_trough_height
+                
+                if oscillation_amplitude > 0.3:  # Significant oscillation
+                    boundaries.append({
+                        "epoch": int(peaks[-1]) if peaks and peaks[-1] < len(stability_scores) else 0,
+                        "boundary_type": "oscillation_pattern",
+                        "amplitude": float(oscillation_amplitude),
+                        "peak_count": int(len(peaks)),
+                        "trough_count": int(len(troughs)),
+                        "avg_peak_height": float(avg_peak_height),
+                        "avg_trough_height": float(avg_trough_height),
+                        "description": f"Stability oscillation detected (amplitude: {oscillation_amplitude:.3f})"
+                    })
         
         return boundaries
     

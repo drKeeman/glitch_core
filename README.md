@@ -16,29 +16,27 @@ Drift Engine (orchestration)
 └── Analysis Engine (interpretability algorithms)
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Docker-First)
 
 ### Prerequisites
 
-- Docker and Docker Compose
-- Python 3.12+
-- [uv](https://github.com/astral-sh/uv) package manager
+- **Docker and Docker Compose** (required)
+- Python 3.12+ (optional, for local development)
 
 ### Development Setup
 
-1. **Clone and install dependencies:**
+1. **Clone the repository:**
    ```bash
    git clone <repository-url>
    cd glitch_core
-   uv sync
    ```
 
-2. **Start core services:**
+2. **Run the development setup script:**
    ```bash
-   make up-core
+   ./scripts/dev-setup.sh
    ```
 
-3. **Run development server:**
+3. **Start development environment:**
    ```bash
    make dev
    ```
@@ -48,18 +46,64 @@ Drift Engine (orchestration)
    make health
    ```
 
-### Production Deployment
+### Alternative Manual Setup
 
-1. **Build and start all services:**
+1. **Build and start core services:**
    ```bash
-   make build
-   make up
+   make dev-build
    ```
 
 2. **Pull the LLM model:**
    ```bash
    make pull-model
    ```
+
+3. **Start development server:**
+   ```bash
+   make dev
+   ```
+
+## 🐳 Docker-First Development
+
+This project is optimized for Docker-first development. All development tasks run in containers:
+
+### Development Commands
+
+```bash
+# Start development environment
+make dev                    # Start with hot reload
+make dev-wait              # Start and wait for services to be healthy
+make dev-build             # Build and start
+make dev-clean             # Clean rebuild
+
+# Testing and code quality
+make test                  # Run tests in Docker
+make test-watch            # Run tests with watch mode
+make lint                  # Run linting in Docker
+make format                # Format code in Docker
+
+# Service management
+make up-core               # Start core services only
+make health                # Check service health
+make logs                  # View API logs
+make logs-all              # View all logs
+
+# Development tools
+make dev-shell             # Open shell in API container
+make dev-tools             # Start development tools container
+make dev-tools-shell       # Open shell in dev tools container
+```
+
+### Production Deployment
+
+```bash
+# Deploy to production
+./scripts/prod-deploy.sh
+
+# Or manually
+make prod-build
+make prod
+```
 
 ## 🧠 Core Features
 
@@ -99,9 +143,9 @@ curl http://localhost:8000/health
 
 ### Code Quality
 ```bash
-make format    # Format code
-make lint      # Run linting
-make test      # Run tests
+make format    # Format code in Docker
+make lint      # Run linting in Docker
+make test      # Run tests in Docker
 ```
 
 ### Docker Operations
@@ -120,11 +164,11 @@ make redis-cli     # Redis CLI
 
 ## 🏗️ Technology Stack
 
-- **Runtime**: Python 3.12+
+- **Runtime**: Python 3.12+ (containerized)
 - **Framework**: FastAPI + Pydantic 2 + SQLAlchemy 2
 - **Database**: Qdrant (vectors) + Redis (cache)
 - **LLM**: Ollama (llama3.2:3b - fast, local)
-- **Deployment**: Docker Compose on Azure VM
+- **Deployment**: Docker Compose (dev/prod)
 - **Monitoring**: Prometheus + custom metrics
 
 ## 📈 Performance Targets
@@ -164,8 +208,8 @@ for stress in [0.1, 0.3, 0.5, 0.8, 1.0]:
 Environment variables can be set in `.env` file:
 
 ```env
-ENV=staging
-LOG_LEVEL=INFO
+ENV=development
+LOG_LEVEL=DEBUG
 QDRANT_URL=http://localhost:6333
 REDIS_URL=redis://localhost:6379
 OLLAMA_URL=http://localhost:11434

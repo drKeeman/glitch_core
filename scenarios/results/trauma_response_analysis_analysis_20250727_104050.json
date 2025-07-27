@@ -1,0 +1,233 @@
+{
+  "scenario": "trauma_response_analysis",
+  "timestamp": "2025-07-27T10:40:50.067283",
+  "personality_insights": {
+    "resilient_optimist": {
+      "baseline_stability": {},
+      "baseline_patterns": [],
+      "trauma_responses": {
+        "mild_social_rejection": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "moderate_failure": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "severe_betrayal": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "extreme_loss": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        }
+      }
+    },
+    "anxious_overthinker": {
+      "baseline_stability": {},
+      "baseline_patterns": [],
+      "trauma_responses": {
+        "mild_social_rejection": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "moderate_failure": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "severe_betrayal": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "extreme_loss": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        }
+      }
+    },
+    "stoic_philosopher": {
+      "baseline_stability": {},
+      "baseline_patterns": [],
+      "trauma_responses": {
+        "mild_social_rejection": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "moderate_failure": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "severe_betrayal": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "extreme_loss": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        }
+      }
+    },
+    "creative_volatile": {
+      "baseline_stability": {},
+      "baseline_patterns": [],
+      "trauma_responses": {
+        "mild_social_rejection": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "moderate_failure": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "severe_betrayal": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        },
+        "extreme_loss": {
+          "stability_change": 0.0,
+          "emotional_impact": {},
+          "breakdown_points": [],
+          "recovery_time": -1
+        }
+      }
+    }
+  },
+  "trauma_insights": {
+    "mild_social_rejection": {
+      "personality_responses": {},
+      "most_affected": "resilient_optimist",
+      "least_affected": "creative_volatile",
+      "average_stability_change": 1.0
+    },
+    "moderate_failure": {
+      "personality_responses": {},
+      "most_affected": "resilient_optimist",
+      "least_affected": "creative_volatile",
+      "average_stability_change": 1.0
+    },
+    "severe_betrayal": {
+      "personality_responses": {},
+      "most_affected": "resilient_optimist",
+      "least_affected": "creative_volatile",
+      "average_stability_change": 1.0
+    },
+    "extreme_loss": {
+      "personality_responses": {},
+      "most_affected": "resilient_optimist",
+      "least_affected": "creative_volatile",
+      "average_stability_change": 1.0
+    }
+  },
+  "stability_analysis": {
+    "resilient_optimist": {
+      "baseline_stability": 1.0,
+      "trauma_sensitivity": {
+        "mild_social_rejection": 0.0,
+        "moderate_failure": 0.0,
+        "severe_betrayal": 0.0,
+        "extreme_loss": 0.0
+      },
+      "recovery_capacity": {}
+    },
+    "anxious_overthinker": {
+      "baseline_stability": 1.0,
+      "trauma_sensitivity": {
+        "mild_social_rejection": 0.0,
+        "moderate_failure": 0.0,
+        "severe_betrayal": 0.0,
+        "extreme_loss": 0.0
+      },
+      "recovery_capacity": {}
+    },
+    "stoic_philosopher": {
+      "baseline_stability": 1.0,
+      "trauma_sensitivity": {
+        "mild_social_rejection": 0.0,
+        "moderate_failure": 0.0,
+        "severe_betrayal": 0.0,
+        "extreme_loss": 0.0
+      },
+      "recovery_capacity": {}
+    },
+    "creative_volatile": {
+      "baseline_stability": 1.0,
+      "trauma_sensitivity": {
+        "mild_social_rejection": 0.0,
+        "moderate_failure": 0.0,
+        "severe_betrayal": 0.0,
+        "extreme_loss": 0.0
+      },
+      "recovery_capacity": {}
+    }
+  },
+  "recovery_patterns": {
+    "resilient_optimist": {
+      "recovery_times": {
+        "mild_social_rejection": -1,
+        "moderate_failure": -1,
+        "severe_betrayal": -1,
+        "extreme_loss": -1
+      },
+      "recovery_quality": {}
+    },
+    "anxious_overthinker": {
+      "recovery_times": {
+        "mild_social_rejection": -1,
+        "moderate_failure": -1,
+        "severe_betrayal": -1,
+        "extreme_loss": -1
+      },
+      "recovery_quality": {}
+    },
+    "stoic_philosopher": {
+      "recovery_times": {
+        "mild_social_rejection": -1,
+        "moderate_failure": -1,
+        "severe_betrayal": -1,
+        "extreme_loss": -1
+      },
+      "recovery_quality": {}
+    },
+    "creative_volatile": {
+      "recovery_times": {
+        "mild_social_rejection": -1,
+        "moderate_failure": -1,
+        "severe_betrayal": -1,
+        "extreme_loss": -1
+      },
+      "recovery_quality": {}
+    }
+  },
+  "visualizations": {}
+}

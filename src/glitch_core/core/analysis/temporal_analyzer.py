@@ -55,33 +55,47 @@ class TemporalAnalyzer:
         attention_metrics = [epoch.get("attention_metrics", {}) for epoch in epochs]
         interventions = simulation_data.get("interventions", [])
         
-        # Run analysis components
-        emergence_points = self.pattern_detector.detect_emergence_points(
-            emotional_states, stability_scores
-        )
+        self.logger.info("extracted_data", 
+                        emotional_states_count=len(emotional_states),
+                        stability_scores_count=len(stability_scores),
+                        attention_metrics_count=len(attention_metrics))
         
-        stability_boundaries = self.stability_analyzer.analyze_stability_boundaries(
-            stability_scores, emotional_states
-        )
-        
-        intervention_leverage = self._analyze_intervention_leverage(
-            interventions, emotional_states, stability_scores
-        )
-        
-        attention_evolution = self._analyze_attention_evolution(attention_metrics)
-        
-        drift_patterns = self._analyze_overall_drift_patterns(
-            emotional_states, stability_scores, emergence_points
-        )
-        
-        return AnalysisResult(
-            emergence_points=emergence_points,
-            stability_boundaries=stability_boundaries,
-            intervention_leverage=intervention_leverage,
-            attention_evolution=attention_evolution,
-            drift_patterns=drift_patterns,
-            created_at=datetime.utcnow()
-        )
+        try:
+            # Run analysis components
+            emergence_points = self.pattern_detector.detect_emergence_points(
+                emotional_states, stability_scores
+            )
+            self.logger.info("emergence_points_detected", count=len(emergence_points))
+            
+            stability_boundaries = self.stability_analyzer.analyze_stability_boundaries(
+                stability_scores, emotional_states
+            )
+            self.logger.info("stability_boundaries_detected", count=len(stability_boundaries))
+            
+            intervention_leverage = self._analyze_intervention_leverage(
+                interventions, emotional_states, stability_scores
+            )
+            self.logger.info("intervention_leverage_analyzed", count=len(intervention_leverage))
+            
+            attention_evolution = self._analyze_attention_evolution(attention_metrics)
+            self.logger.info("attention_evolution_analyzed", count=len(attention_evolution))
+            
+            drift_patterns = self._analyze_overall_drift_patterns(
+                emotional_states, stability_scores, emergence_points
+            )
+            self.logger.info("drift_patterns_analyzed", count=len(drift_patterns))
+            
+            return AnalysisResult(
+                emergence_points=emergence_points,
+                stability_boundaries=stability_boundaries,
+                intervention_leverage=intervention_leverage,
+                attention_evolution=attention_evolution,
+                drift_patterns=drift_patterns,
+                created_at=datetime.utcnow()
+            )
+        except Exception as e:
+            self.logger.error("analysis_component_failed", error=str(e))
+            raise
     
     def _analyze_intervention_leverage(
         self, 

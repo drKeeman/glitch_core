@@ -1,11 +1,10 @@
-version: '3.8'
-
 services:
   # Main API service
   api:
     build: 
       context: .
       dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-development}
     container_name: glitch-api
     ports:
       - "8000:8000"
@@ -19,26 +18,30 @@ services:
       OLLAMA_MODEL: llama3.2:3b
       
       # App config
-      ENV: ${ENV:-staging}
-      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      ENV: ${ENV:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-DEBUG}
       API_PREFIX: /api/v1
       
-      # CORS origins (staging vs prod)
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,https://cognitive-drift.app}
+      # CORS origins (development vs staging vs prod)
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:8000,https://cognitive-drift.app}
       
       # WebSocket config
       WS_HEARTBEAT_INTERVAL: 30
       
     volumes:
-      # Mount source for hot reload in dev
+      # Mount source for hot reload in development
       - ${PWD}/src:/app/src:ro
+      - ${PWD}/tests:/app/tests:ro
       - ${PWD}/experiments:/app/experiments
+      - ${PWD}/scenarios:/app/scenarios
+      # Results persistence
+      - ${PWD}/scenarios/results:/app/scenarios/results
       # Logs persistence
       - glitch_logs:/app/logs
       
     depends_on:
       qdrant:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_healthy
       ollama:
@@ -72,11 +75,11 @@ services:
     volumes:
       - qdrant_storage:/qdrant/storage
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      test: ["CMD", "curl", "-f", "http://localhost:6333/"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
     
     # Qdrant can be memory hungry
@@ -129,7 +132,7 @@ services:
         reservations:
           memory: 2G
 
-  # Reverse proxy + SSL termination
+  # Reverse proxy + SSL termination (production only)
   nginx:
     image: nginx:1.25-alpine
     container_name: glitch-nginx
@@ -144,6 +147,7 @@ services:
     depends_on:
       - api
     restart: unless-stopped
+    profiles: ["production"]  # Only run in production
 
   # Monitoring (optional, can disable in resource-constrained env)
   prometheus:
@@ -167,6 +171,20 @@ services:
       resources:
         limits:
           memory: 512M
+
+  # Development tools
+  dev-tools:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: glitch-dev-tools
+    volumes:
+      - ${PWD}:/app
+      - /app/.venv  # Exclude venv from mount
+    working_dir: /app
+    profiles: ["dev-tools"]  # Only run when needed
+    command: ["tail", "-f", "/dev/null"]  # Keep container running
 
 volumes:
   # Persistent data

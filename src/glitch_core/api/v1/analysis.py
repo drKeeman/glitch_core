@@ -40,9 +40,20 @@ async def get_analysis(experiment_id: UUID) -> AnalysisResult:
         # Run temporal analysis
         analysis_result = temporal_analyzer.analyze_drift_patterns(simulation_data)
         
+        # Convert to API response format
+        api_response = AnalysisResult(
+            experiment_id=experiment_id,
+            emergence_points=analysis_result.emergence_points,
+            stability_boundaries=analysis_result.stability_boundaries,
+            intervention_leverage=analysis_result.intervention_leverage,
+            attention_evolution=analysis_result.attention_evolution,
+            drift_patterns=analysis_result.drift_patterns,
+            created_at=analysis_result.created_at
+        )
+        
         logger.info("analysis_completed", experiment_id=str(experiment_id))
         
-        return analysis_result
+        return api_response
         
     except HTTPException:
         raise
