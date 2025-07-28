@@ -7,13 +7,14 @@ import pytest_asyncio
 import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
-from glitch_core.core.llm import ReflectionEngine, ReflectionResponse
+from glitch_core.config import get_reflection_engine, get_settings
+from glitch_core.core.llm import ReflectionResponse
 
 
 @pytest_asyncio.fixture
 async def reflection_engine():
     """Create a reflection engine for testing."""
-    engine = ReflectionEngine()
+    engine = get_reflection_engine()
     # Mock the HTTP client
     engine.client = AsyncMock()
     return engine

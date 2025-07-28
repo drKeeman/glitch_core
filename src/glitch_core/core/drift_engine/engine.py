@@ -4,11 +4,13 @@ Drift Engine: Orchestrates personality evolution over compressed time.
 
 import asyncio
 import random
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, TYPE_CHECKING
 from dataclasses import dataclass
 from datetime import datetime
 
-from glitch_core.config.settings import get_settings
+if TYPE_CHECKING:
+    from glitch_core.config.settings import Settings
+
 from glitch_core.config.logging import get_logger, DriftLogger, PersonalityLogger
 from glitch_core.core.memory import MemoryManager
 from glitch_core.core.llm import ReflectionEngine
@@ -37,15 +39,22 @@ class DriftEngine:
     Captures interpretability metrics at each step
     """
     
-    def __init__(self):
-        self.settings = get_settings()
+    def __init__(
+        self,
+        settings: "Settings",
+        memory_manager: MemoryManager,
+        reflection_engine: ReflectionEngine
+    ):
+        self.settings = settings
+        self.memory_manager = memory_manager
+        self.reflection_engine = reflection_engine
         self.active_simulations: Dict[str, asyncio.Task] = {}
         self.logger = get_logger("drift_engine")
         self.personality_logger = PersonalityLogger()
         
         # Initialize memory and reflection components
-        self.memory_manager = MemoryManager()
-        self.reflection_engine = ReflectionEngine()
+        # self.memory_manager = MemoryManager() # This line is removed as per the new_code
+        # self.reflection_engine = ReflectionEngine() # This line is removed as per the new_code
     
     async def run_simulation(
         self,

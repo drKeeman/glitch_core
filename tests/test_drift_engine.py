@@ -3,14 +3,14 @@ Tests for the drift engine.
 """
 
 import pytest
-from glitch_core.core.drift_engine.engine import DriftEngine
+from glitch_core.config import get_drift_engine, get_settings
 from glitch_core.core.personality.profiles import get_persona_config, get_drift_profile
 
 
 @pytest.mark.asyncio
 async def test_drift_engine_initialization():
     """Test drift engine initialization."""
-    engine = DriftEngine()
+    engine = get_drift_engine()
     assert engine is not None
     assert engine.settings is not None
 
@@ -18,7 +18,7 @@ async def test_drift_engine_initialization():
 @pytest.mark.asyncio
 async def test_basic_simulation():
     """Test a basic simulation run."""
-    engine = DriftEngine()
+    engine = get_drift_engine()
     
     # Get a persona config
     persona_config = get_persona_config("resilient_optimist")

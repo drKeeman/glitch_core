@@ -8,13 +8,14 @@ import asyncio
 from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
 
-from glitch_core.core.memory import MemoryManager, MemoryRecord
+from glitch_core.config import get_memory_manager, get_settings
+from glitch_core.core.memory import MemoryRecord
 
 
 @pytest_asyncio.fixture
 async def memory_manager():
     """Create a memory manager for testing."""
-    manager = MemoryManager()
+    manager = get_memory_manager()
     # Mock the external dependencies
     manager.qdrant_client = AsyncMock()
     manager.redis_client = AsyncMock()

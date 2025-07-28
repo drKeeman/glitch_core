@@ -7,14 +7,14 @@ import pytest_asyncio
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from glitch_core.core.drift_engine import DriftEngine
+from glitch_core.config import get_drift_engine, get_settings
 from glitch_core.core.personality.profiles import get_persona_config, get_drift_profile
 
 
 @pytest_asyncio.fixture
 async def drift_engine():
     """Create a drift engine for testing."""
-    engine = DriftEngine()
+    engine = get_drift_engine()
     
     # Mock the memory and reflection components
     engine.memory_manager = AsyncMock()

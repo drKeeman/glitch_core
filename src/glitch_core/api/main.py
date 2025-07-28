@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 import uvicorn
 
-from glitch_core.config.settings import get_settings
+from glitch_core.config import get_settings
 from glitch_core.config.logging import setup_logging, get_logger, api_logger
 
 

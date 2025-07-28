@@ -83,16 +83,4 @@ class Settings(BaseSettings):
         case_sensitive=False,
         env_parse_none_str=None,
         extra="ignore"
-    )
-
-
-# Global settings instance
-_settings: Settings = None
-
-
-def get_settings() -> Settings:
-    """Get the global settings instance."""
-    global _settings
-    if _settings is None:
-        _settings = Settings()
-    return _settings 
+    ) 

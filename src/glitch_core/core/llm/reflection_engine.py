@@ -4,12 +4,20 @@ Reflection Engine: Ollama HTTP integration for persona-specific reflection gener
 
 import json
 import time
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, TYPE_CHECKING
 from dataclasses import dataclass
 
 import httpx
-from glitch_core.config.settings import get_settings
+
+if TYPE_CHECKING:
+    from glitch_core.config.settings import Settings
+
 from glitch_core.config.logging import get_logger
+from glitch_core.core.exceptions import (
+    LLMConnectionError, ExternalServiceError, TimeoutError,
+    RetryableError, NonRetryableError
+)
+from glitch_core.utils.retry import retry, with_timeout, CircuitBreaker
 
 
 @dataclass
@@ -42,8 +50,8 @@ class ReflectionEngine:
     - Retrieved memories
     """
     
-    def __init__(self):
-        self.settings = get_settings()
+    def __init__(self, settings: "Settings"):
+        self.settings = settings
         self.logger = get_logger("reflection_engine")
         
         # HTTP client for Ollama
@@ -61,6 +69,13 @@ class ReflectionEngine:
         self.total_tokens_used = 0
         self.total_requests = 0
         
+        # Circuit breaker for LLM calls
+        self.circuit_breaker = CircuitBreaker(
+            failure_threshold=3,
+            recovery_timeout=30.0,
+            expected_exception=(LLMConnectionError, ExternalServiceError, TimeoutError)
+        )
+        
     async def initialize(self):
         """Initialize connection to Ollama."""
         try:
@@ -69,12 +84,20 @@ class ReflectionEngine:
             if response.status_code == 200:
                 self.logger.info("ollama_connection_established")
             else:
-                raise Exception(f"Ollama connection failed: {response.status_code}")
+                raise LLMConnectionError(
+                    f"Ollama connection failed: {response.status_code}",
+                    context={"status_code": response.status_code}
+                )
                 
         except Exception as e:
             self.logger.error("ollama_init_failed", error=str(e))
-            raise
+            raise LLMConnectionError(
+                f"Failed to initialize Ollama connection: {str(e)}",
+                context={"error": str(e)}
+            )
     
+    @retry(max_attempts=3, base_delay=1.0, max_delay=10.0)
+    @with_timeout(30.0)
     async def generate_reflection(
         self,
         trigger_event: str,
@@ -99,37 +122,26 @@ class ReflectionEngine:
         start_time = time.time()
         
         try:
-            # Construct the prompt
-            prompt = self._construct_prompt(
-                trigger_event=trigger_event,
-                emotional_state=emotional_state,
-                memories=memories,
-                persona_prompt=persona_prompt
-            )
+            # Construct prompt outside circuit breaker
+            prompt = self._construct_prompt(trigger_event, emotional_state, memories, persona_prompt)
             
-            # Generate reflection
-            response = await self._call_ollama(prompt)
+            # Use circuit breaker for LLM calls
+            async def _call_with_circuit_breaker():
+                response = await self._call_ollama(prompt)
+                return response
+            
+            response = await self.circuit_breaker.call_async(_call_with_circuit_breaker)
             
             # Parse response
             reflection = self._parse_response(response)
-            
-            # Calculate metadata
             generation_time = time.time() - start_time
             token_count = self._estimate_token_count(prompt + reflection)
             confidence = self._calculate_confidence(response)
             emotional_impact = self._analyze_emotional_impact(reflection, emotional_state)
             
-            # Update tracking
+            # Update usage statistics
             self.total_tokens_used += token_count
             self.total_requests += 1
-            
-            result = ReflectionResponse(
-                reflection=reflection,
-                generation_time=generation_time,
-                token_count=token_count,
-                confidence=confidence,
-                emotional_impact=emotional_impact
-            )
             
             self.logger.info(
                 "reflection_generated",
@@ -139,9 +151,15 @@ class ReflectionEngine:
                 confidence=confidence
             )
             
-            return result
+            return ReflectionResponse(
+                reflection=reflection,
+                generation_time=generation_time,
+                token_count=token_count,
+                confidence=confidence,
+                emotional_impact=emotional_impact
+            )
             
-        except Exception as e:
+        except (LLMConnectionError, ExternalServiceError, TimeoutError) as e:
             self.logger.error(
                 "reflection_generation_failed",
                 experiment_id=experiment_id,
@@ -150,24 +168,52 @@ class ReflectionEngine:
             # Return fallback reflection
             return self._generate_fallback_reflection(trigger_event, emotional_state)
     
+    @retry(max_attempts=2, base_delay=0.5, max_delay=5.0)
     async def _call_ollama(self, prompt: str) -> Dict[str, Any]:
-        """Make API call to Ollama."""
-        payload = {
-            "model": self.model_name,
-            "prompt": prompt,
-            "stream": False,
-            "options": {
-                "temperature": self.temperature,
-                "num_predict": self.max_tokens
+        """Make API call to Ollama with retry logic."""
+        try:
+            payload = {
+                "model": self.model_name,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": self.temperature,
+                    "num_predict": self.max_tokens
+                }
             }
-        }
-        
-        response = await self.client.post("/api/generate", json=payload)
-        
-        if response.status_code != 200:
-            raise Exception(f"Ollama API error: {response.status_code}")
-        
-        return response.json()
+            
+            response = await self.client.post("/api/generate", json=payload)
+            
+            if response.status_code == 200:
+                return response.json()
+            elif response.status_code in [429, 503, 502]:
+                # Retryable errors
+                raise RetryableError(
+                    f"Ollama API error: {response.status_code}",
+                    context={"status_code": response.status_code}
+                )
+            else:
+                # Non-retryable errors
+                raise NonRetryableError(
+                    f"Ollama API error: {response.status_code}",
+                    context={"status_code": response.status_code}
+                )
+                
+        except httpx.TimeoutException:
+            raise TimeoutError(
+                "Ollama API request timed out",
+                context={"timeout": self.settings.OLLAMA_TIMEOUT}
+            )
+        except httpx.ConnectError:
+            raise LLMConnectionError(
+                "Failed to connect to Ollama service",
+                context={"url": self.settings.OLLAMA_URL}
+            )
+        except Exception as e:
+            raise ExternalServiceError(
+                f"Unexpected error calling Ollama: {str(e)}",
+                context={"error": str(e)}
+            )
     
     def _construct_prompt(
         self,
