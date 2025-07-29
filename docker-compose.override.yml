@@ -8,12 +8,12 @@ services:
       PYTHONPATH: /app/src
     volumes:
       # Mount source for hot reload
-      - ${PWD}/src:/app/src:ro
-      - ${PWD}/tests:/app/tests:ro
-      - ${PWD}/experiments:/app/experiments
-      - ${PWD}/scenarios:/app/scenarios:ro
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./experiments:/app/experiments
+      - ./scenarios:/app/scenarios:ro
       # Development tools
-      - ${PWD}/.git:/app/.git:ro
+      - ./.git:/app/.git:ro
     # Development command with hot reload
     command: ["uv", "run", "uvicorn", "src.glitch_core.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 

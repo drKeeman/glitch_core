@@ -6,6 +6,7 @@ import os
 import time
 from contextlib import asynccontextmanager
 from typing import Dict, Any
+from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
@@ -98,10 +99,49 @@ def create_app() -> FastAPI:
         logger = get_logger("health")
         logger.info("health_check_requested")
         
+        # Check individual services
+        checks = {}
+        
+        # Check Qdrant
+        try:
+            import httpx
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                response = await client.get(f"{settings.QDRANT_URL}/")
+                checks["qdrant"] = response.status_code == 200
+        except Exception:
+            checks["qdrant"] = False
+        
+        # Check Redis
+        try:
+            import redis.asyncio as redis
+            redis_client = redis.from_url(settings.REDIS_URL)
+            await redis_client.ping()
+            checks["redis"] = True
+            await redis_client.close()
+        except Exception:
+            checks["redis"] = False
+        
+        # Check Ollama
+        try:
+            import httpx
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                response = await client.get(f"{settings.OLLAMA_URL}/api/tags")
+                checks["ollama"] = response.status_code == 200
+        except Exception:
+            checks["ollama"] = False
+        
+        # API is always healthy if we reach this point
+        checks["api"] = True
+        
+        # Overall status
+        overall_status = "healthy" if all(checks.values()) else "unhealthy"
+        
         return {
-            "status": "healthy",
+            "status": overall_status,
+            "checks": checks,
             "version": "0.1.0",
             "environment": settings.ENV,
+            "timestamp": datetime.now().isoformat()
         }
     
     # Root endpoint

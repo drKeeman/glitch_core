@@ -30,12 +30,12 @@ services:
       
     volumes:
       # Mount source for hot reload in development
-      - ${PWD}/src:/app/src:ro
-      - ${PWD}/tests:/app/tests:ro
-      - ${PWD}/experiments:/app/experiments
-      - ${PWD}/scenarios:/app/scenarios
-      # Results persistence
-      - ${PWD}/scenarios/results:/app/scenarios/results
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - ./experiments:/app/experiments
+      - ./scenarios:/app/scenarios
+      # Results persistence - use relative path to avoid Docker file sharing issues
+      - ./scenarios/results:/app/scenarios/results
       # Logs persistence
       - glitch_logs:/app/logs
       
@@ -180,7 +180,7 @@ services:
       target: development
     container_name: glitch-dev-tools
     volumes:
-      - ${PWD}:/app
+      - .:/app
       - /app/.venv  # Exclude venv from mount
     working_dir: /app
     profiles: ["dev-tools"]  # Only run when needed
