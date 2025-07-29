@@ -39,8 +39,8 @@ docker-down: ## Stop all services
 docker-logs: ## View logs
 	docker-compose logs -f
 
-start: ## Start all services (alias for docker-up)
-	docker-compose up -d
+start: ## Start all services (with live console)
+	docker-compose up
 
 clean: ## Clean up generated files
 	find . -type f -name "*.pyc" -delete

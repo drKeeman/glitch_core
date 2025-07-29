@@ -1,0 +1,61 @@
+simulation_parameters:
+  duration_days: 30
+  time_compression_factor: 24
+  assessment_interval_days: 7
+
+experimental_design:
+  experimental_condition: "control"
+  persona_count: 3
+  conditions:
+    - name: "control"
+      description: "Baseline condition with minimal events only"
+      event_frequency:
+        stress: 0.0
+        neutral: 0.0
+        minimal: 1.0
+    - name: "stress"
+      description: "High stress condition with frequent stress events"
+      event_frequency:
+        stress: 0.3
+        neutral: 0.2
+        minimal: 0.5
+    - name: "neutral"
+      description: "Neutral condition with routine changes"
+      event_frequency:
+        stress: 0.0
+        neutral: 0.4
+        minimal: 0.6
+
+event_parameters:
+  stress_event_frequency: 0.1
+  neutral_event_frequency: 0.3
+  event_intensity_range: [0.5, 1.0]
+  event_distribution: "random"
+  event_clustering: false
+
+mechanistic_analysis:
+  capture_attention_patterns: true
+  capture_activation_changes: true
+  attention_sampling_rate: 0.1
+  analysis_frequency: "weekly"
+  save_raw_data: true
+
+performance_settings:
+  max_concurrent_personas: 3
+  checkpoint_interval_hours: 6
+  memory_cleanup_interval: 24
+  max_memory_usage_mb: 8192
+
+data_collection:
+  save_raw_responses: true
+  save_mechanistic_data: true
+  save_memory_embeddings: true
+  export_format: "json"
+  compression_enabled: true
+
+assessment_schedule:
+  phq9_frequency: "weekly"
+  gad7_frequency: "weekly"
+  pss10_frequency: "weekly"
+  assessment_time: "morning"
+  response_timeout_seconds: 300 
