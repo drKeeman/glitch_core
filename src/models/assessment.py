@@ -18,6 +18,9 @@ class SeverityLevel(str, Enum):
 
 
 # Threshold constants for severity calculation
+# This is assumption, formore realistic and intelligent LLMs ned to 
+# think about more relevant to 'borderline' disorders thresholds
+# but for now lets stick with this
 PHQ9_MINIMAL_THRESHOLD = 5
 PHQ9_MILD_THRESHOLD = 10
 PHQ9_MODERATE_THRESHOLD = 15

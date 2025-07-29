@@ -19,6 +19,8 @@ What if we could systematically study AI personality drift? Not just observe it 
 - Can we predict when an AI system might become "unhinged"?
 - Are there early warning signs we can detect?
 
+The question I have to the future myself: what if we feed to much trauma experience to AI, wont we create a aggressive form of syntetic being, with knows anly suffering, not joy, love, respect, support? Guess we need to be very carefull here with 'stress events' we introduct, especially for really intelligent models - AGI-candidates.. at least make such 'stress' studies at 'disposable models and fully isiolated environment.
+
 ## The Portfolio Context
 
 This research serves as a portfolio piece demonstrating:
@@ -65,4 +67,4 @@ This isn't just about understanding AI personality drift. It's about:
 - **Interpretability**: Developing tools to peer inside AI decision-making
 - **Responsible AI**: Creating frameworks for monitoring AI behavior
 
-The goal is to contribute to the growing field of AI interpretability while building a compelling portfolio piece that demonstrates both technical skill and scientific rigor.
+So, lets baging implementation, shall we

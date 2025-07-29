@@ -18,6 +18,12 @@ test: ## Run tests
 test-cov: ## Run tests with coverage
 	uv run pytest --cov=src --cov-report=html --cov-report=term
 
+test-phase3: ## Run Phase 3 persona test
+	uv run python scripts/run_persona_test.py
+
+run-persona-test: ## Run persona test (alias for test-phase3)
+	uv run python scripts/run_persona_test.py
+
 lint: ## Run linting
 	uv run ruff check src tests
 	uv run mypy src
