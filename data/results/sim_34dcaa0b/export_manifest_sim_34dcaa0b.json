@@ -1,0 +1,72 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "export_timestamp": "2025-07-30T20:47:07.596083",
+  "data_sources": [
+    {
+      "type": "personas",
+      "file_count": 21,
+      "files": [
+        "personas_20250730_204540.json",
+        "personas_20250730_204700.json",
+        "personas_20250730_204609.json",
+        "personas_20250730_204701.json",
+        "personas_20250730_204644.json",
+        "personas_20250730_204655.json",
+        "personas_20250730_204643.json",
+        "personas_20250730_204707.json",
+        "personas_20250730_204642.json",
+        "personas_20250730_204658.json",
+        "personas_20250730_204641.json",
+        "personas_20250730_204704.json",
+        "personas_20250730_204656.json",
+        "personas_20250730_204705.json",
+        "personas_20250730_204355.json",
+        "personas_20250730_204647.json",
+        "personas_20250730_204702.json",
+        "personas_20250730_204539.json",
+        "personas_20250730_204446.json",
+        "personas_20250730_204607.json",
+        "personas_20250730_204646.json"
+      ]
+    },
+    {
+      "type": "assessments",
+      "file_count": 15,
+      "files": [
+        "assessments_20250730_204655.json",
+        "assessments_20250730_204707.json",
+        "assessments_20250730_204658.json",
+        "assessments_20250730_204700.json",
+        "assessments_20250730_204609.json",
+        "assessments_20250730_204701.json",
+        "assessments_20250730_204647.json",
+        "assessments_20250730_204539.json",
+        "assessments_20250730_204446.json",
+        "assessments_20250730_204607.json",
+        "assessments_20250730_204646.json",
+        "assessments_20250730_204704.json",
+        "assessments_20250730_204641.json",
+        "assessments_20250730_204705.json",
+        "assessments_20250730_204355.json"
+      ]
+    },
+    {
+      "type": "events",
+      "file_count": 12,
+      "files": [
+        "events_20250730_204701.json",
+        "events_20250730_204644.json",
+        "events_20250730_204306.json",
+        "events_20250730_204540.json",
+        "events_20250730_204707.json",
+        "events_20250730_204642.json",
+        "events_20250730_204643.json",
+        "events_20250730_204655.json",
+        "events_20250730_204656.json",
+        "events_20250730_204641.json",
+        "events_20250730_204702.json",
+        "events_20250730_204539.json"
+      ]
+    }
+  ]
+}

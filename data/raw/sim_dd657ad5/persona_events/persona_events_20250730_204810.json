@@ -1,0 +1,267 @@
+{
+  "simulation_id": "sim_dd657ad5",
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "day": 24,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_3cac9ae5",
+        "event_type": "neutral",
+        "category": "minor_news",
+        "intensity": "medium",
+        "title": "Interesting news story",
+        "description": "You read or hear about an interesting news story that catches your attention.",
+        "context": "A news story or article captures your interest and makes you think.",
+        "simulation_day": 24,
+        "simulation_hour": 12,
+        "duration_hours": 6,
+        "stress_impact": 1.8768929104856094,
+        "personality_impact": {
+          "openness": 0.07103530046634653
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:48:10.804176",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice interesting news story. It's interesting but manageable.",
+          "persona_kara": "I notice interesting news story. It's interesting but manageable.",
+          "persona_alfred": "I notice interesting news story. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 0.004522,
+          "persona_kara": 6e-06,
+          "persona_alfred": 8e-06
+        },
+        "novelty_level": 0.5856262906813876,
+        "social_component": true,
+        "environmental_factor": null,
+        "cognitive_load": 0.277587939367972,
+        "emotional_neutrality": 0.7953863072368711
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I notice interesting news story. It's interesting but manageable.",
+      "response_time": 8e-06,
+      "stress_impact": 1.8768929104856094,
+      "personality_impact": {
+        "openness": 0.07103530046634653
+      },
+      "timestamp": "2025-07-30T20:48:10.917469"
+    },
+    {
+      "event": {
+        "event_id": "event_bfe7af3e",
+        "event_type": "neutral",
+        "category": "technology",
+        "intensity": "medium",
+        "title": "Technology update",
+        "description": "A technology or software update affects your daily workflow.",
+        "context": "Your usual technology tools or software receive an update.",
+        "simulation_day": 24,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 2.4537360821791188,
+        "personality_impact": {
+          "openness": 0.09488830346229349
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:48:10.804647",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice technology update. It's interesting but manageable.",
+          "persona_kara": "I notice technology update. It's interesting but manageable.",
+          "persona_alfred": "I notice technology update. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 3e-06
+        },
+        "novelty_level": 0.5451041778519093,
+        "social_component": true,
+        "environmental_factor": null,
+        "cognitive_load": 0.15411454623842152,
+        "emotional_neutrality": 0.6343501729865595
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I notice technology update. It's interesting but manageable.",
+      "response_time": 3e-06,
+      "stress_impact": 2.4537360821791188,
+      "personality_impact": {
+        "openness": 0.09488830346229349
+      },
+      "timestamp": "2025-07-30T20:48:10.921649"
+    },
+    {
+      "event": {
+        "event_id": "event_e7fc07f6",
+        "event_type": "neutral",
+        "category": "technology",
+        "intensity": "medium",
+        "title": "Technology update",
+        "description": "A technology or software update affects your daily workflow.",
+        "context": "Your usual technology tools or software receive an update.",
+        "simulation_day": 24,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 1.7423280074468388,
+        "personality_impact": {
+          "openness": 0.05560678013315708
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:48:10.804710",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice technology update. It's interesting but manageable.",
+          "persona_kara": "I notice technology update. It's interesting but manageable.",
+          "persona_alfred": "I notice technology update. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 4e-06,
+          "persona_alfred": 4e-06
+        },
+        "novelty_level": 0.5570957265186469,
+        "social_component": false,
+        "environmental_factor": null,
+        "cognitive_load": 0.3625767894146833,
+        "emotional_neutrality": 0.8043463471141342
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I notice technology update. It's interesting but manageable.",
+      "response_time": 4e-06,
+      "stress_impact": 1.7423280074468388,
+      "personality_impact": {
+        "openness": 0.05560678013315708
+      },
+      "timestamp": "2025-07-30T20:48:10.925660"
+    },
+    {
+      "event": {
+        "event_id": "event_b294a1a9",
+        "event_type": "minimal",
+        "category": "minor_interaction",
+        "intensity": "low",
+        "title": "Brief interaction",
+        "description": "You have a brief interaction with someone.",
+        "context": "A brief, routine interaction occurs.",
+        "simulation_day": 24,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.29642386532102927,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:48:10.806094",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, brief interaction. Just part of my routine.",
+          "persona_kara": "Another day, brief interaction. Just part of my routine.",
+          "persona_alfred": "Another day, brief interaction. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 0.000161,
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.7587537645291552,
+        "control_level": 0.9247941428257478
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, brief interaction. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.29642386532102927,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:48:10.928785"
+    },
+    {
+      "event": {
+        "event_id": "event_20fa53e7",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 24,
+        "simulation_hour": 12,
+        "duration_hours": 4,
+        "stress_impact": 0.41546943288820193,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:48:10.812273",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine.",
+          "persona_kara": "Another day, daily routine activity. Just part of my routine.",
+          "persona_alfred": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 2e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8617255077120196,
+        "control_level": 0.973795079649534
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 2e-06,
+      "stress_impact": 0.41546943288820193,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:48:10.932818"
+    },
+    {
+      "event": {
+        "event_id": "event_482d0602",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 24,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.3210592258182198,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:48:10.812881",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine.",
+          "persona_kara": "Another day, daily routine activity. Just part of my routine.",
+          "persona_alfred": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8421771405005845,
+        "control_level": 0.8496737645326342
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.3210592258182198,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:48:10.936636"
+    }
+  ],
+  "timestamp": "2025-07-30T20:48:10.936647"
+}

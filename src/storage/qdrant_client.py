@@ -135,6 +135,91 @@ class QdrantClient:
             logger.error("Failed to search points", collection=collection_name, error=str(e))
             return []
 
+    async def search(
+        self,
+        collection_name: str,
+        query_vector: List[float],
+        limit: int = 10,
+        score_threshold: Optional[float] = None
+    ) -> List[Any]:
+        """Search for similar points in a collection."""
+        try:
+            if not self._client:
+                await self.connect()
+            
+            search_result = await self._client.search(
+                collection_name=collection_name,
+                query_vector=query_vector,
+                limit=limit,
+                score_threshold=score_threshold
+            )
+            
+            return search_result
+            
+        except Exception as e:
+            logger.error("Failed to search", collection=collection_name, error=str(e))
+            return []
+
+    async def scroll(
+        self,
+        collection_name: str,
+        scroll_filter: Optional[Dict[str, Any]] = None,
+        limit: int = 10,
+        with_payload: bool = True
+    ) -> List[Any]:
+        """Scroll through points in a collection."""
+        try:
+            if not self._client:
+                await self.connect()
+            
+            scroll_result = await self._client.scroll(
+                collection_name=collection_name,
+                scroll_filter=scroll_filter,
+                limit=limit,
+                with_payload=with_payload
+            )
+            
+            return scroll_result
+            
+        except Exception as e:
+            logger.error("Failed to scroll", collection=collection_name, error=str(e))
+            return []
+
+    async def get_collection(self, collection_name: str) -> Optional[Dict[str, Any]]:
+        """Get collection information."""
+        try:
+            if not self._client:
+                await self.connect()
+            
+            collection_info = await self._client.get_collection(collection_name)
+            return collection_info.dict()
+            
+        except Exception as e:
+            logger.error("Failed to get collection", name=collection_name, error=str(e))
+            return None
+
+    async def delete(
+        self,
+        collection_name: str,
+        points_selector: Dict[str, Any]
+    ) -> bool:
+        """Delete points from a collection."""
+        try:
+            if not self._client:
+                await self.connect()
+            
+            await self._client.delete(
+                collection_name=collection_name,
+                points_selector=points_selector
+            )
+            
+            logger.info("Points deleted", collection=collection_name)
+            return True
+            
+        except Exception as e:
+            logger.error("Failed to delete points", collection=collection_name, error=str(e))
+            return False
+
 
 # Global Qdrant client instance
 qdrant_client = QdrantClient() 

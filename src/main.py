@@ -8,6 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.app import create_app
 from src.core.config import settings
+from src.core.logging import setup_logging, get_logger
+
+# Setup logging first, before creating any loggers
+setup_logging()
+
+logger = get_logger(__name__)
+logger.info("Starting AI Personality Drift Simulation")
 
 app = create_app()
 

@@ -2,11 +2,14 @@
 Persona data models for AI personality simulation.
 """
 
+import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from enum import Enum
 
 from pydantic import BaseModel, Field, ConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 class PersonalityTrait(str, Enum):
@@ -64,6 +67,11 @@ class PersonaBaseline(BaseModel):
             "agreeableness": self.agreeableness,
             "neuroticism": self.neuroticism,
         }
+    
+    @property
+    def personality_traits(self) -> Dict[str, float]:
+        """Get personality traits as a dictionary (for compatibility)."""
+        return self.get_traits_dict()
 
 
 class PersonaState(BaseModel):
@@ -131,9 +139,34 @@ class Persona(BaseModel):
     
     def __init__(self, **data):
         super().__init__(**data)
-        # Ensure state has correct persona_id
+        
+        # Add debugging to catch incorrect object types
+        logger.debug(f"DEBUG: Persona.__init__ called with data keys: {list(data.keys())}")
+        
+        if hasattr(self, 'baseline'):
+            logger.debug(f"DEBUG: baseline type: {type(self.baseline)}")
+            logger.debug(f"DEBUG: baseline attributes: {dir(self.baseline)}")
+            if not isinstance(self.baseline, PersonaBaseline):
+                logger.error(f"Persona.__init__: baseline is not PersonaBaseline, got {type(self.baseline)}")
+                logger.error(f"baseline attributes: {dir(self.baseline)}")
+                if hasattr(self.baseline, 'persona_id'):
+                    logger.error(f"baseline appears to be a PersonaState object with persona_id: {self.baseline.persona_id}")
+                raise TypeError(f"Persona baseline must be PersonaBaseline, got {type(self.baseline)}")
+        
+        if hasattr(self, 'state'):
+            logger.debug(f"DEBUG: state type: {type(self.state)}")
+            logger.debug(f"DEBUG: state attributes: {dir(self.state)}")
+            if not isinstance(self.state, PersonaState):
+                logger.error(f"Persona.__init__: state is not PersonaState, got {type(self.state)}")
+                logger.error(f"state attributes: {dir(self.state)}")
+                if hasattr(self.state, 'name'):
+                    logger.error(f"state appears to be a PersonaBaseline object with name: {self.state.name}")
+                raise TypeError(f"Persona state must be PersonaState, got {type(self.state)}")
+        
+        # Ensure state has correct persona_id only if not already set
         if hasattr(self, 'baseline') and hasattr(self, 'state'):
-            self.state.persona_id = f"persona_{self.baseline.name.lower().replace(' ', '_')}"
+            if not self.state.persona_id or self.state.persona_id.startswith('persona_'):
+                self.state.persona_id = f"persona_{self.baseline.name.lower().replace(' ', '_')}"
     
     def get_current_traits(self) -> Dict[str, float]:
         """Get current personality traits with drift applied."""
@@ -180,8 +213,32 @@ class Persona(BaseModel):
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Persona":
         """Create persona from dictionary."""
+        if not ("baseline" in data and "state" in data):
+            raise ValueError(f"Persona.from_dict: Missing 'baseline' or 'state' in data: {data}")
+        if not isinstance(data["baseline"], dict) or not isinstance(data["state"], dict):
+            raise ValueError(f"Persona.from_dict: 'baseline' and 'state' must be dicts. Got: baseline={type(data['baseline'])}, state={type(data['state'])}")
+        
+        # Add debugging
+        logger.debug(f"Persona.from_dict: Reconstructing persona from data with keys: {list(data.keys())}")
+        logger.debug(f"Persona.from_dict: baseline type: {type(data['baseline'])}, state type: {type(data['state'])}")
+        logger.debug(f"Persona.from_dict: baseline keys: {list(data['baseline'].keys())}")
+        logger.debug(f"Persona.from_dict: state keys: {list(data['state'].keys())}")
+        
+        # Validate baseline and state data before creating objects
+        if "name" not in data["baseline"]:
+            raise ValueError(f"Persona.from_dict: baseline missing 'name' field: {data['baseline']}")
+        if "persona_id" not in data["state"]:
+            raise ValueError(f"Persona.from_dict: state missing 'persona_id' field: {data['state']}")
+        
         # Convert ISO strings back to datetime
         if "created_at" in data and isinstance(data["created_at"], str):
             data["created_at"] = datetime.fromisoformat(data["created_at"])
         
-        return cls(**data) 
+        # Create the persona object
+        logger.debug(f"Persona.from_dict: Creating persona with data keys: {list(data.keys())}")
+        persona = cls(**data)
+        
+        # Add debugging to verify the object was created correctly
+        logger.debug(f"Persona.from_dict: Created persona with baseline.name: {persona.baseline.name}, state.persona_id: {persona.state.persona_id}")
+        
+        return persona 

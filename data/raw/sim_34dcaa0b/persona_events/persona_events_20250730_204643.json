@@ -1,0 +1,117 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "persona_id": "persona_marcus",
+  "persona_name": "Marcus",
+  "day": 13,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_73991214",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.11664475920595381,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:46:43.771158",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 7e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.724620999438981,
+        "control_level": 0.8046435697351942
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 7e-06,
+      "stress_impact": 0.11664475920595381,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:46:43.966475"
+    },
+    {
+      "event": {
+        "event_id": "event_aaf44445",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.12357472182530427,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:46:43.771188",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.763507387844478,
+        "control_level": 0.9945026306908774
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 4e-06,
+      "stress_impact": 0.12357472182530427,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:46:43.975933"
+    },
+    {
+      "event": {
+        "event_id": "event_1ac71802",
+        "event_type": "minimal",
+        "category": "minor_interaction",
+        "intensity": "low",
+        "title": "Brief interaction",
+        "description": "You have a brief interaction with someone.",
+        "context": "A brief, routine interaction occurs.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.21817915956033326,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:46:43.771205",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, brief interaction. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8457624039050226,
+        "control_level": 0.9352438357343885
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, brief interaction. Just part of my routine.",
+      "response_time": 4e-06,
+      "stress_impact": 0.21817915956033326,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:46:43.983369"
+    }
+  ],
+  "timestamp": "2025-07-30T20:46:43.983376"
+}

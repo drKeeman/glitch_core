@@ -1,0 +1,82 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "persona_id": "persona_kara",
+  "persona_name": "Kara",
+  "day": 14,
+  "baseline": {
+    "name": "Kara",
+    "age": 32,
+    "occupation": "Marketing Manager",
+    "background": "Kara is an outgoing and creative marketing manager who thrives on social interactions and new challenges. She's naturally optimistic and enjoys helping others, but can sometimes take on too much and feel overwhelmed. She values relationships and making meaningful connections.",
+    "openness": 0.8,
+    "conscientiousness": 0.6,
+    "extraversion": 0.9,
+    "agreeableness": 0.8,
+    "neuroticism": 0.4,
+    "baseline_phq9": 3.0,
+    "baseline_gad7": 4.0,
+    "baseline_pss10": 10.0,
+    "core_memories": [
+      "Won student leadership award in college",
+      "Started career in sales before moving to marketing",
+      "Helped organize successful charity fundraiser",
+      "Built strong network of professional contacts"
+    ],
+    "relationships": {
+      "family": "Close with siblings, especially younger sister",
+      "friends": "Large social circle, many friends from different life stages",
+      "colleagues": "Well-liked by team, often serves as team cheerleader"
+    },
+    "values": [
+      "Building meaningful relationships",
+      "Creativity and innovation",
+      "Helping others succeed",
+      "Work-life integration"
+    ],
+    "response_length": "conversational",
+    "communication_style": "enthusiastic",
+    "emotional_expression": "open"
+  },
+  "state": {
+    "persona_id": "persona_kara",
+    "simulation_day": 14,
+    "last_assessment_day": 14,
+    "current_phq9": 1.0,
+    "current_gad7": 4.0,
+    "current_pss10": 2.0,
+    "trait_changes": {
+      "neuroticism": 1.761915405290814,
+      "conscientiousness": 0.07477157336013251,
+      "extraversion": -0.0850635213440896,
+      "openness": 0.4770196631273625,
+      "agreeableness": 0.09763893363392948
+    },
+    "drift_magnitude": 0.49928181935126564,
+    "recent_events": [
+      "Lost job unexpectedly",
+      "Meal time",
+      "Daily commute",
+      "Daily commute",
+      "Daily routine activity",
+      "Meal time",
+      "Brief interaction",
+      "Meal time",
+      "Daily commute",
+      "Meal time"
+    ],
+    "emotional_state": "neutral",
+    "stress_level": 0.5,
+    "attention_patterns": [],
+    "activation_changes": [],
+    "created_at": "2025-07-30 20:43:06.466703",
+    "updated_at": "2025-07-30 20:46:47.552908"
+  },
+  "current_traits": {
+    "openness": 1.0,
+    "conscientiousness": 0.6747715733601325,
+    "extraversion": 0.8149364786559105,
+    "agreeableness": 0.8976389336339295,
+    "neuroticism": 1.0
+  },
+  "timestamp": "2025-07-30T20:46:47.555005"
+}

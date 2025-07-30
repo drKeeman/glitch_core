@@ -8,6 +8,7 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
+import uuid
 
 from src.core.config import config_manager
 from src.models.persona import Persona, PersonaBaseline, PersonaState
@@ -36,8 +37,14 @@ class PersonaManager:
                 logger.error(f"Persona configuration not found: {persona_name}")
                 return None
             
+            # Add debugging
+            logger.debug(f"DEBUG: create_persona_from_config for {persona_name}")
+            logger.debug(f"DEBUG: config keys: {list(config.keys())}")
+            
             # Create baseline from config
             baseline = PersonaBaseline(**config)
+            logger.debug(f"DEBUG: Created baseline type: {type(baseline)}")
+            logger.debug(f"DEBUG: baseline attributes: {dir(baseline)}")
             
             # Create initial state
             state = PersonaState(
@@ -45,9 +52,15 @@ class PersonaManager:
                 simulation_day=0,
                 last_assessment_day=-1
             )
+            logger.debug(f"DEBUG: Created state type: {type(state)}")
+            logger.debug(f"DEBUG: state attributes: {dir(state)}")
             
             # Create persona
             persona = Persona(baseline=baseline, state=state)
+            logger.debug(f"DEBUG: Created persona type: {type(persona)}")
+            logger.debug(f"DEBUG: persona attributes: {dir(persona)}")
+            logger.debug(f"DEBUG: persona.baseline type: {type(persona.baseline)}")
+            logger.debug(f"DEBUG: persona.state type: {type(persona.state)}")
             
             # Store in active personas
             self.active_personas[persona.state.persona_id] = persona
@@ -70,7 +83,13 @@ class PersonaManager:
             
             # Parse persona data
             persona_dict = json.loads(persona_data)
+            logger.debug(f"Loading persona {persona_id} from storage, data keys: {list(persona_dict.keys())}")
+            
             persona = Persona.from_dict(persona_dict)
+            
+            # Add debugging to verify the loaded persona
+            logger.debug(f"Loaded persona type: {type(persona)}, baseline type: {type(persona.baseline)}, state type: {type(persona.state)}")
+            logger.debug(f"Loaded persona baseline.name: {persona.baseline.name}, state.persona_id: {persona.state.persona_id}")
             
             # Add to active personas
             self.active_personas[persona_id] = persona
@@ -144,7 +163,8 @@ class PersonaManager:
                                  simulation_day: Optional[int] = None,
                                  emotional_state: Optional[str] = None,
                                  stress_level: Optional[float] = None,
-                                 event_description: Optional[str] = None) -> bool:
+                                 event_description: Optional[str] = None,
+                                 last_assessment_day: Optional[int] = None) -> bool:
         """Update persona state with new information."""
         try:
             # Update simulation day
@@ -158,6 +178,10 @@ class PersonaManager:
             # Update stress level
             if stress_level is not None:
                 persona.state.update_stress_level(stress_level)
+            
+            # Update last assessment day
+            if last_assessment_day is not None:
+                persona.state.last_assessment_day = last_assessment_day
             
             # Add event to memory
             if event_description is not None:
@@ -233,12 +257,18 @@ class PersonaManager:
             # Convert session to dictionary
             session_dict = session.model_dump()
             
-            # Convert datetime objects to ISO strings
-            if "started_at" in session_dict and isinstance(session_dict["started_at"], datetime):
-                session_dict["started_at"] = session_dict["started_at"].isoformat()
+            # Recursively convert datetime objects to ISO strings
+            def convert_datetimes(obj):
+                if isinstance(obj, datetime):
+                    return obj.isoformat()
+                elif isinstance(obj, dict):
+                    return {k: convert_datetimes(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [convert_datetimes(item) for item in obj]
+                else:
+                    return obj
             
-            if "completed_at" in session_dict and isinstance(session_dict["completed_at"], datetime):
-                session_dict["completed_at"] = session_dict["completed_at"].isoformat()
+            session_dict = convert_datetimes(session_dict)
             
             return json.dumps(session_dict)
             
@@ -315,11 +345,11 @@ class PersonaManager:
         """Store memory embedding in Qdrant."""
         try:
             # Create memory point
-            point_id = f"{persona.state.persona_id}_{datetime.utcnow().timestamp()}"
+            point_id = str(uuid.uuid4())
             
             # Store in Qdrant
             await qdrant_client.upsert_points(
-                collection_name=f"memories_{persona.state.persona_id}",
+                collection_name=f"memories_{persona.baseline.name.lower()}",
                 points=[{
                     "id": point_id,
                     "vector": embedding,
@@ -345,7 +375,7 @@ class PersonaManager:
         try:
             # Search in persona's memory collection
             search_results = await qdrant_client.search_points(
-                collection_name=f"memories_{persona.state.persona_id}",
+                collection_name=f"memories_{persona.baseline.name.lower()}",
                 query_vector=query_embedding,
                 limit=limit
             )

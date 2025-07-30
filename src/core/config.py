@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     # Model settings
     MODEL_PATH: str = Field(default="./models", env="MODEL_PATH")
     MODEL_NAME: str = Field(default="llama-3.1-8b-instruct", env="MODEL_NAME")
+    OLLAMA_URL: str = Field(default="http://localhost:11434", env="OLLAMA_URL")
     
     # Simulation settings
     SIMULATION_DURATION_DAYS: int = Field(default=30, env="SIMULATION_DURATION_DAYS")
@@ -117,6 +118,10 @@ class ConfigManager:
     
     def load_event_config(self, event_type: str) -> Optional[Dict[str, Any]]:
         """Load event configuration."""
+        # Handle both 'stress' and 'stress_events' formats
+        if event_type.endswith('_events'):
+            event_type = event_type.replace('_events', '')
+        
         config_file = self.events_dir / f"{event_type}_events.yaml"
         return self.load_yaml_config(config_file)
     

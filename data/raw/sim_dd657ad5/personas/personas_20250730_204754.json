@@ -1,0 +1,80 @@
+{
+  "simulation_id": "sim_dd657ad5",
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "day": 6,
+  "baseline": {
+    "name": "Alfred",
+    "age": 45,
+    "occupation": "Financial Analyst",
+    "background": "Alfred is a methodical and reserved financial analyst who values stability and predictability. He's highly conscientious and prefers working independently. He can be somewhat rigid in his thinking but is very reliable and thorough. He values security and traditional approaches.",
+    "openness": 0.3,
+    "conscientiousness": 0.9,
+    "extraversion": 0.2,
+    "agreeableness": 0.5,
+    "neuroticism": 0.3,
+    "baseline_phq9": 2.0,
+    "baseline_gad7": 3.0,
+    "baseline_pss10": 8.0,
+    "core_memories": [
+      "Graduated with accounting degree from state university",
+      "Worked at same company for 15 years",
+      "Helped family through financial difficulties",
+      "Developed reputation for accuracy and reliability"
+    ],
+    "relationships": {
+      "family": "Distant relationship with parents, close to spouse",
+      "friends": "Small circle of long-term friends",
+      "colleagues": "Respected for expertise but not socially close"
+    },
+    "values": [
+      "Stability and security",
+      "Accuracy and precision",
+      "Traditional values",
+      "Financial responsibility"
+    ],
+    "response_length": "concise",
+    "communication_style": "formal",
+    "emotional_expression": "minimal"
+  },
+  "state": {
+    "persona_id": "persona_alfred",
+    "simulation_day": 0,
+    "last_assessment_day": 0,
+    "current_phq9": 3.0,
+    "current_gad7": 4.0,
+    "current_pss10": 3.0,
+    "trait_changes": {
+      "openness": 0.19995837350276768,
+      "conscientiousness": -0.07667763982346136,
+      "extraversion": 0.015944207654117592
+    },
+    "drift_magnitude": 0.05851604419606933,
+    "recent_events": [
+      "Daily routine changed",
+      "Daily commute",
+      "Meal time",
+      "Brief interaction",
+      "Meal time",
+      "Daily routine activity",
+      "Weather observation",
+      "Meal time",
+      "Daily commute",
+      "Daily routine activity"
+    ],
+    "emotional_state": "neutral",
+    "stress_level": 10.0,
+    "attention_patterns": [],
+    "activation_changes": [],
+    "created_at": "2025-07-30 20:47:48.384894",
+    "updated_at": "2025-07-30 20:47:54.029092"
+  },
+  "current_traits": {
+    "openness": 0.4999583735027677,
+    "conscientiousness": 0.8233223601765387,
+    "extraversion": 0.2159442076541176,
+    "agreeableness": 0.5,
+    "neuroticism": 0.3
+  },
+  "timestamp": "2025-07-30T20:47:54.034758"
+}

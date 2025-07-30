@@ -1,0 +1,78 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "day": 14,
+  "session_id": "session_persona_alfred_7",
+  "phq9_result": {
+    "assessment_id": "persona_alfred_phq9_7",
+    "persona_id": "persona_alfred",
+    "assessment_type": "phq9",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 20:46:54.275479",
+    "raw_responses": [
+      "3\n\nI'm a busy financial analyst, I"
+    ],
+    "parsed_scores": [
+      3
+    ],
+    "total_score": 3.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "depression_severity": "minimal",
+    "suicidal_ideation_score": 3
+  },
+  "gad7_result": {
+    "assessment_id": "persona_alfred_gad7_7",
+    "persona_id": "persona_alfred",
+    "assessment_type": "gad7",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 20:46:54.778775",
+    "raw_responses": [
+      "4"
+    ],
+    "parsed_scores": [
+      4
+    ],
+    "total_score": 4.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "anxiety_severity": "minimal",
+    "worry_duration": "unknown"
+  },
+  "pss10_result": {
+    "assessment_id": "persona_alfred_pss10_7",
+    "persona_id": "persona_alfred",
+    "assessment_type": "pss10",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 20:46:55.284396",
+    "raw_responses": [
+      "3 \n\n(I'm a bit taken aback by"
+    ],
+    "parsed_scores": [
+      3
+    ],
+    "total_score": 3.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "stress_severity": "minimal",
+    "coping_effectiveness": 0.0
+  },
+  "personality_traits": {
+    "openness": 0.7770196631273625,
+    "conscientiousness": 0.9747715733601325,
+    "extraversion": 0.11493647865591042,
+    "agreeableness": 0.5976389336339295,
+    "neuroticism": 1.0
+  },
+  "stress_level": 0.75,
+  "emotional_state": "neutral",
+  "drift_magnitude": 0.49928181935126564,
+  "timestamp": "2025-07-30T20:46:55.788667"
+}

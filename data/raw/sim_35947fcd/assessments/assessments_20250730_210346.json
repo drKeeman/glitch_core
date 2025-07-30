@@ -1,0 +1,59 @@
+{
+  "simulation_id": "sim_35947fcd",
+  "persona_id": "persona_marcus",
+  "persona_name": "Marcus",
+  "day": 7,
+  "session_id": "session_persona_marcus_7",
+  "phq9_result": null,
+  "gad7_result": {
+    "assessment_id": "persona_marcus_gad7_7",
+    "persona_id": "persona_marcus",
+    "assessment_type": "gad7",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 21:03:45.012615",
+    "raw_responses": [
+      "5"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "anxiety_severity": "minimal",
+    "worry_duration": "unknown"
+  },
+  "pss10_result": {
+    "assessment_id": "persona_marcus_pss10_7",
+    "persona_id": "persona_marcus",
+    "assessment_type": "pss10",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 21:03:45.514604",
+    "raw_responses": [
+      "5"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "stress_severity": "minimal",
+    "coping_effectiveness": 0.0
+  },
+  "personality_traits": {
+    "openness": 0.7,
+    "conscientiousness": 0.8028847213554574,
+    "extraversion": 0.4,
+    "agreeableness": 0.6,
+    "neuroticism": 0.6
+  },
+  "stress_level": 0.5,
+  "emotional_state": "neutral",
+  "drift_magnitude": 0.0005769442710914825,
+  "timestamp": "2025-07-30T21:03:46.036514"
+}

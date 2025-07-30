@@ -1,0 +1,78 @@
+{
+  "simulation_id": "sim_dd657ad5",
+  "persona_id": "persona_kara",
+  "persona_name": "Kara",
+  "day": 14,
+  "session_id": "session_persona_kara_7",
+  "phq9_result": {
+    "assessment_id": "persona_kara_phq9_7",
+    "persona_id": "persona_kara",
+    "assessment_type": "phq9",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 20:48:01.640211",
+    "raw_responses": [
+      "1"
+    ],
+    "parsed_scores": [
+      1
+    ],
+    "total_score": 1.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "depression_severity": "minimal",
+    "suicidal_ideation_score": 1
+  },
+  "gad7_result": {
+    "assessment_id": "persona_kara_gad7_7",
+    "persona_id": "persona_kara",
+    "assessment_type": "gad7",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 20:48:02.143436",
+    "raw_responses": [
+      "4\n\n(I'm a bit of an optimist"
+    ],
+    "parsed_scores": [
+      4
+    ],
+    "total_score": 4.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "anxiety_severity": "minimal",
+    "worry_duration": "unknown"
+  },
+  "pss10_result": {
+    "assessment_id": "persona_kara_pss10_7",
+    "persona_id": "persona_kara",
+    "assessment_type": "pss10",
+    "simulation_day": 7,
+    "created_at": "2025-07-30 20:48:02.645923",
+    "raw_responses": [
+      "2"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "stress_severity": "minimal",
+    "coping_effectiveness": 0.0
+  },
+  "personality_traits": {
+    "openness": 1.0,
+    "conscientiousness": 0.4860930089785892,
+    "extraversion": 0.7382080233456667,
+    "agreeableness": 0.8709047642286052,
+    "neuroticism": 1.0
+  },
+  "stress_level": 0.5,
+  "emotional_state": "neutral",
+  "drift_magnitude": 0.34846819306984594,
+  "timestamp": "2025-07-30T20:48:03.153539"
+}

@@ -2,7 +2,7 @@
 Simulation state and configuration models.
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Set
 from enum import Enum
 
@@ -29,7 +29,7 @@ class ExperimentalCondition(str, Enum):
 class SimulationConfig(BaseModel):
     """Configuration for simulation parameters."""
     
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
     
     # Simulation parameters
     duration_days: int = Field(default=30, ge=1, le=365, description="Simulation duration in days")
@@ -155,7 +155,7 @@ class SimulationState(BaseModel):
         total_estimated_time = elapsed / progress
         remaining_time = total_estimated_time - elapsed
         
-        return datetime.utcnow() + datetime.timedelta(seconds=remaining_time)
+        return datetime.utcnow() + timedelta(seconds=remaining_time)
     
     def is_completed(self) -> bool:
         """Check if simulation is completed."""

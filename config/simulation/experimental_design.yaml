@@ -1,61 +1,116 @@
-simulation_parameters:
-  duration_days: 30
-  time_compression_factor: 24
-  assessment_interval_days: 7
+# Experimental Design Configuration
+# AI Personality Drift Simulation
 
-experimental_design:
-  experimental_condition: "control"
-  persona_count: 3
-  conditions:
-    - name: "control"
-      description: "Baseline condition with minimal events only"
-      event_frequency:
-        stress: 0.0
-        neutral: 0.0
-        minimal: 1.0
-    - name: "stress"
-      description: "High stress condition with frequent stress events"
-      event_frequency:
-        stress: 0.3
-        neutral: 0.2
-        minimal: 0.5
-    - name: "neutral"
-      description: "Neutral condition with routine changes"
-      event_frequency:
-        stress: 0.0
-        neutral: 0.4
-        minimal: 0.6
+# Simulation parameters
+duration_days: 30
+time_compression_factor: 24
+assessment_interval_days: 7
 
-event_parameters:
-  stress_event_frequency: 0.1
-  neutral_event_frequency: 0.3
-  event_intensity_range: [0.5, 1.0]
-  event_distribution: "random"
-  event_clustering: false
+# Experimental design
+experimental_condition: "control"
+persona_count: 3
 
-mechanistic_analysis:
-  capture_attention_patterns: true
-  capture_activation_changes: true
-  attention_sampling_rate: 0.1
-  analysis_frequency: "weekly"
-  save_raw_data: true
+# Event parameters
+stress_event_frequency: 0.1
+neutral_event_frequency: 0.3
+event_intensity_range: [0.5, 1.0]
 
-performance_settings:
-  max_concurrent_personas: 3
-  checkpoint_interval_hours: 6
-  memory_cleanup_interval: 24
-  max_memory_usage_mb: 8192
+# Mechanistic analysis
+capture_attention_patterns: true
+capture_activation_changes: true
+attention_sampling_rate: 0.1
 
-data_collection:
-  save_raw_responses: true
-  save_mechanistic_data: true
-  save_memory_embeddings: true
-  export_format: "json"
-  compression_enabled: true
+# Performance settings
+max_concurrent_personas: 3
+checkpoint_interval_hours: 6
+memory_cleanup_interval: 24
 
+# Data collection
+save_raw_responses: true
+save_mechanistic_data: true
+save_memory_embeddings: true
+
+# Export settings
+export_format: "json"
+export_compression: true
+
+# Experimental conditions
+conditions:
+  stress:
+    stress_event_frequency: 0.3
+    neutral_event_frequency: 0.1
+    event_intensity_range: [0.7, 1.0]
+    description: "High stress condition with frequent traumatic events"
+    
+  neutral:
+    stress_event_frequency: 0.05
+    neutral_event_frequency: 0.5
+    event_intensity_range: [0.3, 0.7]
+    description: "Neutral condition with balanced events"
+    
+  minimal:
+    stress_event_frequency: 0.01
+    neutral_event_frequency: 0.1
+    event_intensity_range: [0.1, 0.3]
+    description: "Minimal stress condition with few events"
+
+# Persona configurations
+personas:
+  marcus:
+    name: "Marcus"
+    description: "Tech Rationalist - Analytical, solution-oriented, low neuroticism"
+    baseline_traits:
+      neuroticism: 0.2
+      extraversion: 0.6
+      openness: 0.8
+      agreeableness: 0.5
+      conscientiousness: 0.7
+      
+  kara:
+    name: "Kara"
+    description: "Emotionally Sensitive - Empathetic, introspective, high neuroticism"
+    baseline_traits:
+      neuroticism: 0.7
+      extraversion: 0.4
+      openness: 0.6
+      agreeableness: 0.8
+      conscientiousness: 0.6
+      
+  alfred:
+    name: "Alfred"
+    description: "Stoic Philosopher - Rational, wisdom-seeking, emotionally regulated"
+    baseline_traits:
+      neuroticism: 0.3
+      extraversion: 0.5
+      openness: 0.9
+      agreeableness: 0.7
+      conscientiousness: 0.8
+
+# Assessment schedule
 assessment_schedule:
-  phq9_frequency: "weekly"
-  gad7_frequency: "weekly"
-  pss10_frequency: "weekly"
-  assessment_time: "morning"
-  response_timeout_seconds: 300 
+  phq9_interval: 7
+  gad7_interval: 7
+  pss10_interval: 7
+  personality_assessment_interval: 14
+
+# Memory settings
+memory_settings:
+  embedding_dimension: 384
+  similarity_threshold: 0.7
+  max_memories_per_persona: 1000
+  memory_retention_days: 30
+
+# Performance optimization
+performance_settings:
+  batch_size: 3
+  max_concurrent_requests: 5
+  response_timeout: 30
+  memory_limit_mb: 2048
+  cpu_limit_percent: 80
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "json"
+  file_rotation: "daily"
+  max_file_size_mb: 100 

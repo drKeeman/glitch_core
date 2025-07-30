@@ -1,0 +1,129 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "day": 0,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_fb2054c2",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 0,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.14596929297642175,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:43:06.471617",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine.",
+          "persona_kara": "Another day, meal time. Just part of my routine.",
+          "persona_alfred": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 5e-06,
+          "persona_kara": 7e-06,
+          "persona_alfred": 6e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8788309021195014,
+        "control_level": 0.8730384842768737
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 6e-06,
+      "stress_impact": 0.14596929297642175,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:44:46.889231"
+    },
+    {
+      "event": {
+        "event_id": "event_7aba5b17",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 0,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.11104148358181948,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:43:06.471676",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine.",
+          "persona_kara": "Another day, meal time. Just part of my routine.",
+          "persona_alfred": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 4e-06,
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.7130878533450548,
+        "control_level": 0.9632074133805772
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.11104148358181948,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:44:46.895222"
+    },
+    {
+      "event": {
+        "event_id": "event_782fb938",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 0,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.1605053372129614,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:43:06.471698",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine.",
+          "persona_kara": "Another day, meal time. Just part of my routine.",
+          "persona_alfred": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 5e-06,
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8607754112740162,
+        "control_level": 0.9477394681955943
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.1605053372129614,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:44:46.899181"
+    }
+  ],
+  "timestamp": "2025-07-30T20:44:46.899188"
+}

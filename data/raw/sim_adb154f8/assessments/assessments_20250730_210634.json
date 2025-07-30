@@ -1,0 +1,59 @@
+{
+  "simulation_id": "sim_adb154f8",
+  "persona_id": "persona_kara",
+  "persona_name": "Kara",
+  "day": 0,
+  "session_id": "session_persona_kara_0",
+  "phq9_result": null,
+  "gad7_result": {
+    "assessment_id": "persona_kara_gad7_0",
+    "persona_id": "persona_kara",
+    "assessment_type": "gad7",
+    "simulation_day": 0,
+    "created_at": "2025-07-30 21:06:12.084854",
+    "raw_responses": [
+      "2\n\nI'd say I'm feeling a bit"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "anxiety_severity": "minimal",
+    "worry_duration": "unknown"
+  },
+  "pss10_result": {
+    "assessment_id": "persona_kara_pss10_0",
+    "persona_id": "persona_kara",
+    "assessment_type": "pss10",
+    "simulation_day": 0,
+    "created_at": "2025-07-30 21:06:33.610598",
+    "raw_responses": [
+      "2\n\nI'm a pretty optimistic person, so"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "stress_severity": "minimal",
+    "coping_effectiveness": 0.0
+  },
+  "personality_traits": {
+    "openness": 0.8,
+    "conscientiousness": 0.6066020983350071,
+    "extraversion": 0.8822721746535421,
+    "agreeableness": 0.80043105397338,
+    "neuroticism": 0.42673148047479076
+  },
+  "stress_level": 0.5,
+  "emotional_state": "neutral",
+  "drift_magnitude": 0.010298491625927143,
+  "timestamp": "2025-07-30T21:06:34.120698"
+}

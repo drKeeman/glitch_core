@@ -27,6 +27,7 @@ class HealthResponse(BaseModel):
 async def health_check() -> HealthResponse:
     """Health check endpoint."""
     logger.info("Health check requested")
+    logger.debug("Debug mode is enabled")
     
     return HealthResponse(
         status="healthy",

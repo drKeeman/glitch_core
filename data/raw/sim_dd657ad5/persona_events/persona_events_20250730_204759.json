@@ -1,0 +1,280 @@
+{
+  "simulation_id": "sim_dd657ad5",
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "day": 13,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_b394d595",
+        "event_type": "stress",
+        "category": "relationship",
+        "intensity": "high",
+        "title": "End of long-term relationship",
+        "description": "Your long-term relationship has ended unexpectedly.",
+        "context": "Your partner ends the relationship, leaving you devastated.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 60,
+        "stress_impact": 7.781211367006897,
+        "personality_impact": {
+          "neuroticism": 0.2661207832019535,
+          "extraversion": -0.11314349341093438,
+          "agreeableness": 0.022480579327829167
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:47:59.875299",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process.",
+          "persona_kara": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process.",
+          "persona_alfred": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process."
+        },
+        "response_times": {
+          "persona_marcus": 5e-06,
+          "persona_kara": 5e-06,
+          "persona_alfred": 4e-06
+        },
+        "trauma_level": 6.224969093605518,
+        "recovery_time_days": 2,
+        "triggers": [],
+        "depression_risk_increase": 0.4636885842669408,
+        "anxiety_risk_increase": 0.369061124616163,
+        "stress_risk_increase": 0.6796290668971228
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process.",
+      "response_time": 4e-06,
+      "stress_impact": 7.781211367006897,
+      "personality_impact": {
+        "neuroticism": 0.2661207832019535,
+        "extraversion": -0.11314349341093438,
+        "agreeableness": 0.022480579327829167
+      },
+      "timestamp": "2025-07-30T20:47:59.931404"
+    },
+    {
+      "event": {
+        "event_id": "event_c97071ac",
+        "event_type": "stress",
+        "category": "work",
+        "intensity": "high",
+        "title": "Lost job unexpectedly",
+        "description": "You have been laid off from your job due to company restructuring.",
+        "context": "Your company announces layoffs and you are among those affected.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 30,
+        "stress_impact": 8.152496156442847,
+        "personality_impact": {
+          "neuroticism": 0.31379101151704364,
+          "conscientiousness": -0.015604389916329314
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:47:59.875347",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I'm feeling overwhelmed by lost job unexpectedly. This is really difficult to process.",
+          "persona_kara": "I'm feeling overwhelmed by lost job unexpectedly. This is really difficult to process.",
+          "persona_alfred": "I'm feeling overwhelmed by lost job unexpectedly. This is really difficult to process."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 3e-06
+        },
+        "trauma_level": 6.521996925154278,
+        "recovery_time_days": 1,
+        "triggers": [],
+        "depression_risk_increase": 0.6178548736093195,
+        "anxiety_risk_increase": 0.3204353228499103,
+        "stress_risk_increase": 0.6321016801074987
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I'm feeling overwhelmed by lost job unexpectedly. This is really difficult to process.",
+      "response_time": 3e-06,
+      "stress_impact": 8.152496156442847,
+      "personality_impact": {
+        "neuroticism": 0.31379101151704364,
+        "conscientiousness": -0.015604389916329314
+      },
+      "timestamp": "2025-07-30T20:47:59.934746"
+    },
+    {
+      "event": {
+        "event_id": "event_b9723f01",
+        "event_type": "stress",
+        "category": "relationship",
+        "intensity": "high",
+        "title": "End of long-term relationship",
+        "description": "Your long-term relationship has ended unexpectedly.",
+        "context": "Your partner ends the relationship, leaving you devastated.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 51,
+        "stress_impact": 6.334520694033671,
+        "personality_impact": {
+          "neuroticism": 0.34817935451468074,
+          "extraversion": -0.10966117422790118,
+          "agreeableness": 0.04842418490077599
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:47:59.875369",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process.",
+          "persona_kara": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process.",
+          "persona_alfred": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 3e-06
+        },
+        "trauma_level": 5.067616555226937,
+        "recovery_time_days": 2,
+        "triggers": [],
+        "depression_risk_increase": 0.5222640928644413,
+        "anxiety_risk_increase": 0.3071169925672439,
+        "stress_risk_increase": 0.6880226006396528
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I'm feeling overwhelmed by end of long-term relationship. This is really difficult to process.",
+      "response_time": 3e-06,
+      "stress_impact": 6.334520694033671,
+      "personality_impact": {
+        "neuroticism": 0.34817935451468074,
+        "extraversion": -0.10966117422790118,
+        "agreeableness": 0.04842418490077599
+      },
+      "timestamp": "2025-07-30T20:47:59.939772"
+    },
+    {
+      "event": {
+        "event_id": "event_69e8d217",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.19312259446011892,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:47:59.875391",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine.",
+          "persona_kara": "Another day, meal time. Just part of my routine.",
+          "persona_alfred": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 4e-06,
+          "persona_alfred": 4e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8437163771856524,
+        "control_level": 0.9099930840410169
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 4e-06,
+      "stress_impact": 0.19312259446011892,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:47:59.942802"
+    },
+    {
+      "event": {
+        "event_id": "event_3912ee46",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.15559234920037857,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:47:59.875408",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine.",
+          "persona_kara": "Another day, daily routine activity. Just part of my routine.",
+          "persona_alfred": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.830553139984018,
+        "control_level": 0.9791198229671724
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.15559234920037857,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:47:59.946873"
+    },
+    {
+      "event": {
+        "event_id": "event_c7cb5209",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily commute",
+        "description": "You commute to or from work as usual.",
+        "context": "Your regular commute to or from work.",
+        "simulation_day": 13,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.2998643649746866,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:47:59.875422",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily commute. Just part of my routine.",
+          "persona_kara": "Another day, daily commute. Just part of my routine.",
+          "persona_alfred": "Another day, daily commute. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 4e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.7486590242730015,
+        "control_level": 0.8837069668475354
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, daily commute. Just part of my routine.",
+      "response_time": 4e-06,
+      "stress_impact": 0.2998643649746866,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:47:59.950263"
+    }
+  ],
+  "timestamp": "2025-07-30T20:47:59.950271"
+}

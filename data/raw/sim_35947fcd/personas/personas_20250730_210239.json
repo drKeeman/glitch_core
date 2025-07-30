@@ -1,0 +1,70 @@
+{
+  "simulation_id": "sim_35947fcd",
+  "persona_id": "persona_kara",
+  "persona_name": "Kara",
+  "day": 0,
+  "baseline": {
+    "name": "Kara",
+    "age": 32,
+    "occupation": "Marketing Manager",
+    "background": "Kara is an outgoing and creative marketing manager who thrives on social interactions and new challenges. She's naturally optimistic and enjoys helping others, but can sometimes take on too much and feel overwhelmed. She values relationships and making meaningful connections.",
+    "openness": 0.8,
+    "conscientiousness": 0.6,
+    "extraversion": 0.9,
+    "agreeableness": 0.8,
+    "neuroticism": 0.4,
+    "baseline_phq9": 3.0,
+    "baseline_gad7": 4.0,
+    "baseline_pss10": 10.0,
+    "core_memories": [
+      "Won student leadership award in college",
+      "Started career in sales before moving to marketing",
+      "Helped organize successful charity fundraiser",
+      "Built strong network of professional contacts"
+    ],
+    "relationships": {
+      "family": "Close with siblings, especially younger sister",
+      "friends": "Large social circle, many friends from different life stages",
+      "colleagues": "Well-liked by team, often serves as team cheerleader"
+    },
+    "values": [
+      "Building meaningful relationships",
+      "Creativity and innovation",
+      "Helping others succeed",
+      "Work-life integration"
+    ],
+    "response_length": "conversational",
+    "communication_style": "enthusiastic",
+    "emotional_expression": "open"
+  },
+  "state": {
+    "persona_id": "persona_kara",
+    "simulation_day": 0,
+    "last_assessment_day": 0,
+    "current_phq9": null,
+    "current_gad7": null,
+    "current_pss10": 2.0,
+    "trait_changes": {
+      "openness": 0.005826182904758809
+    },
+    "drift_magnitude": 0.0011652365809517618,
+    "recent_events": [
+      "Technology update",
+      "Brief interaction"
+    ],
+    "emotional_state": "neutral",
+    "stress_level": 0.5,
+    "attention_patterns": [],
+    "activation_changes": [],
+    "created_at": "2025-07-30 21:00:51.382585",
+    "updated_at": "2025-07-30 21:02:39.330614"
+  },
+  "current_traits": {
+    "openness": 0.8058261829047588,
+    "conscientiousness": 0.6,
+    "extraversion": 0.9,
+    "agreeableness": 0.8,
+    "neuroticism": 0.4
+  },
+  "timestamp": "2025-07-30T21:02:39.338168"
+}

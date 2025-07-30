@@ -1,61 +1,120 @@
-.PHONY: help install test lint format docker-build docker-up clean start
+# Development targets
+dev: ## Start development environment
+	docker-compose up
+	@echo "🚀 Development environment started"
+	@echo "📊 API: http://localhost:8000"
+	@echo "🔍 Redis: http://localhost:6379"
+	@echo "🗄️  Qdrant: http://localhost:6333"
+	@echo "🤖 Ollama: http://localhost:11434"
 
-help: ## Show this help message
-	@echo 'Usage: make [target]'
-	@echo ''
-	@echo 'Targets:'
-	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
-
-install: ## Install dependencies
-	uv sync --all-extras
-
-install-dev: ## Install with development dependencies
-	uv sync --all-extras --dev
-
-test: ## Run tests
-	uv run pytest -v
-
-test-cov: ## Run tests with coverage
-	uv run pytest --cov=src --cov-report=html --cov-report=term
-
-test-phase3: ## Run Phase 3 persona test
-	uv run python scripts/run_persona_test.py
-
-run-persona-test: ## Run persona test (alias for test-phase3)
-	uv run python scripts/run_persona_test.py
-
-lint: ## Run linting
-	uv run ruff check src tests
-	uv run mypy src
-
-format: ## Format code
-	uv run black src tests
-	uv run isort src tests
-	uv run ruff --fix src tests
-
-docker-build: ## Build Docker images
-	docker-compose build
-
-docker-up: ## Start all services
-	docker-compose up -d
-
-docker-down: ## Stop all services
-	docker-compose down
-
-docker-logs: ## View logs
+dev-logs: ## View development logs
 	docker-compose logs -f
 
-start: ## Start all services (with live console)
-	docker-compose up
+dev-stop: ## Stop development environment
+	docker-compose down
 
-clean: ## Clean up generated files
-	find . -type f -name "*.pyc" -delete
-	find . -type d -name "__pycache__" -delete
-	find . -type d -name "*.egg-info" -exec rm -rf {} +
-	rm -rf .coverage htmlcov/ .pytest_cache/
+docker-down: ## Stop all Docker services
+	docker-compose down
 
-dev: ## Start development environment
-	docker-compose up -d redis qdrant
-	uv run uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+build: ## Build Docker images
+	@echo "🔨 Building Docker images..."
+	docker-compose build
+	@echo "✅ Docker images built successfully"
 
-all: install-dev lint test docker-build ## Run all quality checks and build 
+build-no-cache: ## Build Docker images without cache
+	@echo "🔨 Building Docker images (no cache)..."
+	docker-compose build --no-cache
+	@echo "✅ Docker images built successfully"
+
+build-app: ## Build only the app Docker image
+	@echo "🔨 Building app Docker image..."
+	docker-compose build app
+	@echo "✅ App Docker image built successfully"
+
+# Quick Setup target
+setup: ## Complete setup with LLM (recommended)
+	@echo "🚀 Complete Glitch Core Setup"
+	./scripts/quick_setup.sh
+
+setup-with-build: ## Complete setup with build and LLM
+	@echo "🚀 Complete Glitch Core Setup with Build"
+	make build
+	./scripts/quick_setup.sh
+
+# LLM Setup targets
+llm-setup: ## Setup Ollama and pull required model
+	@echo "🤖 Setting up LLM (Ollama)..."
+	docker-compose up -d ollama
+	@echo "⏳ Waiting for Ollama to start..."
+	@sleep 10
+	python scripts/setup_ollama.py
+
+llm-test: ## Test LLM connection and generation
+	@echo "🧪 Testing LLM connection..."
+	python scripts/test_llm.py
+
+llm-logs: ## View Ollama logs
+	docker-compose logs -f ollama
+
+llm-pull: ## Pull LLM model manually
+	@echo "📥 Pulling LLM model..."
+	docker exec -it glitch-core-ollama ollama pull llama3.1:8b
+
+llm-list: ## List available models
+	@echo "📋 Available models:"
+	docker exec -it glitch-core-ollama ollama list
+
+# Testing targets
+test: ## Run all tests
+	pytest tests/ -v
+
+test-unit: ## Run unit tests only
+	pytest tests/unit/ -v
+
+test-integration: ## Run integration tests only
+	pytest tests/integration/ -v
+
+# Code quality targets
+lint: ## Run linting
+	ruff check src/
+	black --check src/
+	isort --check-only src/
+
+format: ## Format code
+	black src/
+	isort src/
+
+# Database targets
+db-reset: ## Reset all databases
+	docker-compose down -v
+	docker-compose up -d
+
+# Simulation targets
+sim-run: ## Run simulation with live LLM
+	@echo "🎯 Running simulation with live LLM..."
+	python scripts/run_simulation.py
+
+sim-test: ## Test simulation setup
+	@echo "🧪 Testing simulation setup..."
+	python scripts/test_simulation.py
+
+# Documentation targets
+docs: ## Generate documentation
+	@echo "📚 Generating documentation..."
+	# Add documentation generation commands here
+
+# Cleanup targets
+clean: ## Clean up all containers and volumes
+	docker-compose down -v --remove-orphans
+	docker system prune -f
+
+clean-models: ## Clean up model cache
+	docker exec -it glitch-core-ollama ollama rm llama3.1:8b || true
+
+# Help target
+help: ## Show this help message
+	@echo "Available targets:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+# Default target
+.DEFAULT_GOAL := help 

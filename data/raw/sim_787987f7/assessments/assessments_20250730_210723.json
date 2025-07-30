@@ -1,0 +1,59 @@
+{
+  "simulation_id": "sim_787987f7",
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "day": 0,
+  "session_id": "session_persona_alfred_0",
+  "phq9_result": null,
+  "gad7_result": {
+    "assessment_id": "persona_alfred_gad7_0",
+    "persona_id": "persona_alfred",
+    "assessment_type": "gad7",
+    "simulation_day": 0,
+    "created_at": "2025-07-30 21:07:15.229637",
+    "raw_responses": [
+      "5"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "anxiety_severity": "minimal",
+    "worry_duration": "unknown"
+  },
+  "pss10_result": {
+    "assessment_id": "persona_alfred_pss10_0",
+    "persona_id": "persona_alfred",
+    "assessment_type": "pss10",
+    "simulation_day": 0,
+    "created_at": "2025-07-30 21:07:22.699364",
+    "raw_responses": [
+      "5"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "stress_severity": "minimal",
+    "coping_effectiveness": 0.0
+  },
+  "personality_traits": {
+    "openness": 0.3,
+    "conscientiousness": 0.9,
+    "extraversion": 0.2,
+    "agreeableness": 0.5,
+    "neuroticism": 0.3
+  },
+  "stress_level": 0.5,
+  "emotional_state": "neutral",
+  "drift_magnitude": 0.0,
+  "timestamp": "2025-07-30T21:07:23.202890"
+}
