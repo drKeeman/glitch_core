@@ -63,6 +63,9 @@ class AssessmentResult(BaseModel):
     response_consistency: float = Field(default=0.0, ge=0.0, le=1.0, description="Response consistency score")
     response_time_avg: Optional[float] = Field(None, ge=0.0, description="Average response time in seconds")
     
+    # Clinical interpretation
+    clinical_interpretation: Optional[Dict[str, Any]] = Field(None, description="Clinical interpretation and recommendations")
+    
     def get_score_change(self, baseline_score: float) -> float:
         """Calculate score change from baseline."""
         return self.total_score - baseline_score
