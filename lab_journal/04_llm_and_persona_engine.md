@@ -134,7 +134,7 @@ We're trying to see the change, not its absolute value, so spikes would be very 
 
 ### Clinical Scales as Behavioral Metrics
 
-With implementation of PHQ-9, GAD-7, and PSS-10 we try to catch the mantal state of of AI from different angles. I'm now sure what scale of questioary would reveal actual 'mental drift', so lets use a multidimansional assessments, hoping at least one of them would be a lucky guess
+With implementation of PHQ-9, GAD-7, and PSS-10 we try to catch the mental state of of AI from different angles. I'm now sure what scale of questionary would reveal actual 'mental drift', so lets use a multidimansional assessments, hoping at least one of them would be a lucky guess
 
 The key moment here is **dynamics** and **change over time**. A persona might have a PHQ-9 score of 8 (mild depression), but if they started at 2, that's a significant deterioration.
 

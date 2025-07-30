@@ -67,4 +67,4 @@ This isn't just about understanding AI personality drift. It's about:
 - **Interpretability**: Developing tools to peer inside AI decision-making
 - **Responsible AI**: Creating frameworks for monitoring AI behavior
 
-So, lets baging implementation, shall we
+So, lets baging implementation, shall we?
