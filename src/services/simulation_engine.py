@@ -134,7 +134,14 @@ class SimulationEngine:
     
     async def _create_personas_for_condition(self, condition: ExperimentalCondition) -> None:
         """Create personas for the experimental condition."""
-        persona_names = ["marcus", "kara", "alfred"]
+        # Dynamically load persona names from config directory
+        persona_names = config_manager.list_persona_configs()
+        
+        if not persona_names:
+            logger.error("No persona configs found in config directory")
+            return
+        
+        logger.info(f"Found {len(persona_names)} persona configs: {persona_names}")
         
         for persona_name in persona_names:
             persona = await self.persona_manager.create_persona_from_config(persona_name)
@@ -158,6 +165,15 @@ class SimulationEngine:
                 logger.error(f"Failed to create persona: {persona_name}")
         
         logger.info(f"Created {len(self.active_personas)} personas for condition: {condition.value}")
+    
+    def validate_persona_configs(self, persona_names: List[str]) -> bool:
+        """Validate that all required persona configs exist."""
+        available_configs = config_manager.list_persona_configs()
+        missing_configs = [name for name in persona_names if name not in available_configs]
+        if missing_configs:
+            logger.error(f"Missing persona configs: {missing_configs}")
+            return False
+        return True
     
     async def run_simulation(self) -> bool:
         """Run the complete simulation."""

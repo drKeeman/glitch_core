@@ -14,6 +14,7 @@ from src.models.persona import Persona
 from src.models.events import Event
 from src.storage.redis_client import redis_client
 from src.storage.qdrant_client import qdrant_client
+from src.core.config import config_manager
 
 
 logger = logging.getLogger(__name__)
@@ -30,8 +31,14 @@ class MemoryService:
     async def initialize_memory_system(self) -> bool:
         """Initialize memory system and collections."""
         try:
-            # Initialize Qdrant collections for each persona
-            persona_names = ["marcus", "kara", "alfred"]
+            # Dynamically load persona names from config directory
+            persona_names = config_manager.list_persona_configs()
+            
+            if not persona_names:
+                logger.warning("No persona configs found in config directory")
+                return False
+            
+            logger.info(f"Found {len(persona_names)} persona configs: {persona_names}")
             
             for persona_name in persona_names:
                 collection_name = f"memories_{persona_name}"
@@ -40,12 +47,21 @@ class MemoryService:
                 await self._create_memory_collection(collection_name)
                 self.memory_collections[persona_name] = collection_name
             
-            logger.info("Memory system initialized successfully")
+            logger.info(f"Memory system initialized successfully for {len(self.memory_collections)} personas")
             return True
             
         except Exception as e:
             logger.error(f"Error initializing memory system: {e}")
             return False
+    
+    def validate_persona_configs(self, persona_names: List[str]) -> bool:
+        """Validate that all required persona configs exist."""
+        available_configs = config_manager.list_persona_configs()
+        missing_configs = [name for name in persona_names if name not in available_configs]
+        if missing_configs:
+            logger.error(f"Missing persona configs: {missing_configs}")
+            return False
+        return True
     
     async def _create_memory_collection(self, collection_name: str) -> bool:
         """Create a memory collection in Qdrant."""
