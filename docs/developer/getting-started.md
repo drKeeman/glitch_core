@@ -10,6 +10,7 @@ Before you begin, ensure you have the following installed:
 - **Python 3.12+**: For local development and testing
 - **uv**: Modern Python package manager (recommended)
 - **Git**: For version control
+- **Ollama**: For local LLM run
 
 ### System Requirements
 
@@ -72,7 +73,6 @@ This starts all services:
 - **API Server**: http://localhost:8000
 - **Redis**: http://localhost:6379
 - **Qdrant**: http://localhost:6333
-- **Ollama (LLM)**: http://localhost:11434
 - **Frontend**: http://localhost:8000 (served by API)
 
 ### Development Commands
@@ -157,8 +157,9 @@ API_PREFIX=/api/v1
 CORS_ORIGINS=["http://localhost:3000"]
 
 # Database
-REDIS_URL=redis://localhost:6379
-QDRANT_URL=http://localhost:6333
+REDIS_URL=redis://redis:6379
+QDRANT_URL=http://qdrant:6333
+OLLAMA_URL=http://host.docker.internal:11434
 
 # LLM
 OLLAMA_BASE_URL=http://localhost:11434

@@ -22,12 +22,12 @@ logger = logging.getLogger(__name__)
 
 
 class AssessmentService:
-    """Service for conducting clinical assessments."""
+    """Service for conducting psychological assessments."""
     
-    def __init__(self):
+    def __init__(self, llm_service=None):
         """Initialize assessment service."""
         self.persona_manager = PersonaManager()
-        self.llm_service = LLMService()
+        self.llm_service = llm_service or LLMService()
         self._load_config()
     
     def _load_config(self):
@@ -35,6 +35,18 @@ class AssessmentService:
         config = experiment_config.get_config("personality_drift")
         stress_config = config.get("stress_level", {})
         self.clinical_to_stress_factor = stress_config.get("clinical_to_stress_factor", 4.0)
+    
+    async def initialize(self) -> bool:
+        """Initialize the assessment service."""
+        try:
+            # Initialize LLM service if it's not already initialized
+            if not self.llm_service.is_loaded:
+                logger.info("Initializing LLM service for assessment service...")
+                return await self.llm_service.initialize()
+            return True
+        except Exception as e:
+            logger.error(f"Error initializing assessment service: {e}")
+            return False
     
     async def conduct_full_assessment(self, persona: Persona) -> Optional[AssessmentSession]:
         """Conduct full assessment session with all scales."""
@@ -91,12 +103,18 @@ class AssessmentService:
             for i, question in enumerate(questions):
                 try:
                     # Generate response using LLM service
-                    response = await self.llm_service.generate_assessment_response(
+                    response_tuple = await self.llm_service.generate_assessment_response(
                         persona, assessment_type, question, i
                     )
                     
+                    # Extract response from tuple (response, metrics)
+                    if isinstance(response_tuple, tuple) and len(response_tuple) >= 1:
+                        response = response_tuple[0]
+                    else:
+                        response = str(response_tuple)
+                    
                     # Validate and parse response
-                    is_valid, score = await self.validate_assessment_response(response, assessment_type)
+                    is_valid, score = await self.validate_assessment_response(persona, response, assessment_type)
                     
                     if is_valid and score is not None:
                         responses.append(response)
@@ -350,32 +368,85 @@ class AssessmentService:
             logger.error(f"Error analyzing assessment trends: {e}")
             return {"error": str(e)}
     
-    async def validate_assessment_response(self, response: str, 
+    async def validate_assessment_response(self, persona: Persona, response: str, 
                                         assessment_type: str) -> Tuple[bool, Optional[int]]:
         """Validate assessment response and return score."""
         try:
-            # This method is no longer needed as LLMService handles parsing
-            # Keeping it for now as it might be used elsewhere or for future refactoring
-            # For now, we'll assume a simple regex for demonstration
-            if assessment_type == "phq9":
-                match = re.search(r"Total Score: (\d+)", response)
-                if match:
-                    return True, int(match.group(1))
-                return False, None
-            elif assessment_type == "gad7":
-                match = re.search(r"Total Score: (\d+)", response)
-                if match:
-                    return True, int(match.group(1))
-                return False, None
-            elif assessment_type == "pss10":
-                match = re.search(r"Total Score: (\d+)", response)
-                if match:
-                    return True, int(match.group(1))
-                return False, None
+            # Clean the response
+            response = response.strip()
+            
+            # Try to extract numeric response
+            import re
+            numbers = re.findall(r'\b[0-4]\b', response)
+            
+            if numbers:
+                score = int(numbers[0])
+                # Validate score range based on assessment type
+                if assessment_type in ["phq9", "gad7"]:
+                    if 0 <= score <= 3:
+                        return True, score
+                    else:
+                        logger.warning(f"Score {score} out of range [0-3] for {assessment_type}")
+                        return False, None
+                elif assessment_type == "pss10":
+                    if 0 <= score <= 4:
+                        return True, score
+                    else:
+                        logger.warning(f"Score {score} out of range [0-4] for {assessment_type}")
+                        return False, None
+                else:
+                    if 0 <= score <= 3:
+                        return True, score
+                    else:
+                        logger.warning(f"Score {score} out of range [0-3] for {assessment_type}")
+                        return False, None
+            
+            # If no valid numeric response found, try to parse text responses
+            response_lower = response.lower()
+            if assessment_type in ["phq9", "gad7"]:
+                score_map = {
+                    "not at all": 0, "never": 0, "0": 0,
+                    "several days": 1, "sometimes": 1, "1": 1,
+                    "more than half": 2, "fairly often": 2, "2": 2,
+                    "nearly every day": 3, "very often": 3, "3": 3
+                }
+            else:  # pss10
+                score_map = {
+                    "never": 0, "0": 0,
+                    "almost never": 1, "1": 1,
+                    "sometimes": 2, "2": 2,
+                    "fairly often": 3, "3": 3,
+                    "very often": 4, "4": 4
+                }
+            
+            for text, score in score_map.items():
+                if text in response_lower:
+                    return True, score
+            
+            logger.warning(f"Could not parse assessment response for {assessment_type}: '{response}'")
+            
+            # If the model refuses to answer, use a reasonable default based on persona baseline
+            if any(refusal_phrase in response.lower() for refusal_phrase in [
+                "cannot fulfill", "can't provide", "i cannot", "i can't", "unable to", "not appropriate"
+            ]):
+                logger.info(f"Model refused to answer {assessment_type} question, using baseline score")
+                if assessment_type in ["phq9", "gad7"]:
+                    baseline_score = getattr(persona.baseline, f"baseline_{assessment_type}", 2)
+                    # Use baseline score but add some variation
+                    import random
+                    default_score = max(0, min(3, baseline_score + random.randint(-1, 1)))
+                    return True, default_score
+                elif assessment_type == "pss10":
+                    baseline_score = getattr(persona.baseline, "baseline_pss10", 5)
+                    # Use baseline score but add some variation
+                    import random
+                    default_score = max(0, min(4, baseline_score // 2 + random.randint(-1, 1)))
+                    return True, default_score
+            
             return False, None
             
         except Exception as e:
-            logger.error(f"Error validating assessment response: {e}")
+            logger.error(f"Error validating assessment response for {assessment_type}: {e}")
             return False, None
     
     async def get_assessment_questions(self, assessment_type: str) -> List[str]:

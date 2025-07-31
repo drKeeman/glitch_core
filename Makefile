@@ -7,6 +7,27 @@ dev: ## Start development environment
 	@echo "🗄️  Qdrant: http://localhost:6333"
 	@echo "🤖 Ollama: http://localhost:11434"
 
+start: ## Start all services (detached)
+	docker-compose up -d
+	@echo "🚀 Services started in background"
+	@echo "📊 API: http://localhost:8000"
+	@echo "🔍 Redis: http://localhost:6379"
+	@echo "🗄️  Qdrant: http://localhost:6333"
+	@echo "🤖 Ollama: http://localhost:11434 (with GPU acceleration)"
+
+start-gpu: ## Start services with GPU acceleration (M1 Max optimized)
+	@echo "🚀 Starting services with GPU acceleration for M1 Max..."
+	docker-compose up -d
+	@echo "⏳ Waiting for Ollama to initialize with GPU..."
+	@sleep 30
+	@echo "📊 Checking GPU acceleration status..."
+	docker exec -it glitch-core-ollama ollama list
+	@echo "✅ Services started with GPU acceleration!"
+	@echo "📊 API: http://localhost:8000"
+	@echo "🔍 Redis: http://localhost:6379"
+	@echo "🗄️  Qdrant: http://localhost:6333"
+	@echo "🤖 Ollama: http://localhost:11434 (GPU accelerated)"
+
 dev-logs: ## View development logs
 	docker-compose logs -f
 
@@ -118,6 +139,14 @@ docs: ## Generate documentation
 clean: ## Clean up all containers and volumes
 	docker-compose down -v --remove-orphans
 	docker system prune -f
+
+clean-sim-data: ## Clean up all simulation files and folders from data directory
+	@echo "🧹 Cleaning up simulation data..."
+	@rm -rf data/exports/simulation_*.json
+	@rm -rf data/results/sim_*
+	@rm -rf data/raw/sim_*
+	@rm -rf data/processed/sim_*
+	@echo "✅ Simulation data cleaned up successfully"
 
 clean-models: ## Clean up model cache
 	docker exec -it glitch-core-ollama ollama rm llama3.1:8b || true

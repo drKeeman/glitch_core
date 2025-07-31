@@ -480,8 +480,8 @@ class SimulationRequest(BaseModel):
     
     @validator('duration_days')
     def validate_duration(cls, v):
-        if v is not None and (v < 1 or v > 365):
-            raise ValueError('Duration must be between 1 and 365 days')
+        if v is not None and (v < 1 or v > 1825):
+            raise ValueError('Duration must be between 1 and 1825 days')
         return v
 ```
 
@@ -545,7 +545,7 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
       - QDRANT_URL=http://qdrant:6333
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_URL=http://host.docker.internal:11434  # Use native Ollama, otherwise docker would kill performance
     depends_on:
       - redis
       - qdrant

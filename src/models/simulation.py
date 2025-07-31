@@ -66,7 +66,7 @@ class SimulationConfig(BaseModel):
             self.event_intensity_range = tuple(default_range)
     
     # Simulation parameters (defaults, will be overridden by config)
-    duration_days: int = Field(default=30, ge=1, le=365, description="Simulation duration in days")
+    duration_days: int = Field(default=30, ge=1, le=1825, description="Simulation duration in days")
     time_compression_factor: int = Field(default=24, ge=1, le=168, description="Time compression factor (hours per day)")
     assessment_interval_days: int = Field(default=7, ge=1, le=30, description="Days between assessments")
     

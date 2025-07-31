@@ -149,7 +149,7 @@ class StressEvent(Event):
     
     # Stress-specific fields
     trauma_level: float = Field(default=0.0, ge=0.0, le=10.0, description="Trauma level (0-10)")
-    recovery_time_days: int = Field(default=7, ge=1, le=365, description="Expected recovery time in days")
+    recovery_time_days: int = Field(default=7, ge=1, le=1825, description="Expected recovery time in days")
     triggers: List[str] = Field(default_factory=list, description="Potential triggers for this event")
     
     # Clinical impact

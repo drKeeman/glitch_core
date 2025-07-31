@@ -67,15 +67,19 @@ class WebSocketManager:
     
     async def broadcast(self, message: WebSocketMessage):
         """Broadcast message to all connected WebSockets."""
+        logger.info(f"Broadcasting message type: {message.type} to {len(self.active_connections)} connections")
         if not self.active_connections:
+            logger.warning("No active WebSocket connections to broadcast to")
             return
         
         message_json = message.model_dump_json()
+        logger.debug(f"Broadcasting message: {message_json}")
         disconnected = []
         
         for connection in self.active_connections:
             try:
                 await connection.send_text(message_json)
+                logger.debug(f"Message sent to connection")
             except Exception as e:
                 logger.error(f"Error broadcasting to WebSocket: {e}")
                 disconnected.append(connection)
@@ -83,9 +87,12 @@ class WebSocketManager:
         # Remove disconnected connections
         for connection in disconnected:
             self.disconnect(connection)
+        
+        logger.info(f"Broadcast completed. {len(self.active_connections)} connections remaining")
     
     async def broadcast_simulation_status(self, status_data: Dict[str, Any]):
         """Broadcast simulation status update."""
+        logger.info(f"Broadcasting simulation status: {status_data}")
         message = WebSocketMessage(
             type=WebSocketMessageType.SIMULATION_STATUS,
             data=status_data,
@@ -95,6 +102,7 @@ class WebSocketManager:
     
     async def broadcast_progress_update(self, progress_data: Dict[str, Any]):
         """Broadcast progress update."""
+        logger.info(f"Broadcasting progress update: {progress_data}")
         message = WebSocketMessage(
             type=WebSocketMessageType.PROGRESS_UPDATE,
             data=progress_data,
@@ -149,30 +157,43 @@ class WebSocketManager:
 
 
 # Global WebSocket manager instance
-from src.api.routes.simulation import simulation_engine
-websocket_manager = WebSocketManager(simulation_engine)
+websocket_manager = WebSocketManager()
+
+# Function to connect simulation engine to WebSocket manager
+def connect_simulation_engine(engine):
+    """Connect simulation engine to WebSocket manager."""
+    websocket_manager.simulation_engine = engine
+    if engine:
+        engine.set_websocket_manager(websocket_manager)
+        logger.info("Simulation engine connected to WebSocket manager")
 
 
 @router.websocket("/ws/simulation")
 async def websocket_simulation_endpoint(websocket: WebSocket):
     """WebSocket endpoint for simulation monitoring."""
+    logger.info("WebSocket connection request received")
     await websocket_manager.connect(websocket)
+    logger.info(f"WebSocket connected. Total connections: {len(websocket_manager.active_connections)}")
     
     try:
         # Send initial status
-        status_data = await websocket_manager.simulation_engine.get_simulation_status()
-        logger.info(f"Initial status data: {status_data}")
-        if status_data:
-            await websocket_manager.send_personal_message(
-                WebSocketMessage(
-                    type=WebSocketMessageType.SIMULATION_STATUS,
-                    data=status_data,
-                    timestamp=datetime.now(timezone.utc)
-                ).model_dump_json(),
-                websocket
-            )
+        if websocket_manager.simulation_engine:
+            status_data = await websocket_manager.simulation_engine.get_simulation_status()
+            logger.info(f"Initial status data: {status_data}")
+            if status_data:
+                await websocket_manager.send_personal_message(
+                    WebSocketMessage(
+                        type=WebSocketMessageType.SIMULATION_STATUS,
+                        data=status_data,
+                        timestamp=datetime.now(timezone.utc)
+                    ).model_dump_json(),
+                    websocket
+                )
+                logger.info("Initial status message sent successfully")
+            else:
+                logger.info("No simulation status available for initial message")
         else:
-            logger.info("No simulation status available for initial message")
+            logger.warning("No simulation engine available for initial status")
         
         # Keep connection alive and handle incoming messages
         while True:
@@ -180,18 +201,23 @@ async def websocket_simulation_endpoint(websocket: WebSocket):
                 # Wait for messages from client
                 data = await websocket.receive_text()
                 message_data = json.loads(data)
+                logger.info(f"Received WebSocket message: {message_data}")
                 
                 # Handle different message types
                 if message_data.get("type") == "request_status":
-                    status = await websocket_manager.simulation_engine.get_simulation_status()
-                    await websocket_manager.send_personal_message(
-                        WebSocketMessage(
-                            type=WebSocketMessageType.SIMULATION_STATUS,
-                            data=status or {},
-                            timestamp=datetime.now(timezone.utc)
-                        ).model_dump_json(),
-                        websocket
-                    )
+                    if websocket_manager.simulation_engine:
+                        status = await websocket_manager.simulation_engine.get_simulation_status()
+                        await websocket_manager.send_personal_message(
+                            WebSocketMessage(
+                                type=WebSocketMessageType.SIMULATION_STATUS,
+                                data=status or {},
+                                timestamp=datetime.now(timezone.utc)
+                            ).model_dump_json(),
+                            websocket
+                        )
+                        logger.info("Status response sent")
+                    else:
+                        logger.warning("No simulation engine available for status request")
                 
                 elif message_data.get("type") == "request_progress":
                     # Send mock progress data
@@ -201,7 +227,8 @@ async def websocket_simulation_endpoint(websocket: WebSocket):
                         "progress_percentage": 16.67,
                         "active_personas": 9,
                         "events_processed": 25,
-                        "assessments_completed": 15
+                        "assessments_completed": 15,
+                        "average_response_time": 2.5
                     }
                     await websocket_manager.send_personal_message(
                         WebSocketMessage(
@@ -211,8 +238,10 @@ async def websocket_simulation_endpoint(websocket: WebSocket):
                         ).model_dump_json(),
                         websocket
                     )
+                    logger.info("Progress response sent")
                 
             except WebSocketDisconnect:
+                logger.info("WebSocket disconnected by client")
                 break
             except Exception as e:
                 logger.error(f"Error handling WebSocket message: {e}")
@@ -227,8 +256,11 @@ async def websocket_simulation_endpoint(websocket: WebSocket):
     
     except WebSocketDisconnect:
         logger.info("WebSocket disconnected")
+    except Exception as e:
+        logger.error(f"WebSocket error: {e}")
     finally:
         websocket_manager.disconnect(websocket)
+        logger.info(f"WebSocket disconnected. Remaining connections: {len(websocket_manager.active_connections)}")
 
 
 @router.websocket("/ws/monitoring")
