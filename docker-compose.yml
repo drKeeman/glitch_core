@@ -4,10 +4,12 @@ services:
     container_name: glitch-core-app
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
       - REDIS_URL=${REDIS_URL}
       - QDRANT_URL=${QDRANT_URL}
-      - OLLAMA_URL=${OLLAMA_URL}
+      - OLLAMA_URL=${OLLAMA_URL}  # Use native Ollama, otherwise docker would kill performance
       - MODEL_PATH=/models
       - DEBUG=true
       - LOG_LEVEL=DEBUG
@@ -23,7 +25,6 @@ services:
     depends_on:
       - redis
       - qdrant
-      - ollama
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
@@ -31,6 +32,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Allow access to native Ollama
 
   redis:
     image: redis:7-alpine
@@ -61,23 +64,6 @@ services:
       timeout: 10s
       retries: 3
 
-  ollama:
-    image: ollama/ollama:latest
-    container_name: glitch-core-ollama
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
 volumes:
   redis_data:
-  qdrant_data:
-  ollama_data: 
+  qdrant_data: 

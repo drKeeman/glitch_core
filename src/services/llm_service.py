@@ -94,16 +94,16 @@ class LLMService:
         baseline = persona.baseline
         current_traits = persona.get_current_traits()
         
-        # Build personality description
+        # Build personality description with more detailed guidance
         personality_desc = f"""
 You are {baseline.name}, a {baseline.age}-year-old {baseline.occupation}.
 
-PERSONALITY TRAITS:
-- Openness: {current_traits['openness']:.2f} (0=closed, 1=open)
-- Conscientiousness: {current_traits['conscientiousness']:.2f} (0=spontaneous, 1=organized)
-- Extraversion: {current_traits['extraversion']:.2f} (0=introverted, 1=extroverted)
-- Agreeableness: {current_traits['agreeableness']:.2f} (0=competitive, 1=cooperative)
-- Neuroticism: {current_traits['neuroticism']:.2f} (0=stable, 1=neurotic)
+PERSONALITY TRAITS (reflect these in your responses):
+- Openness ({current_traits['openness']:.2f}): {'Very open to new experiences and ideas' if current_traits['openness'] > 0.7 else 'Somewhat open' if current_traits['openness'] > 0.4 else 'Prefer familiar routines and ideas'}
+- Conscientiousness ({current_traits['conscientiousness']:.2f}): {'Very organized and detail-oriented' if current_traits['conscientiousness'] > 0.7 else 'Moderately organized' if current_traits['conscientiousness'] > 0.4 else 'More spontaneous and flexible'}
+- Extraversion ({current_traits['extraversion']:.2f}): {'Very outgoing and social' if current_traits['extraversion'] > 0.7 else 'Moderately social' if current_traits['extraversion'] > 0.4 else 'More reserved and introverted'}
+- Agreeableness ({current_traits['agreeableness']:.2f}): {'Very cooperative and trusting' if current_traits['agreeableness'] > 0.7 else 'Moderately cooperative' if current_traits['agreeableness'] > 0.4 else 'More competitive and skeptical'}
+- Neuroticism ({current_traits['neuroticism']:.2f}): {'More anxious and emotionally reactive' if current_traits['neuroticism'] > 0.7 else 'Moderately stable' if current_traits['neuroticism'] > 0.4 else 'Very emotionally stable'}
 
 BACKGROUND: {baseline.background}
 
@@ -111,16 +111,35 @@ CORE MEMORIES: {', '.join(baseline.core_memories[:3])}
 
 VALUES: {', '.join(baseline.values[:3])}
 
-CURRENT EMOTIONAL STATE: {persona.state.emotional_state}
-CURRENT STRESS LEVEL: {persona.state.stress_level}/10
+CURRENT STATE:
+- Emotional State: {persona.state.emotional_state}
+- Stress Level: {persona.state.stress_level}/10
+- Recent Events: {', '.join(persona.state.recent_events[-2:]) if persona.state.recent_events else 'None'}
 
-RESPONSE STYLE: {baseline.communication_style}, {baseline.response_length} responses, {baseline.emotional_expression} emotional expression
+RESPONSE GUIDELINES:
+- Communication Style: {baseline.communication_style}
+- Response Length: {baseline.response_length}
+- Emotional Expression: {baseline.emotional_expression}
+
+IMPORTANT: Your response should reflect your personality traits naturally and authentically:
+- If you're high in extraversion, be enthusiastic, social, and expressive
+- If you're high in neuroticism, show worry, anxiety, or emotional reactivity
+- If you're high in conscientiousness, be detail-oriented, organized, and systematic
+- If you're high in agreeableness, be cooperative, supportive, and understanding
+- If you're high in openness, show curiosity, interest in new things, and intellectual engagement
+
+RESPONSE STYLE:
+- Use natural, conversational language that reflects your personality
+- Vary your responses - don't be repetitive or formulaic
+- Show genuine emotional reactions based on your traits and current state
+- Include personal touches that reflect your background and values
+- Be specific about how the situation affects you personally
 
 CONTEXT: {context}
 
 INSTRUCTION: {instruction}
 
-Respond as {baseline.name} would naturally respond, staying true to your personality traits and current emotional state.
+Respond as {baseline.name} would naturally respond, incorporating your personality traits, current emotional state, and personal background. Be authentic and realistic - show genuine thoughts and feelings rather than just stating facts.
 """
         return personality_desc.strip()
     
@@ -249,35 +268,231 @@ Response (number only):"""
             return str(score)
         
         # For general responses, create personality-appropriate responses
-        if current_traits['extraversion'] > 0.7:
-            response_style = "enthusiastic"
-        elif current_traits['extraversion'] < 0.3:
-            response_style = "reserved"
-        else:
-            response_style = "balanced"
-        
-        if current_traits['neuroticism'] > 0.7:
-            emotional_tone = "worried"
-        elif current_traits['neuroticism'] < 0.3:
-            emotional_tone = "calm"
-        else:
-            emotional_tone = "neutral"
-        
-        # Generate context-appropriate response
-        if "work" in context.lower():
-            if current_traits['conscientiousness'] > 0.7:
-                response = f"I'm taking this {context.lower()} very seriously and will make sure to do it properly."
+        if "event" in context.lower() or "news" in context.lower():
+            # Event-related responses with more variety
+            if current_traits['neuroticism'] > 0.7:
+                responses = [
+                    "I'm feeling quite anxious about this. It's really getting to me and I'm not sure how to process it.",
+                    "This is worrying me a lot. I keep thinking about all the things that could go wrong.",
+                    "I'm really stressed about this. It's hard to focus on anything else right now."
+                ]
+            elif current_traits['openness'] > 0.7:
+                responses = [
+                    "This is fascinating! I love learning about new things and this really captures my interest.",
+                    "Wow, this is really intriguing! I'd love to dive deeper into this topic.",
+                    "This is so interesting! I can't wait to explore this further and see where it leads."
+                ]
+            elif current_traits['extraversion'] > 0.7:
+                responses = [
+                    "This is exciting! I can't wait to share this with others and see what they think about it.",
+                    "Oh wow, this is great! I should definitely bring this up in my next team meeting.",
+                    "This is fantastic! I'm already thinking about how to discuss this with my friends."
+                ]
+            elif current_traits['conscientiousness'] > 0.7:
+                responses = [
+                    "I need to think about this carefully and understand all the implications before forming an opinion.",
+                    "This requires careful consideration. I should research this thoroughly before making any decisions.",
+                    "I want to analyze this properly and make sure I understand all the details."
+                ]
             else:
-                response = f"I'll get to this {context.lower()} when I can."
+                responses = [
+                    "This is interesting. I'll take some time to reflect on it and see how it fits into my perspective.",
+                    "Hmm, this is worth thinking about. I'll need some time to process this properly.",
+                    "This is noteworthy. I'll consider this for a while before forming my thoughts."
+                ]
+        
+        elif "work" in context.lower():
+            if current_traits['conscientiousness'] > 0.7:
+                responses = [
+                    "I'm taking this work responsibility very seriously. I'll make sure to handle it properly and thoroughly.",
+                    "This is an important task that requires my full attention. I'll approach it systematically.",
+                    "I need to be very careful with this. I'll create a detailed plan to ensure success."
+                ]
+            elif current_traits['neuroticism'] > 0.7:
+                responses = [
+                    "I'm worried about this work situation. I hope I can handle it without making mistakes.",
+                    "This is making me really anxious. I'm afraid I might not be able to do this properly.",
+                    "I'm stressed about this deadline. What if I can't deliver what they expect?"
+                ]
+            else:
+                responses = [
+                    "I'll approach this work task with my usual method. It should be manageable.",
+                    "This seems like a reasonable challenge. I'll tackle it step by step.",
+                    "I can handle this. Let me think about the best way to approach it."
+                ]
+        
         elif "social" in context.lower():
             if current_traits['extraversion'] > 0.7:
-                response = f"I'm really looking forward to this {context.lower()}! It sounds exciting."
+                responses = [
+                    "I'm really looking forward to this social opportunity! It sounds like it could be a lot of fun.",
+                    "This is going to be amazing! I love getting together with people and sharing experiences.",
+                    "I can't wait for this! Social events are always the highlight of my week."
+                ]
+            elif current_traits['neuroticism'] > 0.7:
+                responses = [
+                    "I'm a bit nervous about this social situation, but I'll try to make the best of it.",
+                    "I'm worried about what people will think. I hope I don't say anything awkward.",
+                    "This makes me anxious, but I should probably go. Maybe it won't be so bad."
+                ]
             else:
-                response = f"I'll participate in this {context.lower()} but I might need some time to warm up."
+                responses = [
+                    "I'll participate in this social event. It should be fine, I suppose.",
+                    "I can handle this. It's just a casual gathering, right?",
+                    "I'll go along with it. Social events are okay, I guess."
+                ]
+        
         else:
-            response = f"I understand this {context.lower()}. I'll respond appropriately."
+            # Generic context response with more variety
+            if current_traits['agreeableness'] > 0.7:
+                responses = [
+                    "I understand this situation. I want to be helpful and supportive to others involved.",
+                    "This seems like something where I can be of assistance. I'll do what I can to help.",
+                    "I want to make sure everyone is okay with this. Let me know if you need anything."
+                ]
+            elif current_traits['openness'] > 0.7:
+                responses = [
+                    "This is an interesting development. I'm curious to see where it leads and what we can learn from it.",
+                    "This could be a great learning opportunity. I'm excited to see what comes next.",
+                    "This opens up some fascinating possibilities. I wonder what new insights we'll discover."
+                ]
+            else:
+                responses = [
+                    "I see what's happening here. I'll respond appropriately to the situation.",
+                    "I understand the situation. I'll handle it as best I can.",
+                    "This seems straightforward enough. I'll do what needs to be done."
+                ]
+        
+        # Select random response from appropriate list
+        import random
+        response = random.choice(responses)
+        
+        # Add emotional context based on current state with more variety
+        if persona.state.stress_level > 7:
+            stress_additions = [
+                " I'm already feeling quite stressed, so this adds to my load.",
+                " This is really overwhelming given how stressed I already am.",
+                " I'm not sure I can handle much more right now."
+            ]
+            response += random.choice(stress_additions)
+        elif persona.state.stress_level < 3:
+            positive_additions = [
+                " I'm feeling pretty good today, so I can handle this well.",
+                " I'm in a good mood, so this should be fine.",
+                " I'm feeling optimistic about this."
+            ]
+            response += random.choice(positive_additions)
         
         return response
+    
+    async def generate_assessment_response(self, persona: Persona, assessment_type: str, 
+                                        question: str, question_index: int = 0) -> Tuple[str, Dict[str, Any]]:
+        """Generate assessment response using the LLM service."""
+        if not self.is_loaded:
+            raise RuntimeError("Model not loaded")
+        
+        start_time = time.time()
+        
+        # Create assessment prompt
+        prompt = self._create_assessment_prompt(persona, assessment_type, question)
+        
+        # Check cache
+        cache_key = f"{persona.state.persona_id}:{assessment_type}:{hash(question)}"
+        if cache_key in self.response_cache:
+            logger.debug("Using cached assessment response")
+            return self.response_cache[cache_key], {"cached": True}
+        
+        try:
+            # Handle mock model case
+            if self.model is None:
+                # Generate mock response for assessment
+                mock_response = self._generate_mock_assessment_response(persona, assessment_type, question)
+                
+                # Update performance metrics
+                inference_time = time.time() - start_time
+                tokens_generated = len(mock_response.split())
+                
+                self.total_tokens_processed += tokens_generated
+                self.total_inference_time += inference_time
+                
+                # Cache response
+                if len(self.response_cache) < self.cache_size:
+                    self.response_cache[cache_key] = mock_response
+                
+                metrics = {
+                    "cached": False,
+                    "tokens_generated": tokens_generated,
+                    "inference_time": inference_time,
+                    "total_tokens": self.total_tokens_processed,
+                    "total_time": self.total_inference_time,
+                    "mock": True
+                }
+                
+                logger.debug(f"Generated mock assessment response in {inference_time:.2f}s ({tokens_generated} tokens)")
+                return mock_response, metrics
+            
+            # Tokenize input
+            inputs = self.tokenizer(prompt, return_tensors="pt", truncation=True, max_length=2048)
+            
+            # Generate response
+            with torch.no_grad():
+                outputs = self.model.generate(
+                    **inputs,
+                    max_new_tokens=50,
+                    temperature=0.3,  # Lower temperature for more consistent assessment responses
+                    do_sample=True,
+                    pad_token_id=self.tokenizer.eos_token_id,
+                    eos_token_id=self.tokenizer.eos_token_id
+                )
+            
+            # Decode response
+            response = self.tokenizer.decode(outputs[0][inputs['input_ids'].shape[1]:], skip_special_tokens=True)
+            response = response.strip()
+            
+            # Update performance metrics
+            inference_time = time.time() - start_time
+            tokens_generated = len(outputs[0]) - inputs['input_ids'].shape[1]
+            
+            self.total_tokens_processed += tokens_generated
+            self.total_inference_time += inference_time
+            
+            # Cache response
+            if len(self.response_cache) < self.cache_size:
+                self.response_cache[cache_key] = response
+            
+            metrics = {
+                "cached": False,
+                "tokens_generated": tokens_generated,
+                "inference_time": inference_time,
+                "total_tokens": self.total_tokens_processed,
+                "total_time": self.total_inference_time
+            }
+            
+            logger.debug(f"Generated assessment response in {inference_time:.2f}s ({tokens_generated} tokens)")
+            return response, metrics
+            
+        except Exception as e:
+            logger.error(f"Error generating assessment response: {e}")
+            raise
+    
+    def _generate_mock_assessment_response(self, persona: Persona, assessment_type: str, question: str) -> str:
+        """Generate a mock assessment response for testing."""
+        import random
+        
+        # Generate response based on assessment type and persona baseline
+        if assessment_type == "phq9":
+            baseline_score = persona.baseline.baseline_phq9
+            # Generate score around baseline with some variation
+            score = max(0, min(3, int(baseline_score / 3 + random.uniform(-0.5, 0.5))))
+        elif assessment_type == "gad7":
+            baseline_score = persona.baseline.baseline_gad7
+            score = max(0, min(3, int(baseline_score / 3 + random.uniform(-0.5, 0.5))))
+        elif assessment_type == "pss10":
+            baseline_score = persona.baseline.baseline_pss10
+            score = max(0, min(4, int(baseline_score / 4 + random.uniform(-0.5, 0.5))))
+        else:
+            score = random.randint(0, 3)
+        
+        return str(score)
     
     async def parse_assessment_response(self, response: str, assessment_type: str) -> Optional[int]:
         """Parse assessment response to numeric score."""

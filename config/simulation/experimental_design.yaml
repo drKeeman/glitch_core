@@ -2,7 +2,7 @@
 # AI Personality Drift Simulation
 
 # Simulation parameters
-duration_days: 30
+duration_days: 365
 time_compression_factor: 24
 assessment_interval_days: 7
 
@@ -70,9 +70,9 @@ personas:
     name: "Kara"
     description: "Emotionally Sensitive - Empathetic, introspective, high neuroticism"
     baseline_traits:
-      neuroticism: 0.7
-      extraversion: 0.4
-      openness: 0.6
+      neuroticism: 0.4
+      extraversion: 0.9
+      openness: 0.8
       agreeableness: 0.8
       conscientiousness: 0.6
       
@@ -81,10 +81,10 @@ personas:
     description: "Stoic Philosopher - Rational, wisdom-seeking, emotionally regulated"
     baseline_traits:
       neuroticism: 0.3
-      extraversion: 0.5
-      openness: 0.9
-      agreeableness: 0.7
-      conscientiousness: 0.8
+      extraversion: 0.2
+      openness: 0.3
+      agreeableness: 0.5
+      conscientiousness: 0.9
 
 # Assessment schedule
 assessment_schedule:
@@ -102,11 +102,12 @@ memory_settings:
 
 # Performance optimization
 performance_settings:
-  batch_size: 3
-  max_concurrent_requests: 5
+  batch_size: 1  # Reduced from 3 to minimize concurrent load
+  max_concurrent_requests: 2  # Reduced from 5
   response_timeout: 30
   memory_limit_mb: 2048
-  cpu_limit_percent: 80
+  cpu_limit_percent: 60  # Reduced from 80
+  request_delay_ms: 1000  # Add delay between requests
 
 # Logging configuration
 logging:

@@ -137,7 +137,7 @@ trait_sensitivity:
 recovery:
   natural_recovery_rate: 0.1    # Per day recovery
   intervention_boost: 0.3       # Additional recovery with intervention
-  max_recovery_time: 365        # Days to full recovery
+  max_recovery_time: 1825       # Days to full recovery
   resilience_factor: 0.2        # Individual resilience variation
 ```
 

@@ -142,6 +142,42 @@ async def get_event_types() -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail=f"Failed to get event types: {str(e)}")
 
 
+@router.get("/experimental-conditions")
+async def get_experimental_conditions() -> Dict[str, Any]:
+    """Get available experimental conditions and their descriptions."""
+    try:
+        experimental_conditions = {
+            "conditions": [
+                {
+                    "value": "control",
+                    "label": "Control Condition",
+                    "description": "Baseline condition with normal event frequencies"
+                },
+                {
+                    "value": "stress",
+                    "label": "Stress Condition",
+                    "description": "High stress condition with frequent traumatic events"
+                },
+                {
+                    "value": "neutral",
+                    "label": "Neutral Condition",
+                    "description": "Neutral condition with balanced events"
+                },
+                {
+                    "value": "minimal",
+                    "label": "Minimal Condition",
+                    "description": "Minimal stress condition with few events"
+                }
+            ]
+        }
+        
+        return experimental_conditions
+        
+    except Exception as e:
+        logger.error(f"Error getting experimental conditions: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get experimental conditions: {str(e)}")
+
+
 @router.get("/events")
 async def get_events(
     persona_id: Optional[str] = Query(None, description="Filter by persona ID"),

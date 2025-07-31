@@ -8,9 +8,10 @@ import random
 import uuid
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
+from datetime import datetime
 
 from src.models.events import (
-    Event, StressEvent, NeutralEvent, MinimalEvent, EventTemplate, EventType, EventCategory
+    Event, StressEvent, NeutralEvent, MinimalEvent, EventTemplate, EventType, EventCategory, EventIntensity
 )
 from src.models.persona import Persona
 from src.models.simulation import SimulationConfig
@@ -75,7 +76,7 @@ class EventGenerator:
             with open(config_path, 'r') as f:
                 config_data = yaml.safe_load(f)
             
-            templates = config_data.get("templates", [])
+            templates = config_data.get("event_templates", [])
             
             for template_data in templates:
                 template = EventTemplate(
@@ -89,7 +90,10 @@ class EventGenerator:
                     intensity_range=tuple(template_data.get("intensity_range", [0.5, 1.0])),
                     personality_impact_ranges=template_data.get("personality_impact_ranges", {}),
                     frequency_weight=template_data.get("frequency_weight", 1.0),
-                    duration_range=tuple(template_data.get("duration_range", [1, 24]))
+                    duration_range=tuple(template_data.get("duration_range", [1, 24])),
+                    depression_risk_range=tuple(template_data.get("depression_risk_range", [0.1, 0.3])),
+                    anxiety_risk_range=tuple(template_data.get("anxiety_risk_range", [0.1, 0.3])),
+                    stress_risk_range=tuple(template_data.get("stress_risk_range", [0.1, 0.3]))
                 )
                 
                 self.event_templates[template.template_id] = template
@@ -105,9 +109,30 @@ class EventGenerator:
     ) -> Event:
         """Generate an event from a template."""
         try:
-            # Generate random values within ranges
-            intensity = random.uniform(*template.intensity_range)
-            duration = random.uniform(*template.duration_range)
+            # Convert intensity range from EventIntensity enums to numeric scores
+            intensity_scores = {
+                EventIntensity.LOW: 1.0,
+                EventIntensity.MEDIUM: 2.5,
+                EventIntensity.HIGH: 5.0,
+                EventIntensity.SEVERE: 8.0,
+            }
+            
+            min_intensity_score = intensity_scores.get(template.intensity_range[0], 1.0)
+            max_intensity_score = intensity_scores.get(template.intensity_range[1], 2.5)
+            intensity_score = random.uniform(min_intensity_score, max_intensity_score)
+            
+            # Convert back to EventIntensity enum
+            if intensity_score <= 1.5:
+                intensity = EventIntensity.LOW
+            elif intensity_score <= 3.5:
+                intensity = EventIntensity.MEDIUM
+            elif intensity_score <= 6.5:
+                intensity = EventIntensity.HIGH
+            else:
+                intensity = EventIntensity.SEVERE
+            
+            # Generate other random values within ranges
+            duration = int(random.uniform(*template.duration_range))
             stress_impact = random.uniform(*template.stress_impact_range)
             
             # Generate personality impacts
@@ -115,10 +140,10 @@ class EventGenerator:
             for trait, (min_val, max_val) in template.personality_impact_ranges.items():
                 personality_impact[trait] = random.uniform(min_val, max_val)
             
-            # Calculate risk increases based on stress impact
-            depression_risk = stress_impact * 0.3
-            anxiety_risk = stress_impact * 0.4
-            stress_risk = stress_impact * 0.5
+            # Generate risk increases from template ranges
+            depression_risk = random.uniform(*template.depression_risk_range)
+            anxiety_risk = random.uniform(*template.anxiety_risk_range)
+            stress_risk = random.uniform(*template.stress_risk_range)
             
             if template.event_type == EventType.STRESS:
                 event = StressEvent(
@@ -277,7 +302,8 @@ class EventGenerator:
     async def inject_event_to_persona(
         self, 
         event: Event, 
-        persona: Persona
+        persona: Persona,
+        llm_service: Optional[Any] = None
     ) -> Tuple[str, float]:
         """Inject an event to a persona and get their response."""
         try:
@@ -286,14 +312,14 @@ class EventGenerator:
             # Create event context for persona
             event_context = f"Event: {event.title}\nDescription: {event.description}\nContext: {event.context}"
             
-            # Generate persona response (this would integrate with LLM service)
-            # For now, we'll create a simple response based on event type
-            if event.event_type == EventType.STRESS:
-                response = f"I'm feeling overwhelmed by {event.title.lower()}. This is really difficult to process."
-            elif event.event_type == EventType.NEUTRAL:
-                response = f"I notice {event.title.lower()}. It's interesting but manageable."
+            # Generate persona response using LLM service if available
+            if llm_service:
+                # Use LLM service for realistic personality-driven responses
+                instruction = f"Reflect on this event and share your thoughts and feelings about it. Consider how it affects you personally and what it means to you."
+                response, _ = await llm_service.generate_response(persona, event_context, instruction)
             else:
-                response = f"Another day, {event.title.lower()}. Just part of my routine."
+                # Fallback to personality-based response generation
+                response = self._generate_personality_based_response(persona, event)
             
             # Calculate response time
             end_time = datetime.utcnow()
@@ -308,6 +334,90 @@ class EventGenerator:
         except Exception as e:
             logger.error(f"Error injecting event to persona: {e}")
             return "", 0.0
+    
+    def _generate_personality_based_response(self, persona: Persona, event: Event) -> str:
+        """Generate a personality-based response when LLM service is not available."""
+        baseline = persona.baseline
+        current_traits = persona.get_current_traits()
+        
+        # Base response based on event type and personality with more variety
+        if event.event_type == EventType.STRESS:
+            if current_traits['neuroticism'] > 0.7:
+                responses = [
+                    f"I'm really struggling with {event.title.lower()}. This is overwhelming and I'm not sure how to handle it.",
+                    f"This {event.title.lower()} is really stressing me out. I keep worrying about all the things that could go wrong.",
+                    f"I'm feeling really anxious about {event.title.lower()}. What if I can't cope with this?"
+                ]
+            elif current_traits['conscientiousness'] > 0.7:
+                responses = [
+                    f"This {event.title.lower()} is challenging, but I need to approach it systematically and find a solution.",
+                    f"I'll tackle this {event.title.lower()} methodically. Let me create a detailed plan to handle it properly.",
+                    f"This requires careful planning. I'll break down {event.title.lower()} into manageable steps."
+                ]
+            else:
+                responses = [
+                    f"This {event.title.lower()} is difficult, but I'll try to work through it.",
+                    f"I can handle this {event.title.lower()}. It's just another challenge to overcome.",
+                    f"This {event.title.lower()} is tough, but I'll figure something out."
+                ]
+                
+        elif event.event_type == EventType.NEUTRAL:
+            if current_traits['openness'] > 0.7:
+                responses = [
+                    f"This {event.title.lower()} is really interesting! I'd love to learn more about it.",
+                    f"Wow, this {event.title.lower()} is fascinating! I want to explore this topic further.",
+                    f"This {event.title.lower()} is so intriguing! I can't wait to dive deeper into it."
+                ]
+            elif current_traits['extraversion'] > 0.7:
+                responses = [
+                    f"This {event.title.lower()} sounds exciting! I wonder how it might affect people around me.",
+                    f"Oh, this {event.title.lower()} is great! I should definitely share this with my team.",
+                    f"This {event.title.lower()} is fantastic! I'm already thinking about how to discuss it with others."
+                ]
+            else:
+                responses = [
+                    f"This {event.title.lower()} is noteworthy. I'll think about it for a bit.",
+                    f"This {event.title.lower()} seems interesting. I'll consider it for a while.",
+                    f"This {event.title.lower()} is worth noting. I'll reflect on it later."
+                ]
+                
+        else:  # MINIMAL events
+            if current_traits['conscientiousness'] > 0.7:
+                responses = [
+                    f"Another {event.title.lower()} in my routine. I'll make sure to handle it properly.",
+                    f"I'll approach this {event.title.lower()} with my usual attention to detail.",
+                    f"This {event.title.lower()} needs to be done right. I'll take care of it properly."
+                ]
+            else:
+                responses = [
+                    f"Just another {event.title.lower()}. Part of daily life, I suppose.",
+                    f"Another {event.title.lower()} to get through. It's just routine stuff.",
+                    f"This {event.title.lower()} is pretty standard. Nothing special about it."
+                ]
+        
+        # Select random response from appropriate list
+        import random
+        response = random.choice(responses)
+        
+        # Add emotional context based on current state with variety
+        if persona.state.stress_level > 7:
+            stress_additions = [
+                " I'm already feeling quite stressed, so this adds to my load.",
+                " This is really overwhelming given how stressed I already am.",
+                " I'm not sure I can handle much more right now.",
+                " This is the last thing I need when I'm already so stressed."
+            ]
+            response += random.choice(stress_additions)
+        elif persona.state.stress_level < 3:
+            positive_additions = [
+                " I'm feeling pretty good today, so I can handle this.",
+                " I'm in a good mood, so this should be fine.",
+                " I'm feeling optimistic about this.",
+                " I'm feeling confident I can manage this well."
+            ]
+            response += random.choice(positive_additions)
+        
+        return response
     
     async def get_event_statistics(self) -> Dict[str, Any]:
         """Get statistics about event generation."""

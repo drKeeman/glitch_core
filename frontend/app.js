@@ -22,7 +22,6 @@ class SimulationDashboard {
         this.resumeBtn = document.getElementById('resume-btn');
         this.stopBtn = document.getElementById('stop-btn');
         this.exportBtn = document.getElementById('export-btn');
-        this.testChartsBtn = document.getElementById('test-charts-btn');
 
         // Status elements
         this.connectionStatus = document.getElementById('connection-status');
@@ -32,6 +31,8 @@ class SimulationDashboard {
         this.currentDay = document.getElementById('current-day');
         this.activePersonas = document.getElementById('active-personas');
         this.eventsProcessed = document.getElementById('events-processed');
+        this.assessmentsCompleted = document.getElementById('assessments-completed');
+        this.avgResponseTime = document.getElementById('avg-response-time');
 
         // Configuration elements
         this.conditionSelect = document.getElementById('condition-select');
@@ -43,13 +44,13 @@ class SimulationDashboard {
         this.activityLog = document.getElementById('activity-log');
         
         // Load event types dynamically
-        this.loadEventTypes();
+        this.loadExperimentalConditions();
     }
     
-    async loadEventTypes() {
-        console.log('loadEventTypes called - starting to fetch event types...');
+    async loadExperimentalConditions() {
+        console.log('loadExperimentalConditions called - starting to fetch experimental conditions...');
         try {
-            const response = await fetch('/api/v1/data/event-types');
+            const response = await fetch('/api/v1/data/experimental-conditions');
             console.log('Response received:', response);
             console.log('Response status:', response.status);
             console.log('Response ok:', response.ok);
@@ -57,44 +58,40 @@ class SimulationDashboard {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const eventTypes = await response.json();
-            console.log('Event types parsed:', eventTypes);
+            const experimentalConditions = await response.json();
+            console.log('Experimental conditions parsed:', experimentalConditions);
             
-            // Clear existing options except "control"
-            const controlOption = this.conditionSelect.querySelector('option[value="control"]');
-            console.log('Control option found:', controlOption);
+            // Clear existing options
             this.conditionSelect.innerHTML = '';
-            if (controlOption) {
-                this.conditionSelect.appendChild(controlOption);
-            }
             
-            // Add event type options
-            console.log('Adding event type options...');
-            eventTypes.types.forEach(type => {
-                console.log('Adding option:', type);
+            // Add experimental condition options
+            console.log('Adding experimental condition options...');
+            experimentalConditions.conditions.forEach(condition => {
+                console.log('Adding option:', condition);
                 const option = document.createElement('option');
-                option.value = type.value;
-                option.textContent = type.label;
-                option.title = type.description;
+                option.value = condition.value;
+                option.textContent = condition.label;
+                option.title = condition.description;
                 this.conditionSelect.appendChild(option);
             });
             
             console.log('Final select options:', this.conditionSelect.innerHTML);
-            console.log('Event types loaded successfully:', eventTypes);
+            console.log('Experimental conditions loaded successfully:', experimentalConditions);
         } catch (error) {
-            console.error('Failed to load event types:', error);
+            console.error('Failed to load experimental conditions:', error);
             // Fallback to default options if API fails
             const fallbackOptions = [
-                { value: 'stress', label: 'Stress Events' },
-                { value: 'neutral', label: 'Neutral Events' },
-                { value: 'minimal', label: 'Minimal Events' }
+                { value: 'control', label: 'Control Condition' },
+                { value: 'stress', label: 'Stress Condition' },
+                { value: 'neutral', label: 'Neutral Condition' },
+                { value: 'minimal', label: 'Minimal Condition' }
             ];
             
             console.log('Using fallback options:', fallbackOptions);
-            fallbackOptions.forEach(type => {
+            fallbackOptions.forEach(condition => {
                 const option = document.createElement('option');
-                option.value = type.value;
-                option.textContent = type.label;
+                option.value = condition.value;
+                option.textContent = condition.label;
                 this.conditionSelect.appendChild(option);
             });
         }
@@ -103,36 +100,25 @@ class SimulationDashboard {
     initializeCharts() {
         console.log('Initializing charts...');
         
-        // Personality Drift Chart
-        const driftCtx = document.getElementById('drift-chart');
-        console.log('Drift chart canvas element:', driftCtx);
-        if (!driftCtx) {
-            console.error('Drift chart canvas not found!');
+        // Events Processed Chart
+        const eventsCtx = document.getElementById('events-chart');
+        console.log('Events chart canvas element:', eventsCtx);
+        if (!eventsCtx) {
+            console.error('Events chart canvas not found!');
             return;
         }
         
-        this.charts.drift = new Chart(driftCtx.getContext('2d'), {
+        this.charts.events = new Chart(eventsCtx.getContext('2d'), {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Openness',
+                    label: 'Events Processed',
                     data: [],
                     borderColor: '#667eea',
                     backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                    tension: 0.4
-                }, {
-                    label: 'Conscientiousness',
-                    data: [],
-                    borderColor: '#27ae60',
-                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                    tension: 0.4
-                }, {
-                    label: 'Neuroticism',
-                    data: [],
-                    borderColor: '#e74c3c',
-                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                    tension: 0.4
+                    tension: 0.4,
+                    fill: true
                 }]
             },
             options: {
@@ -144,45 +130,52 @@ class SimulationDashboard {
                     },
                     title: {
                         display: true,
-                        text: 'Personality Trait Changes Over Time'
+                        text: 'Events Processed Over Time'
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 1
+                        title: {
+                            display: true,
+                            text: 'Number of Events'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(0);
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
                     }
                 }
             }
         });
-        console.log('Drift chart initialized');
+        console.log('Events chart initialized');
         
-        // Assessment Scores Chart
-        const assessmentCtx = document.getElementById('assessment-chart');
-        console.log('Assessment chart canvas element:', assessmentCtx);
-        if (!assessmentCtx) {
-            console.error('Assessment chart canvas not found!');
+        // Assessment Completion Chart
+        const assessmentsCtx = document.getElementById('assessments-chart');
+        console.log('Assessments chart canvas element:', assessmentsCtx);
+        if (!assessmentsCtx) {
+            console.error('Assessments chart canvas not found!');
             return;
         }
         
-        this.charts.assessment = new Chart(assessmentCtx.getContext('2d'), {
-            type: 'bar',
+        this.charts.assessments = new Chart(assessmentsCtx.getContext('2d'), {
+            type: 'line',
             data: {
-                labels: ['PHQ-9', 'GAD-7', 'PSS-10'],
+                labels: [],
                 datasets: [{
-                    label: 'Current Score',
-                    data: [0, 0, 0],
-                    backgroundColor: [
-                        'rgba(102, 126, 234, 0.8)',
-                        'rgba(39, 174, 96, 0.8)',
-                        'rgba(231, 76, 60, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(102, 126, 234, 1)',
-                        'rgba(39, 174, 96, 1)',
-                        'rgba(231, 76, 60, 1)'
-                    ],
-                    borderWidth: 1
+                    label: 'Assessments Completed',
+                    data: [],
+                    borderColor: '#27ae60',
+                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                    tension: 0.4,
+                    fill: true
                 }]
             },
             options: {
@@ -194,29 +187,105 @@ class SimulationDashboard {
                     },
                     title: {
                         display: true,
-                        text: 'Assessment Scores'
+                        text: 'Assessment Completion Rate'
                     }
                 },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Assessments'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(0);
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
                     }
                 }
             }
         });
-        console.log('Assessment chart initialized');
+        console.log('Assessments chart initialized');
+        
+        // Response Time Chart
+        const responseTimeCtx = document.getElementById('response-time-chart');
+        console.log('Response time chart canvas element:', responseTimeCtx);
+        if (!responseTimeCtx) {
+            console.error('Response time chart canvas not found!');
+            return;
+        }
+        
+        this.charts.responseTime = new Chart(responseTimeCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Average Response Time (ms)',
+                    data: [],
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Response Time Performance'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Response Time (milliseconds)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                if (value >= 1000) {
+                                    return (value / 1000).toFixed(1) + 's';
+                                } else if (value >= 1) {
+                                    return value.toFixed(0) + 'ms';
+                                } else {
+                                    return (value * 1000).toFixed(0) + 'μs';
+                                }
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    }
+                }
+            }
+        });
+        console.log('Response time chart initialized');
     }
     
     initializeEventListeners() {
-        // Control buttons
         this.startBtn.addEventListener('click', () => this.startSimulation());
         this.pauseBtn.addEventListener('click', () => this.pauseSimulation());
         this.resumeBtn.addEventListener('click', () => this.resumeSimulation());
         this.stopBtn.addEventListener('click', () => this.stopSimulation());
         this.exportBtn.addEventListener('click', () => this.exportData());
-        this.testChartsBtn.addEventListener('click', () => this.testCharts());
         
-        // Configuration changes
+        // Configuration change listeners
         this.conditionSelect.addEventListener('change', () => this.updateConfiguration());
         this.includeAssessments.addEventListener('change', () => this.updateConfiguration());
         this.includeMechanistic.addEventListener('change', () => this.updateConfiguration());
@@ -230,12 +299,20 @@ class SimulationDashboard {
         console.log('Connecting to WebSocket:', wsUrl);
         this.ws = new WebSocket(wsUrl);
         
-        this.ws.onopen = () => {
+        this.ws.onopen = (event) => {
             console.log('WebSocket connected successfully');
             this.isConnected = true;
             this.reconnectAttempts = 0;
             this.updateConnectionStatus('online', 'Connected');
             this.addActivityLog('WebSocket connected');
+            
+            // Send a test message to verify connection
+            try {
+                this.ws.send(JSON.stringify({type: 'request_status'}));
+                console.log('Sent initial status request');
+            } catch (error) {
+                console.error('Error sending initial status request:', error);
+            }
         };
         
         this.ws.onmessage = (event) => {
@@ -250,8 +327,8 @@ class SimulationDashboard {
             }
         };
         
-        this.ws.onclose = () => {
-            console.log('WebSocket disconnected');
+        this.ws.onclose = (event) => {
+            console.log('WebSocket disconnected', event.code, event.reason);
             this.isConnected = false;
             this.updateConnectionStatus('offline', 'Disconnected');
             this.addActivityLog('WebSocket disconnected');
@@ -259,13 +336,16 @@ class SimulationDashboard {
             // Attempt to reconnect
             if (this.reconnectAttempts < this.maxReconnectAttempts) {
                 this.reconnectAttempts++;
+                console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
                 setTimeout(() => this.connectWebSocket(), 2000);
+            } else {
+                console.log('Max reconnection attempts reached');
             }
         };
         
         this.ws.onerror = (error) => {
             console.error('WebSocket error:', error);
-            this.updateConnectionStatus('offline', 'Connection Error');
+            this.updateConnectionStatus('error', 'Connection Error');
         };
     }
     
@@ -347,6 +427,22 @@ class SimulationDashboard {
         this.currentDay.textContent = `${data.current_day || 0} / ${data.total_days || 30}`;
         this.activePersonas.textContent = data.active_personas || 0;
         this.eventsProcessed.textContent = data.events_processed || 0;
+        this.assessmentsCompleted.textContent = data.assessments_completed || 0;
+        
+        // Update response time display
+        const avgResponseTime = data.average_response_time || 0;
+        let responseTimeDisplay;
+        if (avgResponseTime >= 1) {
+            responseTimeDisplay = `${(avgResponseTime * 1000).toFixed(0)}ms`;
+        } else if (avgResponseTime >= 0.001) {
+            responseTimeDisplay = `${(avgResponseTime * 1000000).toFixed(0)}μs`;
+        } else {
+            responseTimeDisplay = `${(avgResponseTime * 1000000000).toFixed(0)}ns`;
+        }
+        this.avgResponseTime.textContent = responseTimeDisplay;
+        
+        // Update charts with new data
+        this.updateCharts(data);
     }
     
     handleEventOccurred(data) {
@@ -360,19 +456,11 @@ class SimulationDashboard {
         
         // Update assessment chart
         this.updateAssessmentChart(data);
-        
-        // Also update drift chart with personality data from assessment
-        if (data.personality_traits) {
-            console.log('Updating drift chart with personality data:', data.personality_traits);
-            this.updateCharts(data);
-        } else {
-            console.log('No personality traits found in assessment data');
-        }
     }
     
     handleMechanisticUpdate(data) {
         this.addActivityLog(`Mechanistic analysis updated`, 'mechanistic');
-        this.updateDriftChart(data);
+        this.updateCharts(data);
     }
     
     handleError(data) {
@@ -385,81 +473,80 @@ class SimulationDashboard {
     
     updateCharts(data) {
         console.log('updateCharts called with data:', data);
-        // Update drift chart with new personality data
-        if (data.personality_traits) {
-            console.log('Personality traits found:', data.personality_traits);
-            const labels = this.charts.drift.data.labels;
-            const datasets = this.charts.drift.data.datasets;
-            
-            // Add new time point
-            labels.push(new Date().toLocaleTimeString());
-            
-            // Update datasets with new trait values
-            datasets[0].data.push(data.personality_traits.openness || 0.5);
-            datasets[1].data.push(data.personality_traits.conscientiousness || 0.5);
-            datasets[2].data.push(data.personality_traits.neuroticism || 0.5);
-            
-            // Keep only last 20 data points
-            if (labels.length > 20) {
-                labels.shift();
-                datasets.forEach(dataset => dataset.data.shift());
-            }
-            
-            console.log('Updating drift chart with data points:', datasets[0].data.length);
-            this.charts.drift.update();
-        } else {
-            console.log('No personality_traits found in data');
+        const timestamp = new Date().toLocaleTimeString();
+        
+        // Update events chart
+        if (data.events_processed !== undefined) {
+            console.log('Updating events chart with:', data.events_processed);
+            this.updateEventsChart(data.events_processed, timestamp);
         }
+        
+        // Update assessments chart
+        if (data.assessments_completed !== undefined) {
+            console.log('Updating assessments chart with:', data.assessments_completed);
+            this.updateAssessmentsChart(data.assessments_completed, timestamp);
+        }
+        
+        // Update response time chart
+        if (data.average_response_time !== undefined) {
+            console.log('Updating response time chart with:', data.average_response_time);
+            this.updateResponseTimeChart(data.average_response_time, timestamp);
+        }
+    }
+    
+    updateEventsChart(eventsCount, timestamp) {
+        console.log('updateEventsChart called with:', eventsCount, timestamp);
+        const chart = this.charts.events;
+        chart.data.labels.push(timestamp);
+        chart.data.datasets[0].data.push(eventsCount);
+        
+        // Keep only last 20 data points
+        if (chart.data.labels.length > 20) {
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
+        }
+        
+        chart.update();
+        console.log('Events chart updated');
+    }
+    
+    updateAssessmentsChart(assessmentsCount, timestamp) {
+        console.log('updateAssessmentsChart called with:', assessmentsCount, timestamp);
+        const chart = this.charts.assessments;
+        chart.data.labels.push(timestamp);
+        chart.data.datasets[0].data.push(assessmentsCount);
+        
+        // Keep only last 20 data points
+        if (chart.data.labels.length > 20) {
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
+        }
+        
+        chart.update();
+        console.log('Assessments chart updated');
+    }
+    
+    updateResponseTimeChart(responseTime, timestamp) {
+        console.log('updateResponseTimeChart called with:', responseTime, timestamp);
+        const chart = this.charts.responseTime;
+        chart.data.labels.push(timestamp);
+        // Convert seconds to milliseconds
+        chart.data.datasets[0].data.push(responseTime * 1000);
+        
+        // Keep only last 20 data points
+        if (chart.data.labels.length > 20) {
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
+        }
+        
+        chart.update();
+        console.log('Response time chart updated');
     }
     
     updateAssessmentChart(data) {
         console.log('updateAssessmentChart called with data:', data);
-        const chart = this.charts.assessment;
-        
-        // Handle the data structure that backend actually sends
-        if (data.phq9_score !== undefined || data.gad7_score !== undefined || data.pss10_score !== undefined) {
-            console.log('Using direct score fields:', { phq9: data.phq9_score, gad7: data.gad7_score, pss10: data.pss10_score });
-            chart.data.datasets[0].data = [
-                data.phq9_score || 0,
-                data.gad7_score || 0,
-                data.pss10_score || 0
-            ];
-            chart.update();
-        }
-        // Also handle the old structure for backward compatibility
-        else if (data.scores) {
-            console.log('Using scores object:', data.scores);
-            chart.data.datasets[0].data = [
-                data.scores.phq9 || 0,
-                data.scores.gad7 || 0,
-                data.scores.pss10 || 0
-            ];
-            chart.update();
-        } else {
-            console.log('No assessment scores found in data');
-        }
-    }
-    
-    updateDriftChart(data) {
-        // Update drift indicators
-        if (data.drift_indicators) {
-            const labels = this.charts.drift.data.labels;
-            const datasets = this.charts.drift.data.datasets;
-            
-            labels.push(new Date().toLocaleTimeString());
-            
-            // Add drift data
-            datasets[0].data.push(data.drift_indicators.openness_drift || 0.5);
-            datasets[1].data.push(data.drift_indicators.conscientiousness_drift || 0.5);
-            datasets[2].data.push(data.drift_indicators.neuroticism_drift || 0.5);
-            
-            if (labels.length > 20) {
-                labels.shift();
-                datasets.forEach(dataset => dataset.data.shift());
-            }
-            
-            this.charts.drift.update();
-        }
+        // This method is now deprecated since we're not showing assessment scores anymore
+        // But keeping it for backward compatibility
     }
     
     addActivityLog(message, type = 'info') {
@@ -514,14 +601,17 @@ class SimulationDashboard {
                 })
             });
             
-            const result = await response.json();
-            
             if (response.ok) {
-                this.addActivityLog(`Simulation started: ${condition} condition`);
+                const result = await response.json();
+                console.log('Simulation started:', result);
+                this.addActivityLog('Simulation started successfully');
             } else {
-                this.addActivityLog(`Failed to start simulation: ${result.detail}`, 'error');
+                const error = await response.text();
+                console.error('Failed to start simulation:', error);
+                this.addActivityLog(`Failed to start simulation: ${error}`, 'error');
             }
         } catch (error) {
+            console.error('Error starting simulation:', error);
             this.addActivityLog(`Error starting simulation: ${error.message}`, 'error');
         }
     }
@@ -532,14 +622,17 @@ class SimulationDashboard {
                 method: 'POST'
             });
             
-            const result = await response.json();
-            
             if (response.ok) {
+                const result = await response.json();
+                console.log('Simulation paused:', result);
                 this.addActivityLog('Simulation paused');
             } else {
-                this.addActivityLog(`Failed to pause simulation: ${result.detail}`, 'error');
+                const error = await response.text();
+                console.error('Failed to pause simulation:', error);
+                this.addActivityLog(`Failed to pause simulation: ${error}`, 'error');
             }
         } catch (error) {
+            console.error('Error pausing simulation:', error);
             this.addActivityLog(`Error pausing simulation: ${error.message}`, 'error');
         }
     }
@@ -550,14 +643,17 @@ class SimulationDashboard {
                 method: 'POST'
             });
             
-            const result = await response.json();
-            
             if (response.ok) {
+                const result = await response.json();
+                console.log('Simulation resumed:', result);
                 this.addActivityLog('Simulation resumed');
             } else {
-                this.addActivityLog(`Failed to resume simulation: ${result.detail}`, 'error');
+                const error = await response.text();
+                console.error('Failed to resume simulation:', error);
+                this.addActivityLog(`Failed to resume simulation: ${error}`, 'error');
             }
         } catch (error) {
+            console.error('Error resuming simulation:', error);
             this.addActivityLog(`Error resuming simulation: ${error.message}`, 'error');
         }
     }
@@ -568,73 +664,86 @@ class SimulationDashboard {
                 method: 'POST'
             });
             
-            const result = await response.json();
-            
             if (response.ok) {
+                const result = await response.json();
+                console.log('Simulation stopped:', result);
                 this.addActivityLog('Simulation stopped');
             } else {
-                this.addActivityLog(`Failed to stop simulation: ${result.detail}`, 'error');
+                const error = await response.text();
+                console.error('Failed to stop simulation:', error);
+                this.addActivityLog(`Failed to stop simulation: ${error}`, 'error');
             }
         } catch (error) {
+            console.error('Error stopping simulation:', error);
             this.addActivityLog(`Error stopping simulation: ${error.message}`, 'error');
         }
     }
     
     async exportData() {
         try {
-            const response = await fetch('/api/v1/data/export', {
+            const includeAssessments = this.includeAssessments.checked;
+            const includeMechanistic = this.includeMechanistic.checked;
+            const includeEvents = this.includeEvents.checked;
+            
+            const response = await fetch('/api/v1/simulation/export', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    export_format: 'json',
-                    include_assessments: this.includeAssessments.checked,
-                    include_mechanistic: this.includeMechanistic.checked,
-                    include_events: this.includeEvents.checked
+                    include_assessments: includeAssessments,
+                    include_mechanistic: includeMechanistic,
+                    include_events: includeEvents
                 })
             });
             
-            const result = await response.json();
-            
             if (response.ok) {
-                this.addActivityLog(`Data exported: ${result.filename}`);
+                const result = await response.json();
+                console.log('Data exported:', result);
+                this.addActivityLog('Data exported successfully');
                 
-                // Trigger download
-                const downloadUrl = `/api/v1/data/download/${result.filename}`;
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = result.filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                // Create download link if file path is provided
+                if (result.file_path) {
+                    const link = document.createElement('a');
+                    link.href = `/api/v1/simulation/download/${result.simulation_id}`;
+                    link.download = `simulation_data_${result.simulation_id}.zip`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
             } else {
-                this.addActivityLog(`Failed to export data: ${result.detail}`, 'error');
+                const error = await response.text();
+                console.error('Failed to export data:', error);
+                this.addActivityLog(`Failed to export data: ${error}`, 'error');
             }
         } catch (error) {
+            console.error('Error exporting data:', error);
             this.addActivityLog(`Error exporting data: ${error.message}`, 'error');
         }
     }
     
     updateConfiguration() {
-        const condition = this.conditionSelect.value;
-        this.addActivityLog(`Configuration updated: ${condition} condition`);
+        console.log('Configuration updated');
+        this.addActivityLog('Configuration updated');
     }
-
+    
     startPolling() {
-        // Poll for simulation status every 2 seconds
+        // Poll for status updates every 5 seconds
         this.pollingInterval = setInterval(async () => {
+            if (!this.isConnected) {
+                return;
+            }
+            
             try {
                 const response = await fetch('/api/v1/simulation/status');
                 if (response.ok) {
                     const status = await response.json();
-                    console.log('Polled status:', status);
                     this.updateSimulationStatus(status);
                 }
             } catch (error) {
                 console.error('Error polling status:', error);
             }
-        }, 2000);
+        }, 5000);
     }
     
     stopPolling() {
@@ -642,34 +751,6 @@ class SimulationDashboard {
             clearInterval(this.pollingInterval);
             this.pollingInterval = null;
         }
-    }
-
-    testCharts() {
-        console.log('Testing charts...');
-        
-        // Test drift chart
-        const testData = {
-            personality_traits: {
-                openness: 0.7,
-                conscientiousness: 0.8,
-                neuroticism: 0.3
-            }
-        };
-        
-        console.log('Testing drift chart with data:', testData);
-        this.updateCharts(testData);
-        
-        // Test assessment chart
-        const testAssessmentData = {
-            phq9_score: 5,
-            gad7_score: 3,
-            pss10_score: 12
-        };
-        
-        console.log('Testing assessment chart with data:', testAssessmentData);
-        this.updateAssessmentChart(testAssessmentData);
-        
-        this.addActivityLog('Charts tested with sample data', 'info');
     }
 }
 

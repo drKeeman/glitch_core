@@ -61,11 +61,11 @@ simulation_engine = SimulationEngine()
 def connect_websocket_manager():
     """Connect WebSocket manager to simulation engine."""
     try:
-        from src.api.routes.websocket import websocket_manager
-        simulation_engine.set_websocket_manager(websocket_manager)
+        from src.api.routes.websocket import websocket_manager, connect_simulation_engine
+        connect_simulation_engine(simulation_engine)
         logger.info("WebSocket manager connected to simulation engine")
-    except ImportError:
-        logger.warning("WebSocket manager not available for simulation engine")
+    except ImportError as e:
+        logger.warning(f"WebSocket manager not available for simulation engine: {e}")
 
 # Connect WebSocket manager when module is imported
 connect_websocket_manager()

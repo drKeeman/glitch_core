@@ -35,8 +35,8 @@ class SimulationEngine:
         """Initialize simulation engine."""
         self.persona_manager = PersonaManager()
         self.event_generator = EventGenerator()
-        self.assessment_service = AssessmentService()
         self.llm_service = ollama_service
+        self.assessment_service = AssessmentService(llm_service=self.llm_service)
         self.memory_service = MemoryService()
         self.file_storage = FileStorage()
         
@@ -64,25 +64,27 @@ class SimulationEngine:
     
     async def _broadcast_status_update(self, status_data: Dict[str, Any]):
         """Broadcast status update to WebSocket clients."""
+        logger.info(f"Attempting to broadcast status update: {status_data}")
         if self.websocket_manager and status_data:
             try:
                 await self.websocket_manager.broadcast_simulation_status(status_data)
-                logger.info(f"Broadcasted simulation status update: {status_data}")
+                logger.info(f"Successfully broadcasted simulation status update: {status_data}")
             except Exception as e:
                 logger.error(f"Error broadcasting status update: {e}")
         else:
-            logger.info(f"Simulation status update (no WebSocket): {status_data}")
+            logger.warning(f"WebSocket manager not available or no status data. Manager: {self.websocket_manager}, Data: {status_data}")
     
     async def _broadcast_progress_update(self, progress_data: Dict[str, Any]):
         """Broadcast progress update to WebSocket clients."""
+        logger.info(f"Attempting to broadcast progress update: {progress_data}")
         if self.websocket_manager and progress_data:
             try:
                 await self.websocket_manager.broadcast_progress_update(progress_data)
-                logger.info(f"Broadcasted progress update: {progress_data}")
+                logger.info(f"Successfully broadcasted progress update: {progress_data}")
             except Exception as e:
                 logger.error(f"Error broadcasting progress update: {e}")
         else:
-            logger.info(f"Progress update (no WebSocket): {progress_data}")
+            logger.warning(f"WebSocket manager not available or no progress data. Manager: {self.websocket_manager}, Data: {progress_data}")
     
     async def initialize_simulation(
         self, 
@@ -101,6 +103,9 @@ class SimulationEngine:
             self.simulation_config = SimulationConfig(**config_data)
             self.simulation_config.experimental_condition = experimental_condition
             
+            # Apply condition-specific configuration
+            self._apply_condition_configuration(experimental_condition, config_data)
+            
             # Validate configuration
             if not self.simulation_config.is_valid_configuration():
                 logger.error("Invalid simulation configuration")
@@ -109,6 +114,7 @@ class SimulationEngine:
             # Initialize services
             await self.event_generator.load_event_templates()
             await self.llm_service.initialize()
+            await self.assessment_service.initialize()
             await self.memory_service.initialize_memory_system()
             
             # Create simulation state
@@ -125,12 +131,46 @@ class SimulationEngine:
             logger.info(f"Condition: {experimental_condition.value}")
             logger.info(f"Duration: {self.simulation_config.duration_days} days")
             logger.info(f"Personas: {len(self.active_personas)}")
+            logger.info(f"Stress event frequency: {self.simulation_config.stress_event_frequency}")
+            logger.info(f"Neutral event frequency: {self.simulation_config.neutral_event_frequency}")
             
             return True
             
         except Exception as e:
             logger.error(f"Error initializing simulation: {e}")
             return False
+
+    def _apply_condition_configuration(self, condition: ExperimentalCondition, config_data: Dict[str, Any]) -> None:
+        """Apply condition-specific configuration parameters."""
+        try:
+            # Get conditions section from config
+            conditions = config_data.get("conditions", {})
+            condition_key = condition.value.lower()
+            
+            if condition_key in conditions:
+                condition_config = conditions[condition_key]
+                logger.info(f"Applying {condition_key} condition configuration")
+                
+                # Apply condition-specific parameters
+                if "stress_event_frequency" in condition_config:
+                    self.simulation_config.stress_event_frequency = condition_config["stress_event_frequency"]
+                    logger.info(f"Set stress_event_frequency to {condition_config['stress_event_frequency']}")
+                
+                if "neutral_event_frequency" in condition_config:
+                    self.simulation_config.neutral_event_frequency = condition_config["neutral_event_frequency"]
+                    logger.info(f"Set neutral_event_frequency to {condition_config['neutral_event_frequency']}")
+                
+                if "event_intensity_range" in condition_config:
+                    self.simulation_config.event_intensity_range = tuple(condition_config["event_intensity_range"])
+                    logger.info(f"Set event_intensity_range to {condition_config['event_intensity_range']}")
+                
+                logger.info(f"Applied {condition_key} condition configuration successfully")
+            else:
+                logger.warning(f"No specific configuration found for condition: {condition_key}")
+                
+        except Exception as e:
+            logger.error(f"Error applying condition configuration: {e}")
+            # Continue with default configuration
     
     async def _create_personas_for_condition(self, condition: ExperimentalCondition) -> None:
         """Create personas for the experimental condition."""
@@ -245,9 +285,23 @@ class SimulationEngine:
                         "active_personas": len(self.active_personas),
                         "events_processed": self.total_events_processed,
                         "assessments_completed": self.total_assessments_completed,
+                        "average_response_time": self.simulation_state.average_response_time,
                         "timestamp": datetime.utcnow().isoformat()
                     }
                     await self._broadcast_progress_update(progress_data)
+                
+                # Also broadcast metrics every day for more frequent updates
+                metrics_data = {
+                    "current_day": day,
+                    "total_days": self.simulation_config.duration_days,
+                    "progress_percentage": self.simulation_state.get_progress_percentage(),
+                    "active_personas": len(self.active_personas),
+                    "events_processed": self.total_events_processed,
+                    "assessments_completed": self.total_assessments_completed,
+                    "average_response_time": self.simulation_state.average_response_time,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+                await self._broadcast_progress_update(metrics_data)
                 
                 # Small delay to prevent overwhelming
                 await asyncio.sleep(0.1)
@@ -396,6 +450,15 @@ class SimulationEngine:
                 for event in events:
                     # Inject event to persona
                     response, response_time = await self.event_generator.inject_event_to_persona(event, persona)
+                    
+                    # Update performance metrics with response time
+                    if response_time > 0:
+                        self.simulation_state.update_performance_metrics(
+                            response_time=response_time,
+                            memory_mb=0.0,  # We'll add memory tracking later
+                            cpu_percent=0.0   # We'll add CPU tracking later
+                        )
+                        logger.debug(f"Updated performance metrics with response time: {response_time * 1000:.2f}ms")
                     
                     # Update persona state based on event
                     await self._update_persona_from_event(persona, event)
@@ -587,7 +650,7 @@ class SimulationEngine:
                 # Broadcast assessment completion event
                 if self.websocket_manager:
                     try:
-                        logger.debug(f"WebSocket manager found, attempting to broadcast assessment completion for {persona.baseline.name}")
+                        logger.info(f"WebSocket manager found, attempting to broadcast assessment completion for {persona.baseline.name}")
                         assessment_data = {
                             "persona_id": persona.state.persona_id,
                             "persona_name": persona.baseline.name,
@@ -603,8 +666,9 @@ class SimulationEngine:
                             "timestamp": datetime.utcnow().isoformat()
                         }
                         
+                        logger.info(f"Broadcasting assessment data: {assessment_data}")
                         await self.websocket_manager.broadcast_assessment_completed(assessment_data)
-                        logger.info(f"Broadcasted assessment completion for {persona.baseline.name}")
+                        logger.info(f"Successfully broadcasted assessment completion for {persona.baseline.name}")
                         
                     except Exception as e:
                         logger.error(f"Error broadcasting assessment completion: {e}")
@@ -749,6 +813,7 @@ class SimulationEngine:
             "active_personas": len(self.active_personas),
             "events_processed": self.total_events_processed,
             "assessments_completed": self.total_assessments_completed,
+            "average_response_time": self.simulation_state.average_response_time,
             "start_time": status.get("start_time"),
             "estimated_completion": self.simulation_state.get_estimated_completion_time() if self.simulation_state else None,
             "is_running": status.get("status") == "running",

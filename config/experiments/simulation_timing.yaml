@@ -10,7 +10,7 @@ simulation:
   time_compression_factor: 24
   
   # Maximum simulation duration (days)
-  max_duration_days: 365
+  max_duration_days: 1825
   
   # Minimum simulation duration (days)
   min_duration_days: 1

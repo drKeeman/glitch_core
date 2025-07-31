@@ -28,7 +28,6 @@
                     <button id="pause-btn" class="btn btn-warning" disabled>Pause</button>
                     <button id="resume-btn" class="btn btn-success" disabled>Resume</button>
                     <button id="stop-btn" class="btn btn-danger" disabled>Stop</button>
-                    <button id="test-charts-btn" class="btn btn-info">Test Charts</button>
                 </div>
                 <div class="simulation-config">
                     <label for="condition-select">Experimental Condition:</label>
@@ -62,20 +61,32 @@
                         <h3>Events Processed</h3>
                         <p id="events-processed">0</p>
                     </div>
+                    <div class="status-card">
+                        <h3>Assessments Completed</h3>
+                        <p id="assessments-completed">0</p>
+                    </div>
+                    <div class="status-card">
+                        <h3>Avg Response Time</h3>
+                        <p id="avg-response-time">0.0s</p>
+                    </div>
                 </div>
             </section>
 
             <!-- Real-time Charts -->
             <section class="charts-section">
-                <h2>Real-time Monitoring</h2>
+                <h2>Performance Metrics</h2>
                 <div class="charts-grid">
                     <div class="chart-container">
-                        <h3>Personality Drift Trends</h3>
-                        <canvas id="drift-chart"></canvas>
+                        <h3>Events Processed Over Time</h3>
+                        <canvas id="events-chart"></canvas>
                     </div>
                     <div class="chart-container">
-                        <h3>Assessment Scores</h3>
-                        <canvas id="assessment-chart"></canvas>
+                        <h3>Assessment Completion Rate</h3>
+                        <canvas id="assessments-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Response Time Performance</h3>
+                        <canvas id="response-time-chart"></canvas>
                     </div>
                 </div>
             </section>

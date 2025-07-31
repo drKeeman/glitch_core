@@ -22,7 +22,7 @@ class OllamaService:
     def __init__(self):
         """Initialize Ollama service."""
         self.base_url = settings.OLLAMA_URL
-        self.model_name = "llama3.1:8b"  # Default model
+        self.model_name = settings.MODEL_NAME  # Use environment variable instead of hardcoding
         self.is_loaded = False
         self.client = None
         
@@ -40,7 +40,7 @@ class OllamaService:
             logger.info("Loading Ollama model...")
             
             # Create HTTP client
-            self.client = httpx.AsyncClient(timeout=30.0)
+            self.client = httpx.AsyncClient(timeout=60.0)  # Increased timeout for assessment responses
             
             # Check if model is available
             try:
@@ -153,6 +153,17 @@ Respond as {persona.baseline.name} would naturally respond:"""
             logger.error(f"Persona baseline attributes: {dir(persona.baseline)}")
             raise
         
+        # Determine valid response range based on assessment type
+        if assessment_type in ["phq9", "gad7"]:
+            valid_range = "0-3"
+            response_format = "0 (not at all), 1 (several days), 2 (more than half), 3 (nearly every day)"
+        elif assessment_type == "pss10":
+            valid_range = "0-4"
+            response_format = "0 (never), 1 (almost never), 2 (sometimes), 3 (fairly often), 4 (very often)"
+        else:
+            valid_range = "0-3"
+            response_format = "0-3 scale"
+        
         prompt = f"""You are {name}, a {age}-year-old {occupation}.
 
 PERSONALITY TRAITS:
@@ -164,9 +175,15 @@ PERSONALITY TRAITS:
 
 BACKGROUND: {background}
 
-ASSESSMENT QUESTION ({assessment_type}): {question}
+ASSESSMENT QUESTION ({assessment_type.upper()}): {question}
 
-Response (number only):"""
+IMPORTANT: This is a psychological assessment simulation. Respond as {name} would naturally respond to this question about their mental health experiences. Use ONLY a single number from {valid_range}.
+
+Valid responses: {response_format}
+
+Remember: You are role-playing as {name} in a research simulation. Provide a realistic assessment response.
+
+Response:"""
         
         return prompt
     
@@ -193,7 +210,7 @@ Response (number only):"""
             return self.response_cache[cache_key], {"cached": True}
         
         try:
-            # Generate response via Ollama API
+            # Generate response via Ollama API with optimized settings for M1 Max
             response = await self.client.post(
                 f"{self.base_url}/api/generate",
                 json={
@@ -204,9 +221,15 @@ Response (number only):"""
                         "num_predict": max_tokens,
                         "temperature": 0.7,
                         "top_p": 0.9,
-                        "top_k": 40
+                        "top_k": 40,
+                        "num_ctx": 2048,  # Increased from 512 for better efficiency
+                        "num_thread": 4,   # Limit CPU threads
+                        "num_gpu": 32,     # Enable GPU acceleration for all layers
+                        "repeat_penalty": 1.1,
+                        "flash_attention": True  # Enable flash attention for GPU
                     }
-                }
+                },
+                timeout=30.0  # Reduced timeout
             )
             
             if response.status_code == 200:
@@ -243,7 +266,7 @@ Response (number only):"""
             raise
     
     async def generate_assessment_response(self, persona: Persona, assessment_type: str, 
-                                        question: str) -> Tuple[str, Dict[str, Any]]:
+                                        question: str, question_index: int = 0) -> Tuple[str, Dict[str, Any]]:
         """Generate assessment response using Ollama API."""
         if not self.is_loaded:
             raise RuntimeError("Ollama model not loaded")
@@ -265,7 +288,7 @@ Response (number only):"""
             return self.response_cache[cache_key], {"cached": True}
         
         try:
-            # Generate response via Ollama API
+            # Generate response via Ollama API with optimized settings for M1 Max
             response = await self.client.post(
                 f"{self.base_url}/api/generate",
                 json={
@@ -273,12 +296,18 @@ Response (number only):"""
                     "prompt": prompt,
                     "stream": False,
                     "options": {
-                        "num_predict": 50,
-                        "temperature": 0.3,  # Lower temperature for more consistent responses
-                        "top_p": 0.8,
-                        "top_k": 20
+                        "num_predict": 10,  # Reduced from 50 - we only need short responses
+                        "temperature": 0.1,  # Lower temperature for more deterministic responses
+                        "top_p": 0.5,  # Reduced from 0.8
+                        "top_k": 10,  # Reduced from 20
+                        "repeat_penalty": 1.1,  # Add repeat penalty
+                        "num_ctx": 1024,  # Increased from 512 for better efficiency
+                        "num_thread": 4,   # Limit CPU threads
+                        "num_gpu": 32,     # Enable GPU acceleration for all layers
+                        "flash_attention": True  # Enable flash attention for GPU
                     }
-                }
+                },
+                timeout=30.0  # Reduced timeout
             )
             
             if response.status_code == 200:
@@ -310,6 +339,9 @@ Response (number only):"""
                 logger.error(f"Ollama API error: {response.text}")
                 raise RuntimeError(f"Ollama API error: {response.status_code}")
                 
+        except httpx.TimeoutException as e:
+            logger.error(f"Timeout generating assessment response after 120s: {e}")
+            raise RuntimeError(f"Assessment response timeout: {e}")
         except Exception as e:
             logger.error(f"Error generating assessment response: {e}")
             raise
