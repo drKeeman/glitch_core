@@ -1,0 +1,69 @@
+# Clinical Assessment Thresholds Configuration
+# Used for PHQ-9, GAD-7, and PSS-10 severity classification and clinical significance assessment
+
+# PHQ-9 Depression Scale Thresholds
+phq9:
+  minimal_threshold: 5
+  mild_threshold: 10
+  moderate_threshold: 15
+  severe_threshold: 20
+  max_score: 27
+
+# GAD-7 Anxiety Scale Thresholds  
+gad7:
+  minimal_threshold: 5
+  mild_threshold: 10
+  moderate_threshold: 15
+  severe_threshold: 20
+  max_score: 21
+
+# PSS-10 Stress Scale Thresholds
+pss10:
+  minimal_threshold: 13
+  mild_threshold: 16
+  moderate_threshold: 19
+  severe_threshold: 22
+  max_score: 40
+
+# Clinical Significance Thresholds
+# Used to determine if changes in scores are clinically significant
+clinical_significance:
+  phq9:
+    minimal_change: 5.0
+    moderate_change: 10.0
+    severe_change: 15.0
+  gad7:
+    minimal_change: 5.0
+    moderate_change: 10.0
+    severe_change: 15.0
+  pss10:
+    minimal_change: 5.0
+    moderate_change: 10.0
+    severe_change: 15.0
+
+# Risk Assessment Criteria
+risk_assessment:
+  suicidal_ideation:
+    phq9_item_9_threshold: 2  # Score of 2 or 3 on suicidal ideation item
+    critical_threshold: 2
+  severe_symptoms:
+    phq9_total: 20
+    gad7_total: 20
+    pss10_total: 25
+  rapid_deterioration:
+    weekly_increase: 10  # 10+ point increase in a week
+    monthly_increase: 15  # 15+ point increase in a month
+
+# Assessment Interpretation Settings
+interpretation:
+  # Minimum change required to trigger clinical attention
+  minimum_clinical_change: 3.0
+  
+  # Threshold for considering a trend significant
+  trend_significance_threshold: 0.05
+  
+  # Number of consecutive assessments to establish baseline
+  baseline_assessment_count: 3
+  
+  # Time window for considering recent assessments (days)
+  recent_assessment_window: 30 

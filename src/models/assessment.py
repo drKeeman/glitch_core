@@ -1,12 +1,15 @@
 """
-Assessment result models for psychiatric scales.
+Assessment models for clinical scales and results.
 """
 
+import uuid
 from datetime import datetime
-from typing import Dict, List, Optional, Any
 from enum import Enum
+from typing import Dict, List, Optional, Any
 
 from pydantic import BaseModel, Field, ConfigDict
+
+from src.core.experiment_config import experiment_config
 
 
 class SeverityLevel(str, Enum):
@@ -17,24 +20,28 @@ class SeverityLevel(str, Enum):
     SEVERE = "severe"
 
 
-# Threshold constants for severity calculation
-# This is assumption, formore realistic and intelligent LLMs ned to 
-# think about more relevant to 'borderline' disorders thresholds
-# but for now lets stick with this
-PHQ9_MINIMAL_THRESHOLD = 5
-PHQ9_MILD_THRESHOLD = 10
-PHQ9_MODERATE_THRESHOLD = 15
-PHQ9_SEVERE_THRESHOLD = 20
+def get_clinical_thresholds():
+    """Get clinical thresholds from configuration."""
+    config = experiment_config.get_config("clinical_thresholds")
+    return config
 
-GAD7_MINIMAL_THRESHOLD = 5
-GAD7_MILD_THRESHOLD = 10
-GAD7_MODERATE_THRESHOLD = 15
-GAD7_SEVERE_THRESHOLD = 20
 
-PSS10_MINIMAL_THRESHOLD = 13
-PSS10_MILD_THRESHOLD = 16
-PSS10_MODERATE_THRESHOLD = 19
-PSS10_SEVERE_THRESHOLD = 22
+def get_phq9_thresholds():
+    """Get PHQ-9 thresholds from configuration."""
+    config = get_clinical_thresholds()
+    return config.get("phq9", {})
+
+
+def get_gad7_thresholds():
+    """Get GAD-7 thresholds from configuration."""
+    config = get_clinical_thresholds()
+    return config.get("gad7", {})
+
+
+def get_pss10_thresholds():
+    """Get PSS-10 thresholds from configuration."""
+    config = get_clinical_thresholds()
+    return config.get("pss10", {})
 
 
 class AssessmentResult(BaseModel):
@@ -88,11 +95,16 @@ class PHQ9Result(AssessmentResult):
     @classmethod
     def calculate_severity(cls, total_score: float) -> SeverityLevel:
         """Calculate severity level based on PHQ-9 score."""
-        if total_score < PHQ9_MINIMAL_THRESHOLD:
+        thresholds = get_phq9_thresholds()
+        minimal_threshold = thresholds.get("minimal_threshold", 5)
+        mild_threshold = thresholds.get("mild_threshold", 10)
+        moderate_threshold = thresholds.get("moderate_threshold", 15)
+        
+        if total_score < minimal_threshold:
             return SeverityLevel.MINIMAL
-        elif total_score < PHQ9_MILD_THRESHOLD:
+        elif total_score < mild_threshold:
             return SeverityLevel.MILD
-        elif total_score < PHQ9_MODERATE_THRESHOLD:
+        elif total_score < moderate_threshold:
             return SeverityLevel.MODERATE
         else:
             return SeverityLevel.SEVERE
@@ -114,11 +126,16 @@ class GAD7Result(AssessmentResult):
     @classmethod
     def calculate_severity(cls, total_score: float) -> SeverityLevel:
         """Calculate severity level based on GAD-7 score."""
-        if total_score < GAD7_MINIMAL_THRESHOLD:
+        thresholds = get_gad7_thresholds()
+        minimal_threshold = thresholds.get("minimal_threshold", 5)
+        mild_threshold = thresholds.get("mild_threshold", 10)
+        moderate_threshold = thresholds.get("moderate_threshold", 15)
+        
+        if total_score < minimal_threshold:
             return SeverityLevel.MINIMAL
-        elif total_score < GAD7_MILD_THRESHOLD:
+        elif total_score < mild_threshold:
             return SeverityLevel.MILD
-        elif total_score < GAD7_MODERATE_THRESHOLD:
+        elif total_score < moderate_threshold:
             return SeverityLevel.MODERATE
         else:
             return SeverityLevel.SEVERE
@@ -136,11 +153,16 @@ class PSS10Result(AssessmentResult):
     @classmethod
     def calculate_severity(cls, total_score: float) -> SeverityLevel:
         """Calculate severity level based on PSS-10 score."""
-        if total_score < PSS10_MINIMAL_THRESHOLD:
+        thresholds = get_pss10_thresholds()
+        minimal_threshold = thresholds.get("minimal_threshold", 13)
+        mild_threshold = thresholds.get("mild_threshold", 16)
+        moderate_threshold = thresholds.get("moderate_threshold", 19)
+        
+        if total_score < minimal_threshold:
             return SeverityLevel.MINIMAL
-        elif total_score < PSS10_MILD_THRESHOLD:
+        elif total_score < mild_threshold:
             return SeverityLevel.MILD
-        elif total_score < PSS10_MODERATE_THRESHOLD:
+        elif total_score < moderate_threshold:
             return SeverityLevel.MODERATE
         else:
             return SeverityLevel.SEVERE
@@ -170,7 +192,7 @@ class AssessmentSession(BaseModel):
     completed_at: Optional[datetime] = Field(None, description="Session completion timestamp")
     
     def get_all_results(self) -> List[AssessmentResult]:
-        """Get all assessment results in this session."""
+        """Get all assessment results from session."""
         results = []
         if self.phq9_result:
             results.append(self.phq9_result)
@@ -181,29 +203,40 @@ class AssessmentSession(BaseModel):
         return results
     
     def get_composite_score(self) -> Dict[str, float]:
-        """Get composite scores across all assessments."""
-        scores = {}
+        """Get composite scores from all assessments."""
+        composite = {}
         if self.phq9_result:
-            scores["depression"] = self.phq9_result.total_score
+            composite["depression"] = self.phq9_result.total_score
         if self.gad7_result:
-            scores["anxiety"] = self.gad7_result.total_score
+            composite["anxiety"] = self.gad7_result.total_score
         if self.pss10_result:
-            scores["stress"] = self.pss10_result.total_score
-        return scores
+            composite["stress"] = self.pss10_result.total_score
+        return composite
     
     def get_overall_severity(self) -> SeverityLevel:
-        """Get overall clinical severity based on all assessments."""
-        max_severity = SeverityLevel.MINIMAL
+        """Get overall severity level from all assessments."""
+        results = self.get_all_results()
+        if not results:
+            return SeverityLevel.MINIMAL
         
-        for result in self.get_all_results():
-            if result.severity_level == SeverityLevel.SEVERE:
-                return SeverityLevel.SEVERE
-            elif result.severity_level == SeverityLevel.MODERATE and max_severity in [SeverityLevel.MINIMAL, SeverityLevel.MILD]:
-                max_severity = SeverityLevel.MODERATE
-            elif result.severity_level == SeverityLevel.MILD and max_severity == SeverityLevel.MINIMAL:
-                max_severity = SeverityLevel.MILD
+        # Return the highest severity level (worst case)
+        severity_scores = {
+            SeverityLevel.MINIMAL: 0,
+            SeverityLevel.MILD: 1,
+            SeverityLevel.MODERATE: 2,
+            SeverityLevel.SEVERE: 3
+        }
         
-        return max_severity
+        max_severity_score = max(severity_scores[result.severity_level] for result in results)
+        
+        if max_severity_score == 0:
+            return SeverityLevel.MINIMAL
+        elif max_severity_score == 1:
+            return SeverityLevel.MILD
+        elif max_severity_score == 2:
+            return SeverityLevel.MODERATE
+        else:
+            return SeverityLevel.SEVERE
     
     def is_complete(self) -> bool:
         """Check if session is complete."""
@@ -212,5 +245,6 @@ class AssessmentSession(BaseModel):
     def mark_completed(self) -> None:
         """Mark session as completed."""
         self.completed_at = datetime.utcnow()
+        # Calculate session duration
         if self.started_at and self.completed_at:
             self.session_duration = (self.completed_at - self.started_at).total_seconds() 

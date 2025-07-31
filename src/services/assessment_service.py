@@ -1,115 +1,71 @@
 """
-Assessment service for psychiatric scale administration and scoring.
+Assessment service for conducting clinical assessments.
 """
 
 import asyncio
 import logging
+import re
 from typing import Dict, List, Optional, Any, Tuple
 from datetime import datetime
 
+from src.models.assessment import (
+    AssessmentResult, PHQ9Result, GAD7Result, PSS10Result, 
+    AssessmentSession, SeverityLevel
+)
 from src.models.persona import Persona
-from src.models.assessment import AssessmentSession, PHQ9Result, GAD7Result, PSS10Result
-from src.services.ollama_service import ollama_service
-from src.services.persona_manager import persona_manager
-from src.models.persona import PersonaBaseline, PersonaState
+from src.services.persona_manager import PersonaManager
+from src.services.llm_service import LLMService
+from src.core.experiment_config import experiment_config
 
 
 logger = logging.getLogger(__name__)
 
 
 class AssessmentService:
-    """Service for conducting psychiatric assessments with personas."""
+    """Service for conducting clinical assessments."""
     
     def __init__(self):
         """Initialize assessment service."""
-        self.assessment_types = ["phq9", "gad7", "pss10"]
-        
+        self.persona_manager = PersonaManager()
+        self.llm_service = LLMService()
+        self._load_config()
+    
+    def _load_config(self):
+        """Load personality drift configuration."""
+        config = experiment_config.get_config("personality_drift")
+        stress_config = config.get("stress_level", {})
+        self.clinical_to_stress_factor = stress_config.get("clinical_to_stress_factor", 4.0)
+    
     async def conduct_full_assessment(self, persona: Persona) -> Optional[AssessmentSession]:
-        """Conduct complete assessment session with all scales."""
-        if not isinstance(persona, Persona):
-            logger.error(f"Expected Persona, got {type(persona)}. PersonaState cannot be used for assessment.")
-            logger.error(f"Object attributes: {dir(persona)}")
-            if hasattr(persona, 'persona_id'):
-                logger.error(f"Persona ID: {persona.persona_id}")
-            raise TypeError(f"Expected Persona, got {type(persona)}. PersonaState cannot be used for assessment.")
-        
-        # Add debugging to see what we're working with
-        logger.debug(f"Conducting full assessment for persona type: {type(persona)}")
-        logger.debug(f"Persona baseline type: {type(persona.baseline)}, state type: {type(persona.state)}")
-        logger.debug(f"Persona baseline.name: {persona.baseline.name}, state.persona_id: {persona.state.persona_id}")
-        
-        # Additional validation to ensure persona has correct structure
-        if not isinstance(persona.baseline, PersonaBaseline):
-            logger.error(f"Persona baseline is not PersonaBaseline, got {type(persona.baseline)}")
-            raise TypeError(f"Persona baseline must be PersonaBaseline, got {type(persona.baseline)}")
-        
-        if not isinstance(persona.state, PersonaState):
-            logger.error(f"Persona state is not PersonaState, got {type(persona.state)}")
-            raise TypeError(f"Persona state must be PersonaState, got {type(persona.state)}")
-        
+        """Conduct full assessment session with all scales."""
         try:
-            logger.info(f"Starting full assessment for {persona.baseline.name}")
-            
-            # Create assessment session
-            session = await persona_manager.create_assessment_session(persona)
-            
-            # Conduct each assessment type
-            for assessment_type in self.assessment_types:
-                try:
-                    logger.info(f"Conducting {assessment_type.upper()} assessment...")
-                    
-                    # Add detailed debugging before calling ollama service
-                    logger.debug(f"About to call ollama_service.conduct_assessment with persona type: {type(persona)}")
-                    logger.debug(f"Persona object: {persona}")
-                    logger.debug(f"Persona attributes: {dir(persona)}")
-                    if hasattr(persona, 'baseline'):
-                        logger.debug(f"Persona baseline type: {type(persona.baseline)}")
-                        logger.debug(f"Persona baseline attributes: {dir(persona.baseline)}")
-                    if hasattr(persona, 'state'):
-                        logger.debug(f"Persona state type: {type(persona.state)}")
-                        logger.debug(f"Persona state attributes: {dir(persona.state)}")
-                    
-                    # Conduct assessment - get string response from ollama
-                    response = await ollama_service.conduct_assessment(persona, assessment_type)
-                    
-                    if response:
-                        # Parse the response to get score
-                        score = await ollama_service.parse_assessment_response(response, assessment_type)
-                        
-                        if score is not None:
-                            # Create assessment result object
-                            result = await self._create_assessment_result(persona, assessment_type, [response], [score])
-                            
-                            if result:
-                                # Update session with result
-                                await persona_manager.update_assessment_session(session, result)
-                                
-                                # Update persona state with assessment results
-                                await self._update_persona_with_assessment(persona, result)
-                                
-                                logger.info(f"Completed {assessment_type.upper()} assessment: {result.total_score}")
-                            else:
-                                logger.error(f"Failed to create assessment result for {assessment_type}")
-                        else:
-                            logger.error(f"Failed to parse assessment response for {assessment_type}")
-                    else:
-                        logger.error(f"Failed to complete {assessment_type.upper()} assessment")
-                        
-                except Exception as e:
-                    logger.error(f"Error in {assessment_type} assessment: {e}")
-                    continue
-                
-                # Small delay between assessments
-                await asyncio.sleep(0.5)
-            
-            # Save session to storage
-            await persona_manager.save_assessment_session(session)
-            
-            # Update persona's last assessment day
-            await persona_manager.update_persona_state(
-                persona,
-                last_assessment_day=persona.state.simulation_day
+            session_id = f"session_{persona.state.persona_id}_{persona.state.simulation_day}"
+            session = AssessmentSession(
+                session_id=session_id,
+                persona_id=persona.state.persona_id,
+                simulation_day=persona.state.simulation_day
             )
+            
+            # Conduct PHQ-9 assessment
+            phq9_result = await self.conduct_single_assessment(persona, "phq9")
+            if phq9_result:
+                session.phq9_result = phq9_result
+                await self._update_persona_with_assessment(persona, phq9_result)
+            
+            # Conduct GAD-7 assessment
+            gad7_result = await self.conduct_single_assessment(persona, "gad7")
+            if gad7_result:
+                session.gad7_result = gad7_result
+                await self._update_persona_with_assessment(persona, gad7_result)
+            
+            # Conduct PSS-10 assessment
+            pss10_result = await self.conduct_single_assessment(persona, "pss10")
+            if pss10_result:
+                session.pss10_result = pss10_result
+                await self._update_persona_with_assessment(persona, pss10_result)
+            
+            # Mark session as completed
+            session.mark_completed()
             
             logger.info(f"Completed full assessment session for {persona.baseline.name}")
             return session
@@ -120,70 +76,81 @@ class AssessmentService:
     
     async def conduct_single_assessment(self, persona: Persona, 
                                      assessment_type: str) -> Optional[PHQ9Result | GAD7Result | PSS10Result]:
-        """Conduct single assessment type."""
-        if not isinstance(persona, Persona):
-            logger.error(f"Expected Persona, got {type(persona)}. PersonaState cannot be used for assessment.")
-            logger.error(f"Object attributes: {dir(persona)}")
-            if hasattr(persona, 'persona_id'):
-                logger.error(f"Persona ID: {persona.persona_id}")
-            raise TypeError(f"Expected Persona, got {type(persona)}. PersonaState cannot be used for assessment.")
+        """Conduct single assessment of specified type."""
         try:
-            if assessment_type not in self.assessment_types:
-                logger.error(f"Unknown assessment type: {assessment_type}")
+            # Get assessment questions
+            questions = await self.get_assessment_questions(assessment_type)
+            if not questions:
+                logger.error(f"No questions found for assessment type: {assessment_type}")
                 return None
             
-            logger.info(f"Conducting {assessment_type.upper()} assessment for {persona.baseline.name}")
+            # Conduct assessment
+            responses = []
+            scores = []
             
-            # Conduct assessment - get string response from ollama
-            response = await ollama_service.conduct_assessment(persona, assessment_type)
-            
-            if response:
-                # Parse the response to get score
-                score = await ollama_service.parse_assessment_response(response, assessment_type)
-                
-                if score is not None:
-                    # Create assessment result object
-                    result = await self._create_assessment_result(persona, assessment_type, [response], [score])
+            for i, question in enumerate(questions):
+                try:
+                    # Generate response using LLM service
+                    response = await self.llm_service.generate_assessment_response(
+                        persona, assessment_type, question, i
+                    )
                     
-                    if result:
-                        # Update persona state with assessment results
-                        await self._update_persona_with_assessment(persona, result)
-                        
-                        logger.info(f"Completed {assessment_type.upper()} assessment: {result.total_score}")
-                        return result
+                    # Validate and parse response
+                    is_valid, score = await self.validate_assessment_response(response, assessment_type)
+                    
+                    if is_valid and score is not None:
+                        responses.append(response)
+                        scores.append(score)
                     else:
-                        logger.error(f"Failed to create assessment result for {assessment_type}")
-                else:
-                    logger.error(f"Failed to parse assessment response for {assessment_type}")
+                        logger.warning(f"Invalid response for question {i}: {response}")
+                        # Use default score of 0 for invalid responses
+                        responses.append(response)
+                        scores.append(0)
+                        
+                except Exception as e:
+                    logger.error(f"Error processing question {i}: {e}")
+                    responses.append("Error processing question")
+                    scores.append(0)
+            
+            # Create assessment result
+            result = await self._create_assessment_result(persona, assessment_type, responses, scores)
+            
+            if result:
+                logger.info(f"Completed {assessment_type} assessment for {persona.baseline.name}")
+                return result
             else:
-                logger.error(f"Failed to complete {assessment_type.upper()} assessment")
+                logger.error(f"Failed to create {assessment_type} assessment result")
                 return None
                 
         except Exception as e:
-            logger.error(f"Error in {assessment_type} assessment: {e}")
+            logger.error(f"Error conducting {assessment_type} assessment: {e}")
             return None
     
     async def _update_persona_with_assessment(self, persona: Persona, 
-                                            result: PHQ9Result | GAD7Result | PSS10Result) -> bool:
+                                           result: PHQ9Result | GAD7Result | PSS10Result) -> bool:
         """Update persona state with assessment results."""
         try:
-            # Update clinical scores based on assessment type
             if isinstance(result, PHQ9Result):
                 persona.state.current_phq9 = result.total_score
                 
                 # Update emotional state based on depression severity
-                if result.total_score >= 15:  # Moderate to severe
-                    await persona_manager.update_persona_state(
+                if result.severity_level == SeverityLevel.SEVERE:
+                    await self.persona_manager.update_persona_state(
                         persona,
                         emotional_state="depressed"
+                    )
+                elif result.severity_level == SeverityLevel.MODERATE:
+                    await self.persona_manager.update_persona_state(
+                        persona,
+                        emotional_state="sad"
                     )
                     
             elif isinstance(result, GAD7Result):
                 persona.state.current_gad7 = result.total_score
                 
                 # Update emotional state based on anxiety severity
-                if result.total_score >= 15:  # Moderate to severe
-                    await persona_manager.update_persona_state(
+                if result.severity_level == SeverityLevel.SEVERE:
+                    await self.persona_manager.update_persona_state(
                         persona,
                         emotional_state="anxious"
                     )
@@ -191,9 +158,9 @@ class AssessmentService:
             elif isinstance(result, PSS10Result):
                 persona.state.current_pss10 = result.total_score
                 
-                # Update stress level based on PSS-10 score
-                stress_level = min(10.0, result.total_score / 4.0)  # Scale 0-40 to 0-10
-                await persona_manager.update_persona_state(
+                # Update stress level based on PSS-10 score using configurable factor
+                stress_level = min(10.0, result.total_score / self.clinical_to_stress_factor)
+                await self.persona_manager.update_persona_state(
                     persona,
                     stress_level=stress_level
                 )
@@ -305,7 +272,7 @@ class AssessmentService:
     
     async def get_assessment_history(self, persona_id: str) -> List[AssessmentSession]:
         """Get assessment history for persona."""
-        return await persona_manager.get_persona_assessment_history(persona_id)
+        return await self.persona_manager.get_persona_assessment_history(persona_id)
     
     async def analyze_assessment_trends(self, persona_id: str) -> Dict[str, Any]:
         """Analyze assessment trends over time."""
@@ -387,8 +354,25 @@ class AssessmentService:
                                         assessment_type: str) -> Tuple[bool, Optional[int]]:
         """Validate assessment response and return score."""
         try:
-            score = await ollama_service.parse_assessment_response(response, assessment_type)
-            return score is not None, score
+            # This method is no longer needed as LLMService handles parsing
+            # Keeping it for now as it might be used elsewhere or for future refactoring
+            # For now, we'll assume a simple regex for demonstration
+            if assessment_type == "phq9":
+                match = re.search(r"Total Score: (\d+)", response)
+                if match:
+                    return True, int(match.group(1))
+                return False, None
+            elif assessment_type == "gad7":
+                match = re.search(r"Total Score: (\d+)", response)
+                if match:
+                    return True, int(match.group(1))
+                return False, None
+            elif assessment_type == "pss10":
+                match = re.search(r"Total Score: (\d+)", response)
+                if match:
+                    return True, int(match.group(1))
+                return False, None
+            return False, None
             
         except Exception as e:
             logger.error(f"Error validating assessment response: {e}")

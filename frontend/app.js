@@ -41,6 +41,63 @@ class SimulationDashboard {
 
         // Activity log
         this.activityLog = document.getElementById('activity-log');
+        
+        // Load event types dynamically
+        this.loadEventTypes();
+    }
+    
+    async loadEventTypes() {
+        console.log('loadEventTypes called - starting to fetch event types...');
+        try {
+            const response = await fetch('/api/v1/data/event-types');
+            console.log('Response received:', response);
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const eventTypes = await response.json();
+            console.log('Event types parsed:', eventTypes);
+            
+            // Clear existing options except "control"
+            const controlOption = this.conditionSelect.querySelector('option[value="control"]');
+            console.log('Control option found:', controlOption);
+            this.conditionSelect.innerHTML = '';
+            if (controlOption) {
+                this.conditionSelect.appendChild(controlOption);
+            }
+            
+            // Add event type options
+            console.log('Adding event type options...');
+            eventTypes.types.forEach(type => {
+                console.log('Adding option:', type);
+                const option = document.createElement('option');
+                option.value = type.value;
+                option.textContent = type.label;
+                option.title = type.description;
+                this.conditionSelect.appendChild(option);
+            });
+            
+            console.log('Final select options:', this.conditionSelect.innerHTML);
+            console.log('Event types loaded successfully:', eventTypes);
+        } catch (error) {
+            console.error('Failed to load event types:', error);
+            // Fallback to default options if API fails
+            const fallbackOptions = [
+                { value: 'stress', label: 'Stress Events' },
+                { value: 'neutral', label: 'Neutral Events' },
+                { value: 'minimal', label: 'Minimal Events' }
+            ];
+            
+            console.log('Using fallback options:', fallbackOptions);
+            fallbackOptions.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.value;
+                option.textContent = type.label;
+                this.conditionSelect.appendChild(option);
+            });
+        }
     }
     
     initializeCharts() {

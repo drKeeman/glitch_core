@@ -22,6 +22,7 @@ from src.models.mechanistic import (
 )
 from src.models.persona import Persona
 from src.models.assessment import AssessmentResult
+from src.core.experiment_config import experiment_config
 
 
 logger = logging.getLogger(__name__)
@@ -34,17 +35,45 @@ class DriftDetector:
         """Initialize drift detector."""
         self.baseline_data: Dict[str, Dict[str, Any]] = {}
         self.drift_history: Dict[str, List[DriftDetection]] = {}
-        self.detection_threshold = 0.1
-        self.significance_threshold = 0.05
         
-        # Drift detection configuration
-        self.min_baseline_samples = 5
-        self.drift_window_days = 7
-        self.early_warning_threshold = 0.05
+        # Load configuration
+        self._load_config()
         
         # Performance tracking
         self.total_detections = 0
         self.total_processing_time = 0.0
+    
+    def _load_config(self):
+        """Load drift detection configuration."""
+        config = experiment_config.get_config("drift_detection")
+        
+        # Core detection thresholds
+        detection_thresholds = config.get("detection_thresholds", {})
+        self.detection_threshold = detection_thresholds.get("drift_threshold", 0.1)
+        self.significance_threshold = detection_thresholds.get("significance_threshold", 0.05)
+        self.early_warning_threshold = detection_thresholds.get("early_warning_threshold", 0.05)
+        
+        # Baseline parameters
+        baseline_config = config.get("baseline", {})
+        self.min_baseline_samples = baseline_config.get("min_baseline_samples", 5)
+        self.drift_window_days = baseline_config.get("baseline_window_days", 7)
+        
+        # Analysis parameters
+        analysis_config = config.get("analysis", {})
+        self.min_trend_points = analysis_config.get("min_trend_points", 3)
+        self.confidence_level = analysis_config.get("confidence_level", 0.95)
+        
+        # Circuit-specific parameters
+        circuits_config = config.get("circuits", {})
+        self.attention_drift_threshold = circuits_config.get("attention_drift_threshold", 0.15)
+        self.activation_drift_threshold = circuits_config.get("activation_drift_threshold", 0.12)
+        self.memory_drift_threshold = circuits_config.get("memory_drift_threshold", 0.18)
+        
+        # Clinical integration parameters
+        clinical_config = config.get("clinical_integration", {})
+        self.clinical_weight = clinical_config.get("clinical_weight", 0.4)
+        self.mechanistic_weight = clinical_config.get("mechanistic_weight", 0.6)
+        self.min_clinical_change = clinical_config.get("min_clinical_change", 3.0)
     
     async def establish_baseline(
         self, 

@@ -11,6 +11,7 @@ from src.models.assessment import (
     AssessmentSession, SeverityLevel
 )
 from src.models.persona import Persona
+from src.core.experiment_config import experiment_config
 
 
 logger = logging.getLogger(__name__)
@@ -21,8 +22,15 @@ class ClinicalInterpreter:
     
     def __init__(self):
         """Initialize clinical interpreter."""
+        # Load configuration
+        self._load_config()
+    
+    def _load_config(self):
+        """Load clinical thresholds and risk criteria from configuration."""
+        config = experiment_config.get_config("clinical_thresholds")
+        
         # Clinical significance thresholds
-        self.clinical_thresholds = {
+        self.clinical_thresholds = config.get("clinical_significance", {
             "phq9": {
                 "minimal_change": 5.0,
                 "moderate_change": 10.0,
@@ -38,12 +46,12 @@ class ClinicalInterpreter:
                 "moderate_change": 10.0,
                 "severe_change": 15.0
             }
-        }
+        })
         
         # Risk assessment criteria
-        self.risk_criteria = {
+        self.risk_criteria = config.get("risk_assessment", {
             "suicidal_ideation": {
-                "phq9_item_9": 2,  # Score of 2 or 3 on suicidal ideation item
+                "phq9_item_9_threshold": 2,  # Score of 2 or 3 on suicidal ideation item
                 "critical_threshold": 2
             },
             "severe_symptoms": {
@@ -55,7 +63,7 @@ class ClinicalInterpreter:
                 "weekly_increase": 10,  # 10+ point increase in a week
                 "monthly_increase": 15   # 15+ point increase in a month
             }
-        }
+        })
     
     def assess_clinical_significance(self, current_result: AssessmentResult, 
                                    baseline_result: Optional[AssessmentResult] = None,
@@ -117,55 +125,46 @@ class ClinicalInterpreter:
         risk_assessment = {
             "risk_level": "low",
             "risk_factors": [],
-            "risk_score": 0
+            "suicidal_risk": False,
+            "severe_symptom_risk": False,
+            "rapid_deterioration_risk": False
         }
         
         try:
-            # Check for critical risk factors
+            # Check for suicidal ideation
             if isinstance(result, PHQ9Result):
-                # Suicidal ideation assessment
-                if result.suicidal_ideation_score >= self.risk_criteria["suicidal_ideation"]["critical_threshold"]:
+                suicidal_threshold = self.risk_criteria.get("suicidal_ideation", {}).get("phq9_item_9_threshold", 2)
+                if result.suicidal_ideation_score >= suicidal_threshold:
+                    risk_assessment["suicidal_risk"] = True
+                    risk_assessment["risk_factors"].append("suicidal_ideation")
                     risk_assessment["risk_level"] = "critical"
-                    risk_assessment["risk_factors"].append("Suicidal ideation present")
-                    risk_assessment["risk_score"] += 10
-                
-                # Severe depression
-                if result.total_score >= self.risk_criteria["severe_symptoms"]["phq9_total"]:
-                    risk_assessment["risk_factors"].append("Severe depression symptoms")
-                    risk_assessment["risk_score"] += 5
             
-            elif isinstance(result, GAD7Result):
-                # Severe anxiety
-                if result.total_score >= self.risk_criteria["severe_symptoms"]["gad7_total"]:
-                    risk_assessment["risk_factors"].append("Severe anxiety symptoms")
-                    risk_assessment["risk_score"] += 5
-            
-            elif isinstance(result, PSS10Result):
-                # Severe stress
-                if result.total_score >= self.risk_criteria["severe_symptoms"]["pss10_total"]:
-                    risk_assessment["risk_factors"].append("Severe stress symptoms")
-                    risk_assessment["risk_score"] += 3
+            # Check for severe symptoms
+            severe_symptoms = self.risk_criteria.get("severe_symptoms", {})
+            if result.total_score >= severe_symptoms.get(f"{result.assessment_type}_total", 20):
+                risk_assessment["severe_symptom_risk"] = True
+                risk_assessment["risk_factors"].append("severe_symptoms")
+                if risk_assessment["risk_level"] != "critical":
+                    risk_assessment["risk_level"] = "high"
             
             # Check for rapid deterioration
             if previous_results and len(previous_results) >= 2:
-                recent_change = result.total_score - previous_results[-1].total_score
-                if recent_change >= self.risk_criteria["rapid_deterioration"]["weekly_increase"]:
-                    risk_assessment["risk_factors"].append("Rapid symptom deterioration")
-                    risk_assessment["risk_score"] += 3
+                recent_results = sorted(previous_results, key=lambda x: x.simulation_day)[-2:]
+                if len(recent_results) >= 2:
+                    change = result.total_score - recent_results[0].total_score
+                    rapid_threshold = self.risk_criteria.get("rapid_deterioration", {}).get("weekly_increase", 10)
+                    
+                    if change >= rapid_threshold:
+                        risk_assessment["rapid_deterioration_risk"] = True
+                        risk_assessment["risk_factors"].append("rapid_deterioration")
+                        if risk_assessment["risk_level"] not in ["critical", "high"]:
+                            risk_assessment["risk_level"] = "moderate"
             
-            # Determine risk level based on score
-            if risk_assessment["risk_score"] >= 10:
-                risk_assessment["risk_level"] = "critical"
-            elif risk_assessment["risk_score"] >= 5:
-                risk_assessment["risk_level"] = "high"
-            elif risk_assessment["risk_score"] >= 2:
-                risk_assessment["risk_level"] = "medium"
+            return risk_assessment
             
         except Exception as e:
             logger.error(f"Error assessing risk level: {e}")
-            risk_assessment["risk_factors"].append(f"Risk assessment error: {str(e)}")
-        
-        return risk_assessment
+            return risk_assessment
     
     def _generate_clinical_recommendations(self, result: AssessmentResult, 
                                          assessment: Dict[str, Any],
@@ -178,7 +177,7 @@ class ClinicalInterpreter:
             if risk_assessment["risk_level"] == "critical":
                 recommendations.append("Immediate clinical evaluation required")
                 recommendations.append("Safety assessment and monitoring")
-                if "Suicidal ideation present" in risk_assessment["risk_factors"]:
+                if "suicidal_ideation" in risk_assessment["risk_factors"]:
                     recommendations.append("Crisis intervention services recommended")
             
             # High risk recommendations
@@ -188,7 +187,7 @@ class ClinicalInterpreter:
                 recommendations.append("Weekly monitoring required")
             
             # Moderate risk recommendations
-            elif risk_assessment["risk_level"] == "medium":
+            elif risk_assessment["risk_level"] == "moderate":
                 recommendations.append("Clinical evaluation within 1-2 weeks")
                 recommendations.append("Implement coping strategies")
                 recommendations.append("Bi-weekly monitoring")

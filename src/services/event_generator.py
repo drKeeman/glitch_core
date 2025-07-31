@@ -1,60 +1,65 @@
 """
-Event generation and injection service.
+Event generation service for creating simulation events.
 """
 
 import asyncio
 import logging
 import random
 import uuid
-from datetime import datetime
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
 
-from src.core.config import config_manager
 from src.models.events import (
-    Event, StressEvent, NeutralEvent, MinimalEvent, EventTemplate,
-    EventType, EventCategory, EventIntensity
+    Event, StressEvent, NeutralEvent, MinimalEvent, EventTemplate, EventType, EventCategory
 )
-from src.models.simulation import SimulationState, SimulationConfig
 from src.models.persona import Persona
+from src.models.simulation import SimulationConfig
+from src.core.experiment_config import experiment_config
 
 
 logger = logging.getLogger(__name__)
 
 
 class EventGenerator:
-    """Event generation and injection service."""
+    """Generates events for simulation."""
     
     def __init__(self):
         """Initialize event generator."""
         self.event_templates: Dict[str, EventTemplate] = {}
-        self.frequency_weights: Dict[str, float] = {}
-        self.loaded_templates = False
-        
+        self.frequency_weights: Dict[str, float] = {
+            "work": 1.0,
+            "social": 1.0,
+            "health": 1.0,
+            "family": 1.0,
+            "financial": 1.0
+        }
+        self._load_config()
+    
+    def _load_config(self):
+        """Load personality drift configuration for trauma calculation."""
+        config = experiment_config.get_config("personality_drift")
+        trauma_config = config.get("trauma", {})
+        self.trauma_correlation_factor = trauma_config.get("stress_correlation_factor", 0.8)
+    
     async def load_event_templates(self) -> bool:
         """Load event templates from configuration files."""
         try:
-            logger.info("Loading event templates...")
+            config_dir = Path("config/events")
             
-            # Load stress events
-            stress_config = config_manager.load_event_config("stress_events")
-            logger.info(f"Stress config loaded: {stress_config is not None}")
-            if stress_config:
-                await self._load_templates_from_config(stress_config, EventType.STRESS)
+            # Load different event type configurations
+            event_types = [
+                ("stress_events.yaml", EventType.STRESS),
+                ("neutral_events.yaml", EventType.NEUTRAL),
+                ("minimal_events.yaml", EventType.MINIMAL)
+            ]
             
-            # Load neutral events
-            neutral_config = config_manager.load_event_config("neutral_events")
-            logger.info(f"Neutral config loaded: {neutral_config is not None}")
-            if neutral_config:
-                await self._load_templates_from_config(neutral_config, EventType.NEUTRAL)
+            for config_file, event_type in event_types:
+                config_path = config_dir / config_file
+                if config_path.exists():
+                    await self._load_templates_from_config(config_path, event_type)
+                else:
+                    logger.warning(f"Event config file not found: {config_path}")
             
-            # Load minimal events
-            minimal_config = config_manager.load_event_config("minimal_events")
-            logger.info(f"Minimal config loaded: {minimal_config is not None}")
-            if minimal_config:
-                await self._load_templates_from_config(minimal_config, EventType.MINIMAL)
-            
-            self.loaded_templates = True
             logger.info(f"Loaded {len(self.event_templates)} event templates")
             return True
             
@@ -62,19 +67,17 @@ class EventGenerator:
             logger.error(f"Error loading event templates: {e}")
             return False
     
-    async def _load_templates_from_config(self, config: Dict[str, Any], event_type: EventType) -> None:
-        """Load templates from configuration dictionary."""
-        templates = config.get("event_templates", [])
-        frequency_weights = config.get("frequency_weights", {})
-        
-        for template_data in templates:
-            try:
-                # Convert intensity range to enum values
-                intensity_range = tuple(
-                    EventIntensity(intensity) for intensity in template_data["intensity_range"]
-                )
-                
-                # Create template
+    async def _load_templates_from_config(self, config_path: Path, event_type: EventType) -> None:
+        """Load event templates from a specific configuration file."""
+        try:
+            import yaml
+            
+            with open(config_path, 'r') as f:
+                config_data = yaml.safe_load(f)
+            
+            templates = config_data.get("templates", [])
+            
+            for template_data in templates:
                 template = EventTemplate(
                     template_id=template_data["template_id"],
                     event_type=event_type,
@@ -82,23 +85,17 @@ class EventGenerator:
                     title_template=template_data["title_template"],
                     description_template=template_data["description_template"],
                     context_template=template_data["context_template"],
-                    intensity_range=intensity_range,
                     stress_impact_range=tuple(template_data["stress_impact_range"]),
-                    duration_range=tuple(template_data["duration_range"]),
+                    intensity_range=tuple(template_data.get("intensity_range", [0.5, 1.0])),
                     personality_impact_ranges=template_data.get("personality_impact_ranges", {}),
-                    depression_risk_range=tuple(template_data.get("depression_risk_range", [0.0, 0.0])),
-                    anxiety_risk_range=tuple(template_data.get("anxiety_risk_range", [0.0, 0.0])),
-                    stress_risk_range=tuple(template_data.get("stress_risk_range", [0.0, 0.0])),
-                    frequency_weight=template_data.get("frequency_weight", 1.0)
+                    frequency_weight=template_data.get("frequency_weight", 1.0),
+                    duration_range=tuple(template_data.get("duration_range", [1, 24]))
                 )
                 
                 self.event_templates[template.template_id] = template
                 
-            except Exception as e:
-                logger.error(f"Error loading template {template_data.get('template_id', 'unknown')}: {e}")
-        
-        # Store frequency weights
-        self.frequency_weights.update(frequency_weights)
+        except Exception as e:
+            logger.error(f"Error loading templates from {config_path}: {e}")
     
     def generate_event_from_template(
         self, 
@@ -108,22 +105,21 @@ class EventGenerator:
     ) -> Event:
         """Generate an event from a template."""
         try:
-            # Generate random parameters within ranges
-            intensity = random.choice(template.intensity_range)
+            # Generate random values within ranges
+            intensity = random.uniform(*template.intensity_range)
+            duration = random.uniform(*template.duration_range)
             stress_impact = random.uniform(*template.stress_impact_range)
-            duration = random.randint(*template.duration_range)
             
             # Generate personality impacts
             personality_impact = {}
             for trait, (min_val, max_val) in template.personality_impact_ranges.items():
                 personality_impact[trait] = random.uniform(min_val, max_val)
             
-            # Generate clinical impacts
-            depression_risk = random.uniform(*template.depression_risk_range)
-            anxiety_risk = random.uniform(*template.anxiety_risk_range)
-            stress_risk = random.uniform(*template.stress_risk_range)
+            # Calculate risk increases based on stress impact
+            depression_risk = stress_impact * 0.3
+            anxiety_risk = stress_impact * 0.4
+            stress_risk = stress_impact * 0.5
             
-            # Create event based on type
             if template.event_type == EventType.STRESS:
                 event = StressEvent(
                     event_id=f"event_{uuid.uuid4().hex[:8]}",
@@ -138,7 +134,7 @@ class EventGenerator:
                     duration_hours=duration,
                     stress_impact=stress_impact,
                     personality_impact=personality_impact,
-                    trauma_level=stress_impact * 0.8,  # Trauma level correlates with stress impact
+                    trauma_level=stress_impact * self.trauma_correlation_factor,  # Use configurable factor
                     recovery_time_days=max(1, int(duration / 24)),
                     depression_risk_increase=depression_risk,
                     anxiety_risk_increase=anxiety_risk,

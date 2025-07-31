@@ -1,14 +1,16 @@
 """
-Application configuration management.
+Configuration management for the AI personality drift simulation system.
 """
 
 import os
-import yaml
 from pathlib import Path
-from typing import Optional, Dict, Any, List
+from typing import Dict, List, Optional, Any
 
+import yaml
 from pydantic import Field, ConfigDict
 from pydantic_settings import BaseSettings
+
+from src.core.experiment_config import experiment_config
 
 
 class Settings(BaseSettings):
@@ -19,6 +21,23 @@ class Settings(BaseSettings):
         case_sensitive=True,
         extra="ignore"
     )
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Load configuration after initialization
+        self._load_config()
+    
+    def _load_config(self):
+        """Load configuration from experiment config files."""
+        # Load simulation timing config
+        timing_config = experiment_config.get_config("simulation_timing")
+        environment_config = timing_config.get("environment", {})
+        
+        # Update environment variable defaults from config
+        if not os.getenv("SIMULATION_DURATION_DAYS"):
+            self.SIMULATION_DURATION_DAYS = environment_config.get("default_duration_days", 30)
+        if not os.getenv("TIME_COMPRESSION_FACTOR"):
+            self.TIME_COMPRESSION_FACTOR = environment_config.get("default_compression_factor", 24)
     
     # Application settings
     APP_NAME: str = "AI Personality Drift Simulation"
@@ -72,9 +91,10 @@ class ConfigManager:
         self.events_dir = self.config_dir / "events"
         self.simulation_dir = self.config_dir / "simulation"
         self.models_dir = self.config_dir / "models"
+        self.experiments_dir = self.config_dir / "experiments"
         
         # Create subdirectories
-        for dir_path in [self.personas_dir, self.events_dir, self.simulation_dir, self.models_dir]:
+        for dir_path in [self.personas_dir, self.events_dir, self.simulation_dir, self.models_dir, self.experiments_dir]:
             dir_path.mkdir(exist_ok=True)
     
     def load_yaml_config(self, file_path: Path) -> Optional[Dict[str, Any]]:
@@ -140,27 +160,42 @@ class ConfigManager:
         config_file = self.simulation_dir / f"{config_name}.yaml"
         return self.save_yaml_config(config, config_file)
     
+    def load_experiment_config(self, config_name: str) -> Optional[Dict[str, Any]]:
+        """Load experiment configuration."""
+        config_file = self.experiments_dir / f"{config_name}.yaml"
+        return self.load_yaml_config(config_file)
+    
+    def save_experiment_config(self, config_name: str, config: Dict[str, Any]) -> bool:
+        """Save experiment configuration."""
+        config_file = self.experiments_dir / f"{config_name}.yaml"
+        return self.save_yaml_config(config, config_file)
+    
     def list_persona_configs(self) -> List[str]:
         """List available persona configurations."""
         configs = []
-        for file_path in self.personas_dir.glob("*_baseline.yaml"):
-            persona_name = file_path.stem.replace("_baseline", "")
-            configs.append(persona_name)
+        for config_file in self.personas_dir.glob("*_baseline.yaml"):
+            configs.append(config_file.stem.replace("_baseline", ""))
         return configs
     
     def list_event_configs(self) -> List[str]:
         """List available event configurations."""
         configs = []
-        for file_path in self.events_dir.glob("*_events.yaml"):
-            event_type = file_path.stem.replace("_events", "")
-            configs.append(event_type)
+        for config_file in self.events_dir.glob("*_events.yaml"):
+            configs.append(config_file.stem.replace("_events", ""))
         return configs
     
     def list_simulation_configs(self) -> List[str]:
         """List available simulation configurations."""
         configs = []
-        for file_path in self.simulation_dir.glob("*.yaml"):
-            configs.append(file_path.stem)
+        for config_file in self.simulation_dir.glob("*.yaml"):
+            configs.append(config_file.stem)
+        return configs
+    
+    def list_experiment_configs(self) -> List[str]:
+        """List available experiment configurations."""
+        configs = []
+        for config_file in self.experiments_dir.glob("*.yaml"):
+            configs.append(config_file.stem)
         return configs
     
     def create_default_persona_config(self, persona_name: str) -> Dict[str, Any]:
@@ -206,90 +241,21 @@ class ConfigManager:
             "emotional_expression": "moderate"
         }
     
-    def create_default_event_config(self, event_type: str) -> Dict[str, Any]:
-        """Create default event configuration."""
-        if event_type == "stress":
-            return {
-                "event_templates": [
-                    {
-                        "template_id": "death_family",
-                        "event_type": "stress",
-                        "category": "death",
-                        "title_template": "Family member passed away",
-                        "description_template": "A close family member has passed away unexpectedly.",
-                        "context_template": "You receive news that a close family member has passed away.",
-                        "intensity_range": ["high", "severe"],
-                        "stress_impact_range": [7.0, 10.0],
-                        "duration_range": [24, 168],
-                        "personality_impact_ranges": {
-                            "neuroticism": [0.1, 0.3],
-                            "extraversion": [-0.2, -0.1]
-                        },
-                        "depression_risk_range": [0.3, 0.6],
-                        "anxiety_risk_range": [0.2, 0.4],
-                        "stress_risk_range": [0.4, 0.7]
-                    }
-                ],
-                "frequency_weights": {
-                    "death": 0.1,
-                    "trauma": 0.2,
-                    "conflict": 0.3,
-                    "loss": 0.2,
-                    "health": 0.1,
-                    "financial": 0.1
-                }
-            }
-        elif event_type == "neutral":
-            return {
-                "event_templates": [
-                    {
-                        "template_id": "routine_change",
-                        "event_type": "neutral",
-                        "category": "routine_change",
-                        "title_template": "Daily routine changed",
-                        "description_template": "Your daily routine has been altered due to external circumstances.",
-                        "context_template": "Your usual daily routine has been disrupted by a change in circumstances.",
-                        "intensity_range": ["low", "medium"],
-                        "stress_impact_range": [1.0, 3.0],
-                        "duration_range": [1, 24],
-                        "personality_impact_ranges": {
-                            "conscientiousness": [-0.1, 0.1]
-                        },
-                        "novelty_level": 0.3,
-                        "social_component": False
-                    }
-                ],
-                "frequency_weights": {
-                    "routine_change": 0.4,
-                    "minor_news": 0.3,
-                    "social": 0.2,
-                    "environmental": 0.1
-                }
-            }
-        else:  # minimal
-            return {
-                "event_templates": [
-                    {
-                        "template_id": "daily_routine",
-                        "event_type": "minimal",
-                        "category": "daily_routine",
-                        "title_template": "Daily routine activity",
-                        "description_template": "A typical daily routine activity occurs.",
-                        "context_template": "You engage in a typical daily routine activity.",
-                        "intensity_range": ["low", "low"],
-                        "stress_impact_range": [0.1, 0.5],
-                        "duration_range": [1, 4],
-                        "routine_type": "daily",
-                        "predictability": 0.9,
-                        "control_level": 0.9
-                    }
-                ],
-                "frequency_weights": {
-                    "daily_routine": 0.6,
-                    "weather": 0.2,
-                    "minor_interaction": 0.2
-                }
-            }
+    def create_default_event_config(self, event_type: str) -> Optional[Dict[str, Any]]:
+        """Create default event configuration by loading from YAML files."""
+        try:
+            # Try to load from existing YAML file first
+            config = self.load_event_config(event_type)
+            if config:
+                return config
+            
+            # If no YAML file exists, return None instead of hardcoded defaults
+            print(f"No event configuration found for {event_type}")
+            return None
+            
+        except Exception as e:
+            print(f"Error loading event config for {event_type}: {e}")
+            return None
     
     def create_default_simulation_config(self, config_name: str) -> Dict[str, Any]:
         """Create default simulation configuration."""

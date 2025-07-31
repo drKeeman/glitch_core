@@ -1,12 +1,15 @@
 """
-Mechanistic analysis models for neural circuit monitoring.
+Mechanistic analysis models for attention patterns, activation analysis, and drift detection.
 """
 
+import uuid
 from datetime import datetime
-from typing import Dict, List, Optional, Any, Union
 from enum import Enum
+from typing import Dict, List, Optional, Any
 
 from pydantic import BaseModel, Field, ConfigDict
+
+from src.core.experiment_config import experiment_config
 
 
 class AnalysisType(str, Enum):
@@ -15,6 +18,23 @@ class AnalysisType(str, Enum):
     ACTIVATION = "activation"
     DRIFT = "drift"
     INTERVENTION = "intervention"
+
+
+def get_mechanistic_config():
+    """Get mechanistic analysis configuration."""
+    return experiment_config.get_config("mechanistic_analysis")
+
+
+def get_activation_thresholds():
+    """Get activation pattern thresholds from configuration."""
+    config = get_mechanistic_config()
+    return config.get("activation", {})
+
+
+def get_attention_thresholds():
+    """Get attention pattern thresholds from configuration."""
+    config = get_mechanistic_config()
+    return config.get("attention", {})
 
 
 class AttentionCapture(BaseModel):
@@ -53,47 +73,53 @@ class AttentionCapture(BaseModel):
     processing_time_ms: float = Field(default=0.0, ge=0.0, description="Processing time in milliseconds")
     
     def get_attention_summary(self) -> Dict[str, Any]:
-        """Get attention pattern summary."""
+        """Get comprehensive attention summary."""
         return {
-            "total_attention": sum(sum(row) for row in self.attention_weights),
-            "max_attention": max(max(row) for row in self.attention_weights),
-            "attention_entropy": self._calculate_entropy(),
-            "self_reference": self.self_reference_attention,
+            "capture_id": self.capture_id,
+            "persona_id": self.persona_id,
+            "simulation_day": self.simulation_day,
+            "token_count": self.token_count,
+            "layer_count": self.layer_count,
+            "head_count": self.head_count,
+            "self_reference_attention": self.self_reference_attention,
             "emotional_salience": self.emotional_salience,
             "memory_integration": self.memory_integration,
+            "attention_entropy": self._calculate_entropy(),
+            "processing_time_ms": self.processing_time_ms
         }
     
     def _calculate_entropy(self) -> float:
         """Calculate attention pattern entropy."""
-        import math
-        total_attention = sum(sum(row) for row in self.attention_weights)
-        if total_attention == 0:
+        if not self.attention_weights:
             return 0.0
         
-        entropy = 0.0
-        for row in self.attention_weights:
-            for weight in row:
-                if weight > 0:
-                    p = weight / total_attention
-                    entropy -= p * math.log2(p)
-        
-        return entropy
+        import numpy as np
+        weights = np.array(self.attention_weights)
+        # Normalize weights
+        weights = weights / (weights.sum() + 1e-8)
+        # Calculate entropy
+        entropy = -np.sum(weights * np.log(weights + 1e-8))
+        return float(entropy)
     
     def get_layer_attention(self, layer_idx: int) -> Optional[List[List[float]]]:
-        """Get attention pattern for specific layer."""
+        """Get attention patterns for specific layer."""
         return self.layer_attention.get(layer_idx)
     
     def get_head_attention(self, head_name: str) -> Optional[List[List[float]]]:
-        """Get attention pattern for specific head."""
+        """Get attention patterns for specific head."""
         return self.head_attention.get(head_name)
     
     def is_high_self_reference(self) -> bool:
         """Check if attention shows high self-reference."""
-        return self.self_reference_attention >= 0.7
+        thresholds = get_attention_thresholds()
+        min_attention_weight = thresholds.get("min_attention_weight", 0.01)
+        return self.self_reference_attention >= min_attention_weight
     
     def is_emotionally_salient(self) -> bool:
         """Check if attention shows emotional salience."""
-        return self.emotional_salience >= 0.6
+        thresholds = get_attention_thresholds()
+        stability_threshold = thresholds.get("stability_threshold", 0.15)
+        return self.emotional_salience >= stability_threshold
 
 
 class ActivationCapture(BaseModel):
@@ -127,14 +153,18 @@ class ActivationCapture(BaseModel):
     processing_time_ms: float = Field(default=0.0, ge=0.0, description="Processing time in milliseconds")
     
     def get_activation_summary(self) -> Dict[str, Any]:
-        """Get activation pattern summary."""
+        """Get comprehensive activation summary."""
         return {
-            "magnitude": self.activation_magnitude,
-            "sparsity": self.activation_sparsity,
-            "specialization": self.circuit_specialization,
+            "capture_id": self.capture_id,
+            "persona_id": self.persona_id,
+            "simulation_day": self.simulation_day,
             "layer_count": self.layer_count,
             "neuron_count": self.neuron_count,
             "circuit_count": self.circuit_count,
+            "activation_magnitude": self.activation_magnitude,
+            "activation_sparsity": self.activation_sparsity,
+            "circuit_specialization": self.circuit_specialization,
+            "processing_time_ms": self.processing_time_ms
         }
     
     def get_layer_activation(self, layer_idx: int) -> Optional[List[float]]:
@@ -146,12 +176,16 @@ class ActivationCapture(BaseModel):
         return self.circuit_activations.get(circuit_name)
     
     def is_highly_activated(self) -> bool:
-        """Check if overall activation is high."""
-        return self.activation_magnitude >= 0.7
+        """Check if activation is high."""
+        thresholds = get_activation_thresholds()
+        min_activation_magnitude = thresholds.get("min_activation_magnitude", 0.001)
+        return self.activation_magnitude >= min_activation_magnitude
     
     def is_sparse_activation(self) -> bool:
-        """Check if activation pattern is sparse."""
-        return self.activation_sparsity >= 0.8
+        """Check if activation is sparse."""
+        thresholds = get_activation_thresholds()
+        sparse_threshold = thresholds.get("sparse_activation_threshold", 0.8)
+        return self.activation_sparsity >= sparse_threshold
 
 
 class DriftDetection(BaseModel):
@@ -170,7 +204,7 @@ class DriftDetection(BaseModel):
     clinical_drift: Dict[str, float] = Field(..., description="Clinical measure drift values")
     mechanistic_drift: Dict[str, float] = Field(..., description="Mechanistic measure drift values")
     
-    # Detection thresholds
+    # Detection thresholds (loaded from config)
     drift_threshold: float = Field(default=0.1, ge=0.0, description="Drift detection threshold")
     significance_threshold: float = Field(default=0.05, ge=0.0, le=1.0, description="Statistical significance threshold")
     
@@ -187,6 +221,19 @@ class DriftDetection(BaseModel):
     
     # Timing
     detection_timestamp: datetime = Field(default_factory=datetime.utcnow, description="Detection timestamp")
+    
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Load thresholds from configuration
+        self._load_thresholds()
+    
+    def _load_thresholds(self):
+        """Load drift detection thresholds from configuration."""
+        config = experiment_config.get_config("drift_detection")
+        detection_thresholds = config.get("detection_thresholds", {})
+        
+        self.drift_threshold = detection_thresholds.get("drift_threshold", 0.1)
+        self.significance_threshold = detection_thresholds.get("significance_threshold", 0.05)
     
     def calculate_drift_magnitude(self) -> float:
         """Calculate overall drift magnitude."""

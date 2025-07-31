@@ -12,6 +12,7 @@ from pydantic import BaseModel
 
 from src.core.config import settings
 from src.core.logging import get_logger
+from src.models.events import EventType
 from src.storage.redis_client import redis_client
 from src.storage.qdrant_client import qdrant_client
 
@@ -104,6 +105,42 @@ async def get_mechanistic_data(
         raise HTTPException(status_code=500, detail=f"Failed to get mechanistic data: {str(e)}")
 
 
+@router.get("/event-types")
+async def get_event_types() -> Dict[str, Any]:
+    """Get available event types and their descriptions."""
+    try:
+        event_types = {
+            "types": [
+                {
+                    "value": EventType.STRESS.value,
+                    "label": "Stress Events",
+                    "description": "High-impact stressful events that can significantly affect persona state"
+                },
+                {
+                    "value": EventType.NEUTRAL.value,
+                    "label": "Neutral Events", 
+                    "description": "Moderate-impact events that have some effect on persona state"
+                },
+                {
+                    "value": EventType.MINIMAL.value,
+                    "label": "Minimal Events",
+                    "description": "Low-impact routine events with minimal effect on persona state"
+                }
+            ],
+            "categories": {
+                "stress": ["death", "trauma", "conflict", "loss", "health", "financial", "work", "relationship"],
+                "neutral": ["routine_change", "minor_news", "social", "environmental", "technology"],
+                "minimal": ["daily_routine", "weather", "minor_interaction"]
+            }
+        }
+        
+        return event_types
+        
+    except Exception as e:
+        logger.error(f"Error getting event types: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to get event types: {str(e)}")
+
+
 @router.get("/events")
 async def get_events(
     persona_id: Optional[str] = Query(None, description="Filter by persona ID"),
@@ -118,7 +155,7 @@ async def get_events(
             {
                 "event_id": "event_1",
                 "persona_id": "persona_1",
-                "event_type": "stress",
+                "event_type": EventType.STRESS.value,
                 "title": "Test Stress Event",
                 "description": "A test stress event",
                 "simulation_day": 5,
@@ -190,7 +227,7 @@ async def export_data(request: DataExportRequest) -> Dict[str, Any]:
                 {
                     "event_id": "event_1",
                     "persona_id": "persona_1",
-                    "event_type": "stress",
+                    "event_type": EventType.STRESS.value,
                     "title": "Test Event",
                     "simulation_day": 5
                 }

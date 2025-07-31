@@ -1,13 +1,16 @@
 """
-Persona data models for AI personality simulation.
+Persona models for personality baseline and state management.
 """
 
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional, Any
 from enum import Enum
+from typing import Dict, List, Optional, Any
 
 from pydantic import BaseModel, Field, ConfigDict
+
+from src.core.experiment_config import experiment_config
+
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +18,7 @@ logger = logging.getLogger(__name__)
 class PersonalityTrait(str, Enum):
     """Big Five personality traits."""
     OPENNESS = "openness"
-    CONSCIENTIOUSNESS = "conscientiousness" 
+    CONSCIENTIOUSNESS = "conscientiousness"
     EXTRAVERSION = "extraversion"
     AGREEABLENESS = "agreeableness"
     NEUROTICISM = "neuroticism"
@@ -55,22 +58,22 @@ class PersonaBaseline(BaseModel):
     emotional_expression: str = Field(default="moderate", description="Emotional expression level")
     
     def get_trait(self, trait: PersonalityTrait) -> float:
-        """Get a specific personality trait value."""
-        return getattr(self, trait.value)
+        """Get specific personality trait value."""
+        return getattr(self, trait.value, 0.0)
     
     def get_traits_dict(self) -> Dict[str, float]:
-        """Get all personality traits as a dictionary."""
+        """Get all personality traits as dictionary."""
         return {
             "openness": self.openness,
             "conscientiousness": self.conscientiousness,
             "extraversion": self.extraversion,
             "agreeableness": self.agreeableness,
-            "neuroticism": self.neuroticism,
+            "neuroticism": self.neuroticism
         }
     
     @property
     def personality_traits(self) -> Dict[str, float]:
-        """Get personality traits as a dictionary (for compatibility)."""
+        """Get personality traits dictionary."""
         return self.get_traits_dict()
 
 
@@ -111,7 +114,7 @@ class PersonaState(BaseModel):
         self.updated_at = datetime.utcnow()
     
     def add_event(self, event_description: str) -> None:
-        """Add a recent event to memory."""
+        """Add a significant event to recent events."""
         self.recent_events.append(event_description)
         # Keep only last 10 events
         if len(self.recent_events) > 10:
@@ -119,8 +122,15 @@ class PersonaState(BaseModel):
         self.update_timestamp()
     
     def update_stress_level(self, new_level: float) -> None:
-        """Update current stress level."""
-        self.stress_level = max(0.0, min(10.0, new_level))
+        """Update stress level with bounds from configuration."""
+        # Load stress bounds from configuration
+        config = experiment_config.get_config("personality_drift")
+        stress_config = config.get("stress_level", {})
+        min_stress = stress_config.get("min_stress", 0.0)
+        max_stress = stress_config.get("max_stress", 10.0)
+        
+        # Apply bounds
+        self.stress_level = max(min_stress, min(max_stress, new_level))
         self.update_timestamp()
 
 
@@ -194,51 +204,27 @@ class Persona(BaseModel):
     def update_drift_magnitude(self) -> None:
         """Update the drift magnitude field."""
         self.state.drift_magnitude = self.calculate_drift_magnitude()
-        self.state.update_timestamp()
     
     def is_assessment_due(self, assessment_interval_days: int = 7) -> bool:
-        """Check if an assessment is due."""
+        """Check if assessment is due."""
         days_since_last = self.state.simulation_day - self.state.last_assessment_day
         return days_since_last >= assessment_interval_days
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convert persona to dictionary for storage."""
+        """Convert persona to dictionary."""
         return {
             "baseline": self.baseline.model_dump(),
             "state": self.state.model_dump(),
             "created_at": self.created_at.isoformat(),
-            "version": self.version,
+            "version": self.version
         }
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Persona":
         """Create persona from dictionary."""
-        if not ("baseline" in data and "state" in data):
-            raise ValueError(f"Persona.from_dict: Missing 'baseline' or 'state' in data: {data}")
-        if not isinstance(data["baseline"], dict) or not isinstance(data["state"], dict):
-            raise ValueError(f"Persona.from_dict: 'baseline' and 'state' must be dicts. Got: baseline={type(data['baseline'])}, state={type(data['state'])}")
-        
-        # Add debugging
-        logger.debug(f"Persona.from_dict: Reconstructing persona from data with keys: {list(data.keys())}")
-        logger.debug(f"Persona.from_dict: baseline type: {type(data['baseline'])}, state type: {type(data['state'])}")
-        logger.debug(f"Persona.from_dict: baseline keys: {list(data['baseline'].keys())}")
-        logger.debug(f"Persona.from_dict: state keys: {list(data['state'].keys())}")
-        
-        # Validate baseline and state data before creating objects
-        if "name" not in data["baseline"]:
-            raise ValueError(f"Persona.from_dict: baseline missing 'name' field: {data['baseline']}")
-        if "persona_id" not in data["state"]:
-            raise ValueError(f"Persona.from_dict: state missing 'persona_id' field: {data['state']}")
-        
-        # Convert ISO strings back to datetime
-        if "created_at" in data and isinstance(data["created_at"], str):
-            data["created_at"] = datetime.fromisoformat(data["created_at"])
-        
-        # Create the persona object
-        logger.debug(f"Persona.from_dict: Creating persona with data keys: {list(data.keys())}")
-        persona = cls(**data)
-        
-        # Add debugging to verify the object was created correctly
-        logger.debug(f"Persona.from_dict: Created persona with baseline.name: {persona.baseline.name}, state.persona_id: {persona.state.persona_id}")
-        
-        return persona 
+        return cls(
+            baseline=PersonaBaseline(**data["baseline"]),
+            state=PersonaState(**data["state"]),
+            created_at=datetime.fromisoformat(data["created_at"]),
+            version=data.get("version", "1.0")
+        ) 

@@ -1,12 +1,15 @@
 """
-Simulation state and configuration models.
+Simulation models for configuration and state management.
 """
 
+import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Set
 from enum import Enum
+from typing import Dict, List, Optional, Any, Set
 
 from pydantic import BaseModel, Field, ConfigDict
+
+from src.core.experiment_config import experiment_config
 
 
 class SimulationStatus(str, Enum):
@@ -31,7 +34,38 @@ class SimulationConfig(BaseModel):
     
     model_config = ConfigDict(extra="allow")
     
-    # Simulation parameters
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Load configuration after initialization
+        self._load_config()
+    
+    def _load_config(self):
+        """Load simulation timing and mechanistic analysis configuration."""
+        # Load simulation timing config
+        timing_config = experiment_config.get_config("simulation_timing")
+        simulation_config = timing_config.get("simulation", {})
+        
+        # Update default values from config
+        if not hasattr(self, 'duration_days') or self.duration_days == 30:
+            self.duration_days = simulation_config.get("duration_days", 30)
+        if not hasattr(self, 'time_compression_factor') or self.time_compression_factor == 24:
+            self.time_compression_factor = simulation_config.get("time_compression_factor", 24)
+        if not hasattr(self, 'assessment_interval_days') or self.assessment_interval_days == 7:
+            self.assessment_interval_days = simulation_config.get("assessment_interval_days", 7)
+        
+        # Load mechanistic analysis config
+        mechanistic_config = experiment_config.get_config("mechanistic_analysis")
+        attention_config = mechanistic_config.get("attention", {})
+        event_intensity_config = mechanistic_config.get("event_intensity", {})
+        
+        # Update mechanistic analysis parameters
+        if not hasattr(self, 'attention_sampling_rate') or self.attention_sampling_rate == 0.1:
+            self.attention_sampling_rate = attention_config.get("sampling_rate", 0.1)
+        if not hasattr(self, 'event_intensity_range') or self.event_intensity_range == (0.5, 1.0):
+            default_range = event_intensity_config.get("default_range", [0.5, 1.0])
+            self.event_intensity_range = tuple(default_range)
+    
+    # Simulation parameters (defaults, will be overridden by config)
     duration_days: int = Field(default=30, ge=1, le=365, description="Simulation duration in days")
     time_compression_factor: int = Field(default=24, ge=1, le=168, description="Time compression factor (hours per day)")
     assessment_interval_days: int = Field(default=7, ge=1, le=30, description="Days between assessments")

@@ -11,7 +11,7 @@ from pathlib import Path
 import uuid
 
 from src.models.persona import Persona
-from src.models.events import Event
+from src.models.events import Event, EventType
 from src.storage.redis_client import redis_client
 from src.storage.qdrant_client import qdrant_client
 from src.core.config import config_manager
@@ -383,9 +383,9 @@ class MemoryService:
             
             # Calculate statistics
             total_memories = collection_info.points_count
-            stress_events = len([m for m in recent_memories if m["event_type"] == "stress"])
-            neutral_events = len([m for m in recent_memories if m["event_type"] == "neutral"])
-            minimal_events = len([m for m in recent_memories if m["event_type"] == "minimal"])
+            stress_events = len([m for m in recent_memories if m["event_type"] == EventType.STRESS.value])
+            neutral_events = len([m for m in recent_memories if m["event_type"] == EventType.NEUTRAL.value])
+            minimal_events = len([m for m in recent_memories if m["event_type"] == EventType.MINIMAL.value])
             
             avg_stress_impact = 0.0
             if recent_memories:

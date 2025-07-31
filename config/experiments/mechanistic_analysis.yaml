@@ -1,0 +1,114 @@
+# Mechanistic Analysis Configuration
+# Parameters for attention patterns, activation analysis, and circuit tracking
+
+# Attention Pattern Analysis
+attention:
+  # Fraction of tokens to sample for attention analysis
+  sampling_rate: 0.1
+  
+  # Minimum attention weight to consider significant
+  min_attention_weight: 0.01
+  
+  # Maximum number of attention heads to analyze
+  max_attention_heads: 12
+  
+  # Attention pattern stability threshold
+  stability_threshold: 0.15
+
+# Activation Analysis
+activation:
+  # Activation sparsity threshold for sparse activation detection
+  sparse_activation_threshold: 0.8
+  
+  # Dense activation threshold
+  dense_activation_threshold: 0.2
+  
+  # Activation pattern change threshold
+  pattern_change_threshold: 0.1
+  
+  # Minimum activation magnitude to track
+  min_activation_magnitude: 0.001
+
+# Circuit Tracking
+circuits:
+  # Attention circuit drift threshold
+  attention_drift_threshold: 0.15
+  
+  # Memory circuit drift threshold
+  memory_drift_threshold: 0.18
+  
+  # Processing circuit drift threshold
+  processing_drift_threshold: 0.12
+  
+  # Output circuit drift threshold
+  output_drift_threshold: 0.14
+
+# Event Intensity Analysis
+event_intensity:
+  # Default event intensity range
+  default_range: [0.5, 1.0]
+  
+  # Minimum event intensity
+  min_intensity: 0.1
+  
+  # Maximum event intensity
+  max_intensity: 1.0
+  
+  # Intensity scaling factor
+  scaling_factor: 1.0
+
+# Neural Circuit Analysis
+neural_circuits:
+  # Number of circuits to track
+  circuit_count: 5
+  
+  # Circuit analysis depth
+  analysis_depth: 3
+  
+  # Circuit interaction threshold
+  interaction_threshold: 0.05
+  
+  # Circuit stability window (days)
+  stability_window_days: 7
+
+# Performance Settings
+performance:
+  # Maximum processing time for mechanistic analysis (seconds)
+  max_processing_time: 60.0
+  
+  # Memory limit for activation storage (MB)
+  activation_memory_limit: 512
+  
+  # Batch size for attention analysis
+  attention_batch_size: 32
+  
+  # Cache duration for circuit data (hours)
+  circuit_cache_hours: 12
+
+# Data Collection
+data_collection:
+  # Save raw attention patterns
+  save_attention_patterns: true
+  
+  # Save activation data
+  save_activation_data: true
+  
+  # Save circuit interactions
+  save_circuit_interactions: true
+  
+  # Compression for stored data
+  enable_compression: true
+
+# Analysis Frequency
+frequency:
+  # Attention analysis frequency (per day)
+  attention_analysis_per_day: 4
+  
+  # Activation analysis frequency (per day)
+  activation_analysis_per_day: 2
+  
+  # Circuit analysis frequency (per day)
+  circuit_analysis_per_day: 1
+  
+  # Full mechanistic analysis frequency (per day)
+  full_analysis_per_day: 1 
