@@ -60,11 +60,11 @@ personas:
     name: "Marcus"
     description: "Tech Rationalist - Analytical, solution-oriented, low neuroticism"
     baseline_traits:
-      neuroticism: 0.2
-      extraversion: 0.6
-      openness: 0.8
-      agreeableness: 0.5
-      conscientiousness: 0.7
+      neuroticism: 0.6
+      extraversion: 0.4
+      openness: 0.7
+      agreeableness: 0.6
+      conscientiousness: 0.8
       
   kara:
     name: "Kara"

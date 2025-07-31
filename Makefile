@@ -119,6 +119,14 @@ clean: ## Clean up all containers and volumes
 	docker-compose down -v --remove-orphans
 	docker system prune -f
 
+clean-sim-data: ## Clean up all simulation files and folders from data directory
+	@echo "🧹 Cleaning up simulation data..."
+	@rm -rf data/exports/simulation_*.json
+	@rm -rf data/results/sim_*
+	@rm -rf data/raw/sim_*
+	@rm -rf data/processed/sim_*
+	@echo "✅ Simulation data cleaned up successfully"
+
 clean-models: ## Clean up model cache
 	docker exec -it glitch-core-ollama ollama rm llama3.1:8b || true
 

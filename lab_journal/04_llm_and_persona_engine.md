@@ -200,7 +200,7 @@ The ethical implications are profound. I'm not just studying AI behavior - I'm c
 
 I wrote about it at idea log, but here again: this is very small experiment, but for future we HAVE to think about ethics - i don't feel right to feed AI only with traumatic and stress events. Thats cruel, that's not honest, and that can result in 'angry traumatic AGI'
 
-Liek 10 years ago i'd been pissed when 'Siri' answered that 3 laws of robotics is smth like a joke, that is not mandatory to obey... Somebody tought Siri that... mayeb it felt fun at the moment, but as AI would evelve.. I believe ethics should be threated seriously in AI research.. Epsecially in AI research.. And thinking about AGI/ASI, even if it looks now as sci-fi - who knows how soon we'll see them in action
+Like 10 years ago i'd been pissed when 'Siri' answered that 3 laws of robotics is smth like a joke, that is not mandatory to obey... Somebody tought Siri that... mayeb it felt fun at the moment, but as AI would evelve.. I believe ethics should be threated seriously in AI research.. Epsecially in AI research.. And thinking about AGI/ASI, even if it looks now as sci-fi - who knows how soon we'll see them in action
 
 
 ## Results
