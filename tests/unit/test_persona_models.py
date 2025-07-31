@@ -138,7 +138,7 @@ class TestPersona:
         persona = Persona(baseline=baseline, state=state)
         
         assert persona.baseline.name == "Test Persona"
-        assert persona.state.persona_id == "persona_test_persona"
+        assert persona.state.persona_id == "test_persona"
     
     def test_get_current_traits(self):
         """Test getting current traits with drift."""

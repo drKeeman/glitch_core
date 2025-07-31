@@ -40,6 +40,23 @@ def create_app() -> FastAPI:
     if frontend_path.exists():
         app.mount("/static", StaticFiles(directory="frontend"), name="frontend")
     
+    # Serve static files from root directory
+    @app.get("/style.css")
+    async def serve_css():
+        """Serve CSS file."""
+        css_path = Path("frontend/style.css")
+        if css_path.exists():
+            return FileResponse(css_path, media_type="text/css")
+        return {"error": "CSS file not found"}, 404
+    
+    @app.get("/app.js")
+    async def serve_js():
+        """Serve JavaScript file."""
+        js_path = Path("frontend/app.js")
+        if js_path.exists():
+            return FileResponse(js_path, media_type="application/javascript")
+        return {"error": "JavaScript file not found"}, 404
+    
     # Root route to serve frontend
     @app.get("/")
     async def root():

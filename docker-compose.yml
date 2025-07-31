@@ -5,9 +5,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - REDIS_URL=redis://redis:6379
-      - QDRANT_URL=http://qdrant:6333
-      - OLLAMA_URL=http://ollama:11434
+      - REDIS_URL=${REDIS_URL}
+      - QDRANT_URL=${QDRANT_URL}
+      - OLLAMA_URL=${OLLAMA_URL}
       - MODEL_PATH=/models
       - DEBUG=true
       - LOG_LEVEL=DEBUG
@@ -17,6 +17,7 @@ services:
       - ./models:/models
       - ./frontend:/app/frontend
       - ./src:/app/src
+      - ./tests:/app/tests
       - ./pyproject.toml:/app/pyproject.toml
       - ./uv.lock:/app/uv.lock
     depends_on:

@@ -31,6 +31,11 @@ build-app: ## Build only the app Docker image
 	docker-compose build app
 	@echo "✅ App Docker image built successfully"
 
+rebuild-app: ## Rebuild app Docker image (force rebuild)
+	@echo "🔨 Rebuilding app Docker image..."
+	docker-compose build --no-cache app
+	@echo "✅ App Docker image rebuilt successfully"
+
 # Quick Setup target
 setup: ## Complete setup with LLM (recommended)
 	@echo "🚀 Complete Glitch Core Setup"
@@ -66,23 +71,29 @@ llm-list: ## List available models
 
 # Testing targets
 test: ## Run all tests
-	pytest tests/ -v
+	docker-compose exec app /app/.venv/bin/pytest tests/ -v
+
+test-with-deps: ## Run all tests (ensures container is running with dev deps)
+	docker-compose up -d app
+	@echo "⏳ Waiting for app container to be ready..."
+	@sleep 5
+	docker-compose exec app /app/.venv/bin/pytest tests/ -v
 
 test-unit: ## Run unit tests only
-	pytest tests/unit/ -v
+	docker-compose exec app /app/.venv/bin/pytest tests/unit/ -v
 
 test-integration: ## Run integration tests only
-	pytest tests/integration/ -v
+	docker-compose exec app /app/.venv/bin/pytest tests/integration/ -v
 
 # Code quality targets
 lint: ## Run linting
-	ruff check src/
-	black --check src/
-	isort --check-only src/
+	docker-compose exec app ruff check src/
+	docker-compose exec app black --check src/
+	docker-compose exec app isort --check-only src/
 
 format: ## Format code
-	black src/
-	isort src/
+	docker-compose exec app black src/
+	docker-compose exec app isort src/
 
 # Database targets
 db-reset: ## Reset all databases

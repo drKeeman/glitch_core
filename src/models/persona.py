@@ -163,9 +163,9 @@ class Persona(BaseModel):
                     logger.error(f"state appears to be a PersonaBaseline object with name: {self.state.name}")
                 raise TypeError(f"Persona state must be PersonaState, got {type(self.state)}")
         
-        # Ensure state has correct persona_id only if not already set
+        # Ensure state has correct persona_id based on baseline name if not already set
         if hasattr(self, 'baseline') and hasattr(self, 'state'):
-            if not self.state.persona_id or self.state.persona_id.startswith('persona_'):
+            if not self.state.persona_id:
                 self.state.persona_id = f"persona_{self.baseline.name.lower().replace(' ', '_')}"
     
     def get_current_traits(self) -> Dict[str, float]:

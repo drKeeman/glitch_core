@@ -54,7 +54,6 @@ data/
 notebooks/
 docs/
 *.md
-tests/
 scripts/
 deployment/
 frontend/
