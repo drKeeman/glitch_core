@@ -1,0 +1,90 @@
+{
+  "simulation_id": "sim_35947fcd",
+  "day": 4,
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "events": [
+    {
+      "event": {
+        "event_id": "event_b508acca",
+        "event_type": "stress",
+        "category": "work",
+        "intensity": "severe",
+        "title": "Lost job unexpectedly",
+        "description": "You have been laid off from your job due to company restructuring.",
+        "context": "Your company announces layoffs and you are among those affected.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 74,
+        "stress_impact": 7.079290594142162,
+        "personality_impact": {
+          "neuroticism": 0.021397537491407534,
+          "conscientiousness": -0.0002977601058784668
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 21:03:43.541163",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_alfred": "I'm feeling overwhelmed by lost job unexpectedly. This is really difficult to process."
+        },
+        "response_times": {
+          "persona_alfred": 5e-06
+        },
+        "trauma_level": 5.66343247531373,
+        "recovery_time_days": 3,
+        "triggers": [],
+        "depression_risk_increase": 0.5749437654206128,
+        "anxiety_risk_increase": 0.3292054918830021,
+        "stress_risk_increase": 0.713199049465062
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I'm feeling overwhelmed by lost job unexpectedly. This is really difficult to process.",
+      "response_time": 5e-06,
+      "stress_impact": 7.079290594142162,
+      "personality_impact": {
+        "neuroticism": 0.021397537491407534,
+        "conscientiousness": -0.0002977601058784668
+      },
+      "timestamp": "2025-07-30T21:03:43.727456"
+    },
+    {
+      "event": {
+        "event_id": "event_0ece7534",
+        "event_type": "minimal",
+        "category": "minor_interaction",
+        "intensity": "low",
+        "title": "Brief interaction",
+        "description": "You have a brief interaction with someone.",
+        "context": "A brief, routine interaction occurs.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.2849816897522688,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 21:03:43.541183",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_alfred": "Another day, brief interaction. Just part of my routine."
+        },
+        "response_times": {
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.7581654770937046,
+        "control_level": 0.8023854895332302
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, brief interaction. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.2849816897522688,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T21:03:43.822872"
+    }
+  ],
+  "timestamp": "2025-07-30T21:03:43.822882"
+}

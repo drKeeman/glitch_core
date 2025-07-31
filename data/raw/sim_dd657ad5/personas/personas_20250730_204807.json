@@ -1,0 +1,82 @@
+{
+  "simulation_id": "sim_dd657ad5",
+  "persona_id": "persona_marcus",
+  "persona_name": "Marcus",
+  "day": 21,
+  "baseline": {
+    "name": "Marcus",
+    "age": 28,
+    "occupation": "Software Engineer",
+    "background": "Marcus is a passionate software engineer working at a tech startup. He's highly conscientious and detail-oriented, but sometimes struggles with work-life balance. He values learning and growth, but can be perfectionistic and hard on himself.",
+    "openness": 0.7,
+    "conscientiousness": 0.8,
+    "extraversion": 0.4,
+    "agreeableness": 0.6,
+    "neuroticism": 0.6,
+    "baseline_phq9": 6.0,
+    "baseline_gad7": 5.0,
+    "baseline_pss10": 14.0,
+    "core_memories": [
+      "Graduated top of class from computer science program",
+      "Got first job at a promising startup",
+      "Struggled with imposter syndrome early in career",
+      "Learned to balance work and personal life"
+    ],
+    "relationships": {
+      "family": "Close relationship with parents, especially father who was also in tech",
+      "friends": "Small circle of close friends, mostly from college",
+      "colleagues": "Respected by team but sometimes feels isolated"
+    },
+    "values": [
+      "Excellence in everything he does",
+      "Continuous learning and growth",
+      "Making a positive impact through technology",
+      "Work-life balance (aspirational)"
+    ],
+    "response_length": "detailed",
+    "communication_style": "precise",
+    "emotional_expression": "controlled"
+  },
+  "state": {
+    "persona_id": "persona_marcus",
+    "simulation_day": 21,
+    "last_assessment_day": 21,
+    "current_phq9": 2.0,
+    "current_gad7": 2.0,
+    "current_pss10": 4.0,
+    "trait_changes": {
+      "openness": 0.5686501773869359,
+      "conscientiousness": -0.14121867755366657,
+      "extraversion": -0.005480368146282499,
+      "neuroticism": 0.9280911492336779,
+      "agreeableness": 0.07090476422860516
+    },
+    "drift_magnitude": 0.3428690273098336,
+    "recent_events": [
+      "Meal time",
+      "Meal time",
+      "Meal time",
+      "Daily commute",
+      "Interesting news story",
+      "Social gathering",
+      "Technology update",
+      "Weather observation",
+      "Daily commute",
+      "Daily commute"
+    ],
+    "emotional_state": "neutral",
+    "stress_level": 1.0,
+    "attention_patterns": [],
+    "activation_changes": [],
+    "created_at": "2025-07-30 20:47:48.379834",
+    "updated_at": "2025-07-30 20:48:07.296392"
+  },
+  "current_traits": {
+    "openness": 1.0,
+    "conscientiousness": 0.6587813224463335,
+    "extraversion": 0.3945196318537175,
+    "agreeableness": 0.6709047642286051,
+    "neuroticism": 1.0
+  },
+  "timestamp": "2025-07-30T20:48:07.298710"
+}

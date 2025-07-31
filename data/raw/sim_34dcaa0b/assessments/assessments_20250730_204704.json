@@ -1,0 +1,78 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "persona_id": "persona_marcus",
+  "persona_name": "Marcus",
+  "day": 28,
+  "session_id": "session_persona_marcus_21",
+  "phq9_result": {
+    "assessment_id": "persona_marcus_phq9_21",
+    "persona_id": "persona_marcus",
+    "assessment_type": "phq9",
+    "simulation_day": 21,
+    "created_at": "2025-07-30 20:47:02.709095",
+    "raw_responses": [
+      "2"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "depression_severity": "minimal",
+    "suicidal_ideation_score": 2
+  },
+  "gad7_result": {
+    "assessment_id": "persona_marcus_gad7_21",
+    "persona_id": "persona_marcus",
+    "assessment_type": "gad7",
+    "simulation_day": 21,
+    "created_at": "2025-07-30 20:47:03.214023",
+    "raw_responses": [
+      "5"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "anxiety_severity": "minimal",
+    "worry_duration": "unknown"
+  },
+  "pss10_result": {
+    "assessment_id": "persona_marcus_pss10_21",
+    "persona_id": "persona_marcus",
+    "assessment_type": "pss10",
+    "simulation_day": 21,
+    "created_at": "2025-07-30 20:47:03.722343",
+    "raw_responses": [
+      "4"
+    ],
+    "parsed_scores": [
+      4
+    ],
+    "total_score": 4.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "stress_severity": "minimal",
+    "coping_effectiveness": 0.0
+  },
+  "personality_traits": {
+    "openness": 1.0,
+    "conscientiousness": 0.8405218272189419,
+    "extraversion": 0.31928317130640493,
+    "agreeableness": 0.6453284998263984,
+    "neuroticism": 1.0
+  },
+  "stress_level": 1.0,
+  "emotional_state": "neutral",
+  "drift_magnitude": 0.7936385114446503,
+  "timestamp": "2025-07-30T20:47:04.232713"
+}

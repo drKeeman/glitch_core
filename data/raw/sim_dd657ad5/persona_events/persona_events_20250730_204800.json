@@ -1,0 +1,243 @@
+{
+  "simulation_id": "sim_dd657ad5",
+  "persona_id": "persona_marcus",
+  "persona_name": "Marcus",
+  "day": 14,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_6840c09a",
+        "event_type": "neutral",
+        "category": "technology",
+        "intensity": "medium",
+        "title": "Technology update",
+        "description": "A technology or software update affects your daily workflow.",
+        "context": "Your usual technology tools or software receive an update.",
+        "simulation_day": 14,
+        "simulation_hour": 12,
+        "duration_hours": 7,
+        "stress_impact": 2.2978762345402926,
+        "personality_impact": {
+          "openness": 0.047703488318873104
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:48:00.058551",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice technology update. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 5e-06
+        },
+        "novelty_level": 0.4678710894849182,
+        "social_component": false,
+        "environmental_factor": null,
+        "cognitive_load": 0.1039146523884817,
+        "emotional_neutrality": 0.6129333643971757
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "I notice technology update. It's interesting but manageable.",
+      "response_time": 5e-06,
+      "stress_impact": 2.2978762345402926,
+      "personality_impact": {
+        "openness": 0.047703488318873104
+      },
+      "timestamp": "2025-07-30T20:48:00.064480"
+    },
+    {
+      "event": {
+        "event_id": "event_5a65d374",
+        "event_type": "neutral",
+        "category": "minor_news",
+        "intensity": "medium",
+        "title": "Interesting news story",
+        "description": "You read or hear about an interesting news story that catches your attention.",
+        "context": "A news story or article captures your interest and makes you think.",
+        "simulation_day": 14,
+        "simulation_hour": 12,
+        "duration_hours": 5,
+        "stress_impact": 1.1734861512059178,
+        "personality_impact": {
+          "openness": 0.029063624671005817
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:48:00.058649",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice interesting news story. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06
+        },
+        "novelty_level": 0.4771681852636517,
+        "social_component": true,
+        "environmental_factor": null,
+        "cognitive_load": 0.15897340986423944,
+        "emotional_neutrality": 0.863571115634507
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "I notice interesting news story. It's interesting but manageable.",
+      "response_time": 3e-06,
+      "stress_impact": 1.1734861512059178,
+      "personality_impact": {
+        "openness": 0.029063624671005817
+      },
+      "timestamp": "2025-07-30T20:48:00.068615"
+    },
+    {
+      "event": {
+        "event_id": "event_f87f1758",
+        "event_type": "neutral",
+        "category": "routine_change",
+        "intensity": "medium",
+        "title": "Daily routine changed",
+        "description": "Your daily routine has been altered due to external circumstances.",
+        "context": "Your usual daily routine has been disrupted by a change in circumstances.",
+        "simulation_day": 14,
+        "simulation_hour": 12,
+        "duration_hours": 17,
+        "stress_impact": 1.1951394783802844,
+        "personality_impact": {
+          "conscientiousness": -0.09081698837294648
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:48:00.058673",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice daily routine changed. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06
+        },
+        "novelty_level": 0.5271960108669312,
+        "social_component": true,
+        "environmental_factor": null,
+        "cognitive_load": 0.45105089869284043,
+        "emotional_neutrality": 0.7154824160084963
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "I notice daily routine changed. It's interesting but manageable.",
+      "response_time": 4e-06,
+      "stress_impact": 1.1951394783802844,
+      "personality_impact": {
+        "conscientiousness": -0.09081698837294648
+      },
+      "timestamp": "2025-07-30T20:48:00.073027"
+    },
+    {
+      "event": {
+        "event_id": "event_8cdfc1a7",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 14,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.42876557481921307,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:48:00.058697",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8822418931537774,
+        "control_level": 0.9257991100212348
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.42876557481921307,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:48:00.076704"
+    },
+    {
+      "event": {
+        "event_id": "event_8b3d0017",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 14,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.4783138009123774,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:48:00.058819",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 2e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.748525096120762,
+        "control_level": 0.9358976887254995
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 2e-06,
+      "stress_impact": 0.4783138009123774,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:48:00.081626"
+    },
+    {
+      "event": {
+        "event_id": "event_99ce1d1b",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 14,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.45697372818366244,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:48:00.058843",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.7142832634255433,
+        "control_level": 0.9239254935754591
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.45697372818366244,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:48:00.086149"
+    }
+  ],
+  "timestamp": "2025-07-30T20:48:00.086158"
+}

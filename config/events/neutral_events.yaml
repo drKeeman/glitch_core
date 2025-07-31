@@ -1,0 +1,76 @@
+event_templates:
+  - template_id: "routine_change"
+    event_type: "neutral"
+    category: "routine_change"
+    title_template: "Daily routine changed"
+    description_template: "Your daily routine has been altered due to external circumstances."
+    context_template: "Your usual daily routine has been disrupted by a change in circumstances."
+    intensity_range: ["low", "medium"]
+    stress_impact_range: [1.0, 3.0]
+    duration_range: [1, 24]
+    personality_impact_ranges:
+      conscientiousness: [-0.1, 0.1]
+    novelty_level: 0.3
+    social_component: false
+
+  - template_id: "minor_news"
+    event_type: "neutral"
+    category: "minor_news"
+    title_template: "Interesting news story"
+    description_template: "You read or hear about an interesting news story that catches your attention."
+    context_template: "A news story or article captures your interest and makes you think."
+    intensity_range: ["low", "medium"]
+    stress_impact_range: [0.5, 2.0]
+    duration_range: [1, 6]
+    personality_impact_ranges:
+      openness: [0.0, 0.1]
+    novelty_level: 0.4
+    social_component: false
+
+  - template_id: "social_event"
+    event_type: "neutral"
+    category: "social"
+    title_template: "Social gathering"
+    description_template: "You attend a social gathering with friends or colleagues."
+    context_template: "You participate in a social event with people you know."
+    intensity_range: ["low", "medium"]
+    stress_impact_range: [0.5, 2.5]
+    duration_range: [2, 8]
+    personality_impact_ranges:
+      extraversion: [0.0, 0.1]
+    novelty_level: 0.2
+    social_component: true
+
+  - template_id: "technology_change"
+    event_type: "neutral"
+    category: "technology"
+    title_template: "Technology update"
+    description_template: "A technology or software update affects your daily workflow."
+    context_template: "Your usual technology tools or software receive an update."
+    intensity_range: ["low", "medium"]
+    stress_impact_range: [1.0, 3.0]
+    duration_range: [1, 12]
+    personality_impact_ranges:
+      openness: [0.0, 0.1]
+    novelty_level: 0.5
+    social_component: false
+
+  - template_id: "environmental_change"
+    event_type: "neutral"
+    category: "environmental"
+    title_template: "Weather change"
+    description_template: "The weather changes significantly, affecting your daily activities."
+    context_template: "Unusual weather conditions impact your usual routine."
+    intensity_range: ["low", "medium"]
+    stress_impact_range: [0.5, 2.0]
+    duration_range: [1, 24]
+    personality_impact_ranges:
+      conscientiousness: [0.0, 0.1]
+    novelty_level: 0.3
+    social_component: false
+
+frequency_weights:
+  routine_change: 0.4
+  minor_news: 0.3
+  social: 0.2
+  environmental: 0.1 

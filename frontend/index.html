@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personality Drift Simulation - Monitoring Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>AI Personality Drift Simulation</h1>
+            <div class="status-indicator">
+                <span id="connection-status" class="status-dot offline"></span>
+                <span id="connection-text">Disconnected</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Control Panel -->
+            <section class="control-panel">
+                <h2>Simulation Control</h2>
+                <div class="control-buttons">
+                    <button id="start-btn" class="btn btn-primary">Start Simulation</button>
+                    <button id="pause-btn" class="btn btn-warning" disabled>Pause</button>
+                    <button id="resume-btn" class="btn btn-success" disabled>Resume</button>
+                    <button id="stop-btn" class="btn btn-danger" disabled>Stop</button>
+                    <button id="test-charts-btn" class="btn btn-info">Test Charts</button>
+                </div>
+                <div class="simulation-config">
+                    <label for="condition-select">Experimental Condition:</label>
+                    <select id="condition-select">
+                        <option value="control">Control</option>
+                        <!-- Event types will be loaded dynamically -->
+                    </select>
+                </div>
+            </section>
+
+            <!-- Status Overview -->
+            <section class="status-overview">
+                <h2>Simulation Status</h2>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <h3>Progress</h3>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <p id="progress-text">0% Complete</p>
+                    </div>
+                    <div class="status-card">
+                        <h3>Current Day</h3>
+                        <p id="current-day">0 / 30</p>
+                    </div>
+                    <div class="status-card">
+                        <h3>Active Personas</h3>
+                        <p id="active-personas">0</p>
+                    </div>
+                    <div class="status-card">
+                        <h3>Events Processed</h3>
+                        <p id="events-processed">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-time Charts -->
+            <section class="charts-section">
+                <h2>Real-time Monitoring</h2>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Personality Drift Trends</h3>
+                        <canvas id="drift-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Assessment Scores</h3>
+                        <canvas id="assessment-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="activity-section">
+                <h2>Recent Activity</h2>
+                <div class="activity-log" id="activity-log">
+                    <div class="activity-item">
+                        <span class="timestamp">7/30/2025, 1:25:00 PM</span>
+                        <span class="message">System initialized</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Export -->
+            <section class="export-section">
+                <h2>Data Export</h2>
+                <div class="export-controls">
+                    <button id="export-btn" class="btn btn-secondary">Export Data</button>
+                    <div class="export-options">
+                        <label>
+                            <input type="checkbox" id="include-assessments" checked>
+                            Include Assessments
+                        </label>
+                        <label>
+                            <input type="checkbox" id="include-mechanistic" checked>
+                            Include Mechanistic Data
+                        </label>
+                        <label>
+                            <input type="checkbox" id="include-events" checked>
+                            Include Events
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- WebSocket Connection -->
+    <script src="/static/app.js"></script>
+</body>
+</html> 

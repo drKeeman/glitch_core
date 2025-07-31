@@ -1,0 +1,87 @@
+{
+  "simulation_id": "sim_adb154f8",
+  "day": 0,
+  "persona_id": "persona_marcus",
+  "persona_name": "Marcus",
+  "events": [
+    {
+      "event": {
+        "event_id": "event_0359c6a9",
+        "event_type": "neutral",
+        "category": "technology",
+        "intensity": "low",
+        "title": "Technology update",
+        "description": "A technology or software update affects your daily workflow.",
+        "context": "Your usual technology tools or software receive an update.",
+        "simulation_day": 0,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 2.5208719146329206,
+        "personality_impact": {
+          "openness": 0.004194959183878412
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 21:04:21.670724",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice technology update. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 7e-06
+        },
+        "novelty_level": 0.39137922542870873,
+        "social_component": false,
+        "environmental_factor": null,
+        "cognitive_load": 0.32618788245957586,
+        "emotional_neutrality": 0.8394251740150646
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "I notice technology update. It's interesting but manageable.",
+      "response_time": 7e-06,
+      "stress_impact": 2.5208719146329206,
+      "personality_impact": {
+        "openness": 0.004194959183878412
+      },
+      "timestamp": "2025-07-30T21:04:21.679855"
+    },
+    {
+      "event": {
+        "event_id": "event_ffca293b",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 0,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.11662022496833846,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 21:04:21.670797",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 6e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.752416881470253,
+        "control_level": 0.8693049940595408
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 6e-06,
+      "stress_impact": 0.11662022496833846,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T21:04:21.683752"
+    }
+  ],
+  "timestamp": "2025-07-30T21:04:21.683766"
+}

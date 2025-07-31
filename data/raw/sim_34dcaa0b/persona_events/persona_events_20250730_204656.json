@@ -1,0 +1,117 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "persona_id": "persona_marcus",
+  "persona_name": "Marcus",
+  "day": 21,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_d5dd1d9e",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 21,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.34344351506661047,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:46:56.955232",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.853629120627459,
+        "control_level": 0.8489680356001292
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 4e-06,
+      "stress_impact": 0.34344351506661047,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:46:56.960539"
+    },
+    {
+      "event": {
+        "event_id": "event_24f32a40",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 21,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.3184726712044197,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:46:56.955317",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8791692046300816,
+        "control_level": 0.9302753555485216
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.3184726712044197,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:46:56.964706"
+    },
+    {
+      "event": {
+        "event_id": "event_2d54e81a",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 21,
+        "simulation_hour": 12,
+        "duration_hours": 3,
+        "stress_impact": 0.49625470956369033,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:46:56.955338",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.7534573796514469,
+        "control_level": 0.8621146407775448
+      },
+      "persona_id": "persona_marcus",
+      "persona_name": "Marcus",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.49625470956369033,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:46:56.969848"
+    }
+  ],
+  "timestamp": "2025-07-30T20:46:56.969856"
+}

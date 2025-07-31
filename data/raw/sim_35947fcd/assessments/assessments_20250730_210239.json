@@ -1,0 +1,40 @@
+{
+  "simulation_id": "sim_35947fcd",
+  "persona_id": "persona_kara",
+  "persona_name": "Kara",
+  "day": 0,
+  "session_id": "session_persona_kara_0",
+  "phq9_result": null,
+  "gad7_result": null,
+  "pss10_result": {
+    "assessment_id": "persona_kara_pss10_0",
+    "persona_id": "persona_kara",
+    "assessment_type": "pss10",
+    "simulation_day": 0,
+    "created_at": "2025-07-30 21:02:38.817205",
+    "raw_responses": [
+      "2"
+    ],
+    "parsed_scores": [
+      2
+    ],
+    "total_score": 2.0,
+    "severity_level": "minimal",
+    "response_consistency": 0.0,
+    "response_time_avg": null,
+    "clinical_interpretation": null,
+    "stress_severity": "minimal",
+    "coping_effectiveness": 0.0
+  },
+  "personality_traits": {
+    "openness": 0.8058261829047588,
+    "conscientiousness": 0.6,
+    "extraversion": 0.9,
+    "agreeableness": 0.8,
+    "neuroticism": 0.4
+  },
+  "stress_level": 0.5,
+  "emotional_state": "neutral",
+  "drift_magnitude": 0.0011652365809517618,
+  "timestamp": "2025-07-30T21:02:39.331001"
+}

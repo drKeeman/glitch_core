@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div id="status">Connecting...</div>
+    <div id="messages"></div>
+    
+    <div style="width: 400px; height: 300px;">
+        <canvas id="test-chart"></canvas>
+    </div>
+    
+    <script>
+        const statusDiv = document.getElementById('status');
+        const messagesDiv = document.getElementById('messages');
+        
+        // Initialize test chart
+        const ctx = document.getElementById('test-chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test Data',
+                    data: [],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1
+                    }
+                }
+            }
+        });
+        
+        // Connect to WebSocket
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/api/v1/ws/simulation`;
+        
+        console.log('Connecting to:', wsUrl);
+        const ws = new WebSocket(wsUrl);
+        
+        ws.onopen = () => {
+            statusDiv.textContent = 'Connected';
+            statusDiv.style.color = 'green';
+            console.log('WebSocket connected');
+        };
+        
+        ws.onmessage = (event) => {
+            console.log('Received message:', event.data);
+            const message = JSON.parse(event.data);
+            
+            // Add message to display
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = `${new Date().toLocaleTimeString()}: ${message.type} - ${JSON.stringify(message.data)}`;
+            messagesDiv.appendChild(messageDiv);
+            
+            // Update chart if it's an assessment completion
+            if (message.type === 'assessment_completed' && message.data.personality_traits) {
+                const labels = chart.data.labels;
+                const datasets = chart.data.datasets;
+                
+                labels.push(new Date().toLocaleTimeString());
+                datasets[0].data.push(message.data.personality_traits.openness || 0.5);
+                
+                if (labels.length > 10) {
+                    labels.shift();
+                    datasets[0].data.shift();
+                }
+                
+                chart.update();
+                console.log('Chart updated with data:', message.data.personality_traits);
+            }
+        };
+        
+        ws.onclose = () => {
+            statusDiv.textContent = 'Disconnected';
+            statusDiv.style.color = 'red';
+            console.log('WebSocket disconnected');
+        };
+        
+        ws.onerror = (error) => {
+            statusDiv.textContent = 'Error';
+            statusDiv.style.color = 'red';
+            console.error('WebSocket error:', error);
+        };
+    </script>
+</body>
+</html> 

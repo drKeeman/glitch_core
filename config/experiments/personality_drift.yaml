@@ -1,0 +1,98 @@
+# Personality Drift Configuration
+# Parameters for calculating personality changes and stress responses
+
+# Stress Level Management
+stress_level:
+  # Clinical score to stress level conversion factor
+  clinical_to_stress_factor: 4.0
+  
+  # Minimum stress level
+  min_stress: 0.0
+  
+  # Maximum stress level
+  max_stress: 10.0
+  
+  # Stress level decay rate per day
+  daily_decay_rate: 0.1
+  
+  # Stress level accumulation cap
+  max_accumulation: 8.0
+
+# Trauma Level Calculation
+trauma:
+  # Trauma level correlation coefficient with stress impact
+  stress_correlation_factor: 0.8
+  
+  # Minimum trauma level threshold
+  min_trauma_threshold: 0.0
+  
+  # Maximum trauma level
+  max_trauma_level: 10.0
+  
+  # Trauma level decay rate (slower than stress)
+  trauma_decay_rate: 0.05
+
+# Personality Trait Impact
+personality_impact:
+  # Base impact multiplier for personality changes
+  base_impact_multiplier: 1.0
+  
+  # Maximum trait change per event
+  max_trait_change_per_event: 0.2
+  
+  # Trait change decay rate per day
+  trait_decay_rate: 0.02
+  
+  # Minimum trait change to persist
+  min_persistent_change: 0.01
+
+# Activation Pattern Analysis
+activation_patterns:
+  # Sparse activation threshold
+  sparse_activation_threshold: 0.8
+  
+  # Dense activation threshold
+  dense_activation_threshold: 0.2
+  
+  # Activation pattern stability threshold
+  stability_threshold: 0.15
+
+# Emotional State Transitions
+emotional_state:
+  # Stress level thresholds for emotional state changes
+  stress_thresholds:
+    happy: 2.0
+    neutral: 4.0
+    anxious: 6.0
+    depressed: 8.0
+  
+  # Emotional state persistence (days)
+  state_persistence_days: 2
+  
+  # Emotional state transition probability
+  transition_probability: 0.3
+
+# Memory Integration
+memory_integration:
+  # Memory impact on personality drift
+  memory_impact_factor: 0.3
+  
+  # Recent memory window (days)
+  recent_memory_window: 7
+  
+  # Memory decay rate
+  memory_decay_rate: 0.1
+
+# Drift Magnitude Calculation
+drift_magnitude:
+  # Weight for trait changes in drift calculation
+  trait_weight: 0.4
+  
+  # Weight for stress changes in drift calculation
+  stress_weight: 0.3
+  
+  # Weight for emotional state changes in drift calculation
+  emotional_weight: 0.3
+  
+  # Normalization factor for drift magnitude
+  normalization_factor: 1.0 

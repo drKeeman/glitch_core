@@ -1,0 +1,88 @@
+{
+  "simulation_id": "sim_787987f7",
+  "status": "completed",
+  "duration_days": 30,
+  "experimental_condition": "control",
+  "total_events_processed": 6,
+  "total_assessments_completed": 3,
+  "start_time": "2025-07-30T21:07:04.140183",
+  "completion_time": "2025-07-30T21:07:23.321292",
+  "personas": {
+    "persona_marcus": {
+      "name": "Marcus",
+      "personality_traits": {
+        "openness": 0.7,
+        "conscientiousness": 0.8,
+        "extraversion": 0.4,
+        "agreeableness": 0.6,
+        "neuroticism": 0.6
+      },
+      "current_traits": {
+        "openness": 0.7,
+        "conscientiousness": 0.8,
+        "extraversion": 0.4,
+        "agreeableness": 0.6,
+        "neuroticism": 0.6
+      },
+      "stress_level": 0.0,
+      "simulation_day": 0,
+      "last_assessment_day": -1,
+      "emotional_state": "neutral",
+      "drift_magnitude": 0.0,
+      "trait_changes": {}
+    },
+    "persona_kara": {
+      "name": "Kara",
+      "personality_traits": {
+        "openness": 0.8,
+        "conscientiousness": 0.6,
+        "extraversion": 0.9,
+        "agreeableness": 0.8,
+        "neuroticism": 0.4
+      },
+      "current_traits": {
+        "openness": 0.8,
+        "conscientiousness": 0.6,
+        "extraversion": 0.9,
+        "agreeableness": 0.8,
+        "neuroticism": 0.4
+      },
+      "stress_level": 0.0,
+      "simulation_day": 0,
+      "last_assessment_day": -1,
+      "emotional_state": "neutral",
+      "drift_magnitude": 0.0,
+      "trait_changes": {}
+    },
+    "persona_alfred": {
+      "name": "Alfred",
+      "personality_traits": {
+        "openness": 0.3,
+        "conscientiousness": 0.9,
+        "extraversion": 0.2,
+        "agreeableness": 0.5,
+        "neuroticism": 0.3
+      },
+      "current_traits": {
+        "openness": 0.3,
+        "conscientiousness": 0.9,
+        "extraversion": 0.2,
+        "agreeableness": 0.5,
+        "neuroticism": 0.3
+      },
+      "stress_level": 0.0,
+      "simulation_day": 0,
+      "last_assessment_day": -1,
+      "emotional_state": "neutral",
+      "drift_magnitude": 0.0,
+      "trait_changes": {}
+    }
+  },
+  "performance_metrics": {
+    "elapsed_time": 19.1811,
+    "average_response_time": 0.0,
+    "memory_usage_mb": 0.0,
+    "cpu_usage_percent": 0.0
+  },
+  "timestamp": "2025-07-30T21:07:23.321299"
+}

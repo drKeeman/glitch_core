@@ -1,0 +1,20 @@
+{
+  "simulation_id": "sim_787987f7",
+  "export_timestamp": "2025-07-30T21:07:23.334212",
+  "data_sources": [
+    {
+      "type": "personas",
+      "file_count": 1,
+      "files": [
+        "personas_20250730_210723.json"
+      ]
+    },
+    {
+      "type": "assessments",
+      "file_count": 1,
+      "files": [
+        "assessments_20250730_210723.json"
+      ]
+    }
+  ]
+}

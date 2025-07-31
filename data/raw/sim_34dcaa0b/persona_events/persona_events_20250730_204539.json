@@ -1,0 +1,255 @@
+{
+  "simulation_id": "sim_34dcaa0b",
+  "persona_id": "persona_kara",
+  "persona_name": "Kara",
+  "day": 4,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_af0f94dd",
+        "event_type": "neutral",
+        "category": "technology",
+        "intensity": "medium",
+        "title": "Technology update",
+        "description": "A technology or software update affects your daily workflow.",
+        "context": "Your usual technology tools or software receive an update.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 10,
+        "stress_impact": 1.865945706356606,
+        "personality_impact": {
+          "openness": 0.07718392068752247
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:45:39.915666",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice technology update. It's interesting but manageable.",
+          "persona_kara": "I notice technology update. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 5e-06,
+          "persona_kara": 7e-06
+        },
+        "novelty_level": 0.4325713201291039,
+        "social_component": true,
+        "environmental_factor": null,
+        "cognitive_load": 0.18557956357975383,
+        "emotional_neutrality": 0.611944723835652
+      },
+      "persona_id": "persona_kara",
+      "persona_name": "Kara",
+      "response": "I notice technology update. It's interesting but manageable.",
+      "response_time": 7e-06,
+      "stress_impact": 1.865945706356606,
+      "personality_impact": {
+        "openness": 0.07718392068752247
+      },
+      "timestamp": "2025-07-30T20:45:39.958145"
+    },
+    {
+      "event": {
+        "event_id": "event_3eec639e",
+        "event_type": "neutral",
+        "category": "minor_news",
+        "intensity": "low",
+        "title": "Interesting news story",
+        "description": "You read or hear about an interesting news story that catches your attention.",
+        "context": "A news story or article captures your interest and makes you think.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 1.4641957665826408,
+        "personality_impact": {
+          "openness": 0.054607850061398136
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:45:39.915727",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice interesting news story. It's interesting but manageable.",
+          "persona_kara": "I notice interesting news story. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 4e-06
+        },
+        "novelty_level": 0.6935213426323588,
+        "social_component": true,
+        "environmental_factor": null,
+        "cognitive_load": 0.21555735302360302,
+        "emotional_neutrality": 0.8957283990173244
+      },
+      "persona_id": "persona_kara",
+      "persona_name": "Kara",
+      "response": "I notice interesting news story. It's interesting but manageable.",
+      "response_time": 4e-06,
+      "stress_impact": 1.4641957665826408,
+      "personality_impact": {
+        "openness": 0.054607850061398136
+      },
+      "timestamp": "2025-07-30T20:45:39.963655"
+    },
+    {
+      "event": {
+        "event_id": "event_0194843f",
+        "event_type": "neutral",
+        "category": "minor_news",
+        "intensity": "medium",
+        "title": "Interesting news story",
+        "description": "You read or hear about an interesting news story that catches your attention.",
+        "context": "A news story or article captures your interest and makes you think.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 1.4737472694994591,
+        "personality_impact": {
+          "openness": 0.09284455251874568
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:45:39.915749",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice interesting news story. It's interesting but manageable.",
+          "persona_kara": "I notice interesting news story. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06
+        },
+        "novelty_level": 0.4052768075785792,
+        "social_component": false,
+        "environmental_factor": null,
+        "cognitive_load": 0.19446996993011784,
+        "emotional_neutrality": 0.658913005140086
+      },
+      "persona_id": "persona_kara",
+      "persona_name": "Kara",
+      "response": "I notice interesting news story. It's interesting but manageable.",
+      "response_time": 3e-06,
+      "stress_impact": 1.4737472694994591,
+      "personality_impact": {
+        "openness": 0.09284455251874568
+      },
+      "timestamp": "2025-07-30T20:45:39.967246"
+    },
+    {
+      "event": {
+        "event_id": "event_778a1bb9",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily routine activity",
+        "description": "A typical daily routine activity occurs.",
+        "context": "You engage in a typical daily routine activity.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.27722977049620534,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:45:39.915770",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily routine activity. Just part of my routine.",
+          "persona_kara": "Another day, daily routine activity. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8225471810634737,
+        "control_level": 0.8016915468580581
+      },
+      "persona_id": "persona_kara",
+      "persona_name": "Kara",
+      "response": "Another day, daily routine activity. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.27722977049620534,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:45:39.971405"
+    },
+    {
+      "event": {
+        "event_id": "event_ac8f6d26",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.17423645984497094,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:45:39.915786",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine.",
+          "persona_kara": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 4e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8611131370510832,
+        "control_level": 0.8030411243527183
+      },
+      "persona_id": "persona_kara",
+      "persona_name": "Kara",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 4e-06,
+      "stress_impact": 0.17423645984497094,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:45:39.976328"
+    },
+    {
+      "event": {
+        "event_id": "event_edfe46f1",
+        "event_type": "minimal",
+        "category": "weather",
+        "intensity": "low",
+        "title": "Weather observation",
+        "description": "You notice the weather conditions outside.",
+        "context": "The weather is typical for this time of year.",
+        "simulation_day": 4,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.20093372975116253,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:45:39.915800",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, weather observation. Just part of my routine.",
+          "persona_kara": "Another day, weather observation. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 5e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8427308872660622,
+        "control_level": 0.8611771482494128
+      },
+      "persona_id": "persona_kara",
+      "persona_name": "Kara",
+      "response": "Another day, weather observation. Just part of my routine.",
+      "response_time": 5e-06,
+      "stress_impact": 0.20093372975116253,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:45:39.979889"
+    }
+  ],
+  "timestamp": "2025-07-30T20:45:39.979895"
+}

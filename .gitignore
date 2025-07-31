@@ -205,3 +205,79 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+/prd/
+
+# Research Data and Generated Files
+# Data exports and research results
+data/exports/
+data/results/
+data/publication/
+
+# CSV files (research data) - only in data and notebooks directories
+data/**/*.csv
+notebooks/**/*.csv
+
+# JSON files (research data and exports) - only in data and notebooks directories
+data/**/*.json
+notebooks/**/*.json
+
+# Plot images and figures - only in data and notebooks directories
+data/**/*.png
+data/**/*.jpg
+data/**/*.jpeg
+data/**/*.gif
+data/**/*.svg
+data/**/*.pdf
+data/**/*.eps
+data/**/*.tiff
+data/**/*.bmp
+notebooks/**/*.png
+notebooks/**/*.jpg
+notebooks/**/*.jpeg
+notebooks/**/*.gif
+notebooks/**/*.svg
+notebooks/**/*.pdf
+notebooks/**/*.eps
+notebooks/**/*.tiff
+notebooks/**/*.bmp
+
+# Notebook outputs and generated content
+notebooks/*/outputs/
+notebooks/*/figures/
+notebooks/*/data/
+
+# Simulation results and logs
+simulation_results/
+logs/
+*.log
+
+# Temporary research files
+temp/
+tmp/
+*.tmp
+*.temp
+
+# Large data files - only in data and notebooks directories
+data/**/*.parquet
+data/**/*.h5
+data/**/*.hdf5
+data/**/*.pkl
+data/**/*.pickle
+notebooks/**/*.parquet
+notebooks/**/*.h5
+notebooks/**/*.hdf5
+notebooks/**/*.pkl
+notebooks/**/*.pickle
+
+# Jupyter notebook checkpoints (already covered but being explicit)
+.ipynb_checkpoints/
+
+# macOS system files
+.DS_Store
+*/.DS_Store
+*/*/.DS_Store
+*/*/*/.DS_Store
+*/*/*/*/.DS_Store
+*/*/*/*/*/.DS_Store
+*/*/*/*/*/*/.DS_Store

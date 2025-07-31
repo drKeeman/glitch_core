@@ -1,0 +1,70 @@
+event_templates:
+  - template_id: "daily_routine"
+    event_type: "minimal"
+    category: "daily_routine"
+    title_template: "Daily routine activity"
+    description_template: "A typical daily routine activity occurs."
+    context_template: "You engage in a typical daily routine activity."
+    intensity_range: ["low", "low"]
+    stress_impact_range: [0.1, 0.5]
+    duration_range: [1, 4]
+    routine_type: "daily"
+    predictability: 0.9
+    control_level: 0.9
+
+  - template_id: "weather_note"
+    event_type: "minimal"
+    category: "weather"
+    title_template: "Weather observation"
+    description_template: "You notice the weather conditions outside."
+    context_template: "The weather is typical for this time of year."
+    intensity_range: ["low", "low"]
+    stress_impact_range: [0.1, 0.3]
+    duration_range: [1, 2]
+    routine_type: "observation"
+    predictability: 0.8
+    control_level: 0.9
+
+  - template_id: "minor_interaction"
+    event_type: "minimal"
+    category: "minor_interaction"
+    title_template: "Brief interaction"
+    description_template: "You have a brief interaction with someone."
+    context_template: "A brief, routine interaction occurs."
+    intensity_range: ["low", "low"]
+    stress_impact_range: [0.1, 0.4]
+    duration_range: [1, 3]
+    routine_type: "social"
+    predictability: 0.8
+    control_level: 0.8
+
+  - template_id: "meal_time"
+    event_type: "minimal"
+    category: "daily_routine"
+    title_template: "Meal time"
+    description_template: "It's time for a regular meal."
+    context_template: "You prepare and eat a regular meal."
+    intensity_range: ["low", "low"]
+    stress_impact_range: [0.1, 0.2]
+    duration_range: [1, 2]
+    routine_type: "daily"
+    predictability: 0.9
+    control_level: 0.9
+
+  - template_id: "commute"
+    event_type: "minimal"
+    category: "daily_routine"
+    title_template: "Daily commute"
+    description_template: "You commute to or from work as usual."
+    context_template: "Your regular commute to or from work."
+    intensity_range: ["low", "low"]
+    stress_impact_range: [0.1, 0.3]
+    duration_range: [1, 2]
+    routine_type: "daily"
+    predictability: 0.9
+    control_level: 0.8
+
+frequency_weights:
+  daily_routine: 0.6
+  weather: 0.2
+  minor_interaction: 0.2 

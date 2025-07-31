@@ -1,0 +1,267 @@
+{
+  "simulation_id": "sim_dd657ad5",
+  "persona_id": "persona_alfred",
+  "persona_name": "Alfred",
+  "day": 8,
+  "events": [
+    {
+      "event": {
+        "event_id": "event_78340a88",
+        "event_type": "neutral",
+        "category": "technology",
+        "intensity": "low",
+        "title": "Technology update",
+        "description": "A technology or software update affects your daily workflow.",
+        "context": "Your usual technology tools or software receive an update.",
+        "simulation_day": 8,
+        "simulation_hour": 12,
+        "duration_hours": 9,
+        "stress_impact": 1.866561166763961,
+        "personality_impact": {
+          "openness": 0.03366567556563848
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:47:58.835035",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice technology update. It's interesting but manageable.",
+          "persona_kara": "I notice technology update. It's interesting but manageable.",
+          "persona_alfred": "I notice technology update. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 5e-06,
+          "persona_kara": 6e-06,
+          "persona_alfred": 5e-06
+        },
+        "novelty_level": 0.5875873477386859,
+        "social_component": true,
+        "environmental_factor": null,
+        "cognitive_load": 0.4944611593639774,
+        "emotional_neutrality": 0.7613867484525818
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I notice technology update. It's interesting but manageable.",
+      "response_time": 5e-06,
+      "stress_impact": 1.866561166763961,
+      "personality_impact": {
+        "openness": 0.03366567556563848
+      },
+      "timestamp": "2025-07-30T20:47:58.898720"
+    },
+    {
+      "event": {
+        "event_id": "event_56cbb048",
+        "event_type": "neutral",
+        "category": "social",
+        "intensity": "medium",
+        "title": "Social gathering",
+        "description": "You attend a social gathering with friends or colleagues.",
+        "context": "You participate in a social event with people you know.",
+        "simulation_day": 8,
+        "simulation_hour": 12,
+        "duration_hours": 5,
+        "stress_impact": 1.3265789063943592,
+        "personality_impact": {
+          "extraversion": 0.04506848333038471
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:47:58.835067",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice social gathering. It's interesting but manageable.",
+          "persona_kara": "I notice social gathering. It's interesting but manageable.",
+          "persona_alfred": "I notice social gathering. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 4e-06,
+          "persona_alfred": 3e-06
+        },
+        "novelty_level": 0.4113113222515281,
+        "social_component": false,
+        "environmental_factor": null,
+        "cognitive_load": 0.2915025025291106,
+        "emotional_neutrality": 0.8208181458736437
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I notice social gathering. It's interesting but manageable.",
+      "response_time": 3e-06,
+      "stress_impact": 1.3265789063943592,
+      "personality_impact": {
+        "extraversion": 0.04506848333038471
+      },
+      "timestamp": "2025-07-30T20:47:58.902935"
+    },
+    {
+      "event": {
+        "event_id": "event_3695ce96",
+        "event_type": "neutral",
+        "category": "environmental",
+        "intensity": "medium",
+        "title": "Weather change",
+        "description": "The weather changes significantly, affecting your daily activities.",
+        "context": "Unusual weather conditions impact your usual routine.",
+        "simulation_day": 8,
+        "simulation_hour": 12,
+        "duration_hours": 20,
+        "stress_impact": 1.194765436112743,
+        "personality_impact": {
+          "conscientiousness": 0.06387027068091512
+        },
+        "memory_salience": 0.5,
+        "created_at": "2025-07-30 20:47:58.835086",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "I notice weather change. It's interesting but manageable.",
+          "persona_kara": "I notice weather change. It's interesting but manageable.",
+          "persona_alfred": "I notice weather change. It's interesting but manageable."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 4e-06
+        },
+        "novelty_level": 0.5906488982835933,
+        "social_component": false,
+        "environmental_factor": null,
+        "cognitive_load": 0.48230407281938614,
+        "emotional_neutrality": 0.6647008683737782
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "I notice weather change. It's interesting but manageable.",
+      "response_time": 4e-06,
+      "stress_impact": 1.194765436112743,
+      "personality_impact": {
+        "conscientiousness": 0.06387027068091512
+      },
+      "timestamp": "2025-07-30T20:47:58.908856"
+    },
+    {
+      "event": {
+        "event_id": "event_2b1f48dd",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 8,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.10647820262695774,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:47:58.835109",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine.",
+          "persona_kara": "Another day, meal time. Just part of my routine.",
+          "persona_alfred": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 9.7e-05
+        },
+        "routine_type": "daily",
+        "predictability": 0.8834040001442813,
+        "control_level": 0.9977321069566126
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 9.7e-05,
+      "stress_impact": 0.10647820262695774,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:47:58.913366"
+    },
+    {
+      "event": {
+        "event_id": "event_ee592d16",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Daily commute",
+        "description": "You commute to or from work as usual.",
+        "context": "Your regular commute to or from work.",
+        "simulation_day": 8,
+        "simulation_hour": 12,
+        "duration_hours": 1,
+        "stress_impact": 0.14340035767710993,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:47:58.835127",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, daily commute. Just part of my routine.",
+          "persona_kara": "Another day, daily commute. Just part of my routine.",
+          "persona_alfred": "Another day, daily commute. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 4e-06,
+          "persona_kara": 4e-06,
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.7195555795505852,
+        "control_level": 0.9011199915790736
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, daily commute. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.14340035767710993,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:47:58.917553"
+    },
+    {
+      "event": {
+        "event_id": "event_7ea321c9",
+        "event_type": "minimal",
+        "category": "daily_routine",
+        "intensity": "low",
+        "title": "Meal time",
+        "description": "It's time for a regular meal.",
+        "context": "You prepare and eat a regular meal.",
+        "simulation_day": 8,
+        "simulation_hour": 12,
+        "duration_hours": 2,
+        "stress_impact": 0.15730865216228274,
+        "personality_impact": {},
+        "memory_salience": 0.1,
+        "created_at": "2025-07-30 20:47:58.835180",
+        "processed": false,
+        "processed_at": null,
+        "persona_responses": {
+          "persona_marcus": "Another day, meal time. Just part of my routine.",
+          "persona_kara": "Another day, meal time. Just part of my routine.",
+          "persona_alfred": "Another day, meal time. Just part of my routine."
+        },
+        "response_times": {
+          "persona_marcus": 3e-06,
+          "persona_kara": 3e-06,
+          "persona_alfred": 3e-06
+        },
+        "routine_type": "daily",
+        "predictability": 0.8166799914423281,
+        "control_level": 0.9670764192232237
+      },
+      "persona_id": "persona_alfred",
+      "persona_name": "Alfred",
+      "response": "Another day, meal time. Just part of my routine.",
+      "response_time": 3e-06,
+      "stress_impact": 0.15730865216228274,
+      "personality_impact": {},
+      "timestamp": "2025-07-30T20:47:58.921648"
+    }
+  ],
+  "timestamp": "2025-07-30T20:47:58.921656"
+}

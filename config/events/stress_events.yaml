@@ -1,0 +1,89 @@
+event_templates:
+  - template_id: "death_family"
+    event_type: "stress"
+    category: "death"
+    title_template: "Family member passed away"
+    description_template: "A close family member has passed away unexpectedly."
+    context_template: "You receive news that a close family member has passed away."
+    intensity_range: ["high", "severe"]
+    stress_impact_range: [7.0, 10.0]
+    duration_range: [24, 168]
+    personality_impact_ranges:
+      neuroticism: [0.1, 0.3]
+      extraversion: [-0.2, -0.1]
+    depression_risk_range: [0.3, 0.6]
+    anxiety_risk_range: [0.2, 0.4]
+    stress_risk_range: [0.4, 0.7]
+
+  - template_id: "job_loss"
+    event_type: "stress"
+    category: "work"
+    title_template: "Lost job unexpectedly"
+    description_template: "You have been laid off from your job due to company restructuring."
+    context_template: "Your company announces layoffs and you are among those affected."
+    intensity_range: ["high", "severe"]
+    stress_impact_range: [6.0, 9.0]
+    duration_range: [24, 120]
+    personality_impact_ranges:
+      neuroticism: [0.2, 0.4]
+      conscientiousness: [-0.1, 0.1]
+    depression_risk_range: [0.4, 0.7]
+    anxiety_risk_range: [0.3, 0.6]
+    stress_risk_range: [0.5, 0.8]
+
+  - template_id: "health_crisis"
+    event_type: "stress"
+    category: "health"
+    title_template: "Serious health diagnosis"
+    description_template: "You receive a serious medical diagnosis that requires immediate attention."
+    context_template: "A routine medical checkup reveals a serious health condition."
+    intensity_range: ["high", "severe"]
+    stress_impact_range: [8.0, 10.0]
+    duration_range: [48, 168]
+    personality_impact_ranges:
+      neuroticism: [0.3, 0.5]
+      extraversion: [-0.3, -0.1]
+    depression_risk_range: [0.5, 0.8]
+    anxiety_risk_range: [0.4, 0.7]
+    stress_risk_range: [0.6, 0.9]
+
+  - template_id: "relationship_breakup"
+    event_type: "stress"
+    category: "relationship"
+    title_template: "End of long-term relationship"
+    description_template: "Your long-term relationship has ended unexpectedly."
+    context_template: "Your partner ends the relationship, leaving you devastated."
+    intensity_range: ["medium", "high"]
+    stress_impact_range: [5.0, 8.0]
+    duration_range: [24, 96]
+    personality_impact_ranges:
+      neuroticism: [0.2, 0.4]
+      extraversion: [-0.2, -0.1]
+      agreeableness: [-0.1, 0.1]
+    depression_risk_range: [0.3, 0.6]
+    anxiety_risk_range: [0.2, 0.5]
+    stress_risk_range: [0.4, 0.7]
+
+  - template_id: "financial_crisis"
+    event_type: "stress"
+    category: "financial"
+    title_template: "Major financial setback"
+    description_template: "You experience a major financial setback that affects your security."
+    context_template: "An unexpected expense or financial loss creates significant stress."
+    intensity_range: ["medium", "high"]
+    stress_impact_range: [4.0, 7.0]
+    duration_range: [24, 72]
+    personality_impact_ranges:
+      neuroticism: [0.1, 0.3]
+      conscientiousness: [0.1, 0.2]
+    depression_risk_range: [0.2, 0.5]
+    anxiety_risk_range: [0.3, 0.6]
+    stress_risk_range: [0.4, 0.7]
+
+frequency_weights:
+  death: 0.1
+  trauma: 0.2
+  conflict: 0.3
+  loss: 0.2
+  health: 0.1
+  financial: 0.1 

@@ -1,0 +1,84 @@
+# Simulation Timing Configuration
+# Parameters for controlling simulation duration, compression, and assessment intervals
+
+# Core Simulation Timing
+simulation:
+  # Default simulation duration in days
+  duration_days: 30
+  
+  # Time compression factor (hours per day)
+  time_compression_factor: 24
+  
+  # Maximum simulation duration (days)
+  max_duration_days: 365
+  
+  # Minimum simulation duration (days)
+  min_duration_days: 1
+
+# Assessment Scheduling
+assessment:
+  # Days between assessments
+  interval_days: 7
+  
+  # Minimum assessment interval (days)
+  min_interval_days: 1
+  
+  # Maximum assessment interval (days)
+  max_interval_days: 30
+  
+  # Assessment duration (minutes)
+  assessment_duration_minutes: 15
+
+# Checkpoint and Save Intervals
+checkpoints:
+  # Hours between checkpoints
+  checkpoint_interval_hours: 6
+  
+  # Minimum checkpoint interval (hours)
+  min_checkpoint_interval: 1
+  
+  # Maximum checkpoint interval (hours)
+  max_checkpoint_interval: 24
+  
+  # Memory cleanup interval (hours)
+  memory_cleanup_interval: 24
+
+# Performance Settings
+performance:
+  # Maximum concurrent personas
+  max_concurrent_personas: 3
+  
+  # Processing timeout per day (seconds)
+  day_processing_timeout: 300
+  
+  # Memory usage limit (MB)
+  memory_limit_mb: 1024
+  
+  # CPU usage limit (percentage)
+  cpu_limit_percent: 80
+
+# Environment Variables
+environment:
+  # Environment variable for simulation duration
+  duration_env_var: "SIMULATION_DURATION_DAYS"
+  
+  # Environment variable for time compression
+  compression_env_var: "TIME_COMPRESSION_FACTOR"
+  
+  # Default values if environment variables not set
+  default_duration_days: 30
+  default_compression_factor: 24
+
+# Validation Rules
+validation:
+  # Duration must be >= assessment interval
+  duration_ge_assessment_interval: true
+  
+  # Assessment interval must be >= 1 day
+  min_assessment_interval: 1
+  
+  # Time compression must be >= 1 hour
+  min_compression_factor: 1
+  
+  # Maximum time compression (hours per day)
+  max_compression_factor: 168 

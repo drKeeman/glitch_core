@@ -1,0 +1,131 @@
+[project]
+name = "glitch-core"
+version = "0.1.0"
+description = "AI Personality Drift Simulation with Mechanistic Interpretability"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.9.0",
+    "aiofiles>=24.1.0",
+    "altair>=5.5.0",
+    "black>=25.1.0",
+    "bokeh>=3.7.3",
+    "fastapi>=0.116.1",
+    "httpx>=0.28.1",
+    "ipywidgets>=8.1.7",
+    "isort>=6.0.1",
+    "jupyterlab>=4.4.5",
+    "matplotlib>=3.10.3",
+    "mypy>=1.17.0",
+    "networkx>=3.5",
+    "notebook>=7.4.4",
+    "numpy>=2.3.2",
+    "pandas>=2.3.1",
+    "pandoc>=2.4",
+    "pingouin>=0.5.5",
+    "plotly>=6.2.0",
+    "pre-commit>=4.2.0",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "python-dotenv>=1.1.1",
+    "python-multipart>=0.0.20",
+    "pyyaml>=6.0.2",
+    "qdrant-client>=1.15.0",
+    "redis>=6.2.0",
+    "ruff>=0.12.5",
+    "scikit-learn>=1.7.1",
+    "scipy>=1.16.1",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.5",
+    "structlog>=25.4.0",
+    "torch>=2.7.1",
+    "transformers>=4.54.0",
+    "typer>=0.16.0",
+    "uvicorn>=0.35.0",
+    "websockets>=15.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "ruff>=0.12.5",
+    "mypy>=1.17.0",
+    "pre-commit>=4.2.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = [
+    "--cov=src",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+    "--strict-markers",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-excludes = '''
+/(
+  \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["src"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
+    "*/.venv/*",
+]

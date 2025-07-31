@@ -1,0 +1,79 @@
+# Drift Detection Configuration
+# Parameters for detecting personality drift in AI personas
+
+# Core Detection Thresholds
+detection_thresholds:
+  # Minimum magnitude of change to consider as drift
+  drift_threshold: 0.1
+  
+  # Statistical significance threshold for drift detection
+  significance_threshold: 0.05
+  
+  # Early warning threshold for potential drift
+  early_warning_threshold: 0.05
+
+# Baseline Establishment Parameters
+baseline:
+  # Minimum number of samples required to establish baseline
+  min_baseline_samples: 5
+  
+  # Number of days to consider for baseline window
+  baseline_window_days: 7
+  
+  # Minimum baseline stability required (coefficient of variation)
+  min_baseline_stability: 0.15
+
+# Drift Analysis Parameters
+analysis:
+  # Number of days to look back for drift detection
+  drift_window_days: 7
+  
+  # Minimum number of data points for trend analysis
+  min_trend_points: 3
+  
+  # Confidence level for statistical tests
+  confidence_level: 0.95
+
+# Drift Classification
+classification:
+  # Thresholds for classifying drift severity
+  minimal_drift: 0.05
+  mild_drift: 0.1
+  moderate_drift: 0.2
+  severe_drift: 0.3
+  
+  # Minimum duration for sustained drift (days)
+  min_sustained_drift_days: 3
+
+# Circuit-Specific Parameters
+circuits:
+  # Attention pattern drift threshold
+  attention_drift_threshold: 0.15
+  
+  # Activation pattern drift threshold
+  activation_drift_threshold: 0.12
+  
+  # Memory circuit drift threshold
+  memory_drift_threshold: 0.18
+
+# Clinical Drift Integration
+clinical_integration:
+  # Weight for clinical scores in drift calculation
+  clinical_weight: 0.4
+  
+  # Weight for mechanistic measures in drift calculation
+  mechanistic_weight: 0.6
+  
+  # Minimum clinical change to trigger drift alert
+  min_clinical_change: 3.0
+
+# Performance Settings
+performance:
+  # Maximum processing time for drift analysis (seconds)
+  max_processing_time: 30.0
+  
+  # Cache duration for baseline data (hours)
+  baseline_cache_hours: 24
+  
+  # Maximum number of concurrent drift analyses
+  max_concurrent_analyses: 5 
