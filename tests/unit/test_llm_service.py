@@ -71,11 +71,11 @@ class TestLLMService:
         
         assert "Test Persona" in prompt
         assert "30-year-old Software Engineer" in prompt
-        assert "Openness: 0.60" in prompt
-        assert "Conscientiousness: 0.70" in prompt
-        assert "Extraversion: 0.50" in prompt
-        assert "Agreeableness: 0.80" in prompt
-        assert "Neuroticism: 0.30" in prompt
+        assert "Openness (0.60):" in prompt
+        assert "Conscientiousness (0.70):" in prompt
+        assert "Extraversion (0.50):" in prompt
+        assert "Agreeableness (0.80):" in prompt
+        assert "Neuroticism (0.30):" in prompt
         assert context in prompt
         assert instruction in prompt
     
