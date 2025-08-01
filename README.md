@@ -6,9 +6,29 @@
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.116+-green.svg)](https://fastapi.tiangolo.com/)
+[![Ollama](https://img.shields.io/badge/Ollama-Local%20LLM-blue.svg)](https://ollama.ai/)
+[![Qdrant](https://img.shields.io/badge/Qdrant-Vector%20DB-purple.svg)](https://qdrant.tech/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![GPU Accelerated](https://img.shields.io/badge/GPU-Accelerated-success.svg)](https://developer.apple.com/metal/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Interactive Docs](https://img.shields.io/badge/Docs-Interactive-orange.svg)](https://glitch.keeman.co)
 
+
+## 📖 [Interactive Documentation](https://glitch.keeman.co)
+
+> **Explore the full documentation and detailed guides**
+
+Our documentation is now available as an interactive experience at **[glitch.keeman.co](https://glitch.keeman.co)**.
+
+- **🔬 Researcher Guide** - How to use platform for your own experiments
+- **⚙️ Configuration Examples** - Try different experimental setups
+- **📚 Complete API Reference** - API design, endpoints, examples
+- **🔧 Developer Guide** - Architecture, solutions and test principles
+- **🎯 Research Methodology** - Deep dive into our experimental design
+
+*Perfect for researchers, developers, and AI safety enthusiasts who want to understand the system hands-on.*
+
+---
 
 ## ✨ The Spark
 
@@ -132,6 +152,8 @@ make test
 
 ## 📚 Documentation
 
+**[🌐 Interactive Documentation](https://glitch.keeman.co)** - Explore the full documentation with interactive examples and live demos
+
 ### **For Developers**
 - **[🚀 Getting Started](docs/developer/getting-started.md)** - Quick setup and development
 - **[🏗️ Architecture](docs/developer/architecture.md)** - System design overview
@@ -240,3 +262,4 @@ What if we feed to much trauma experience to AI, wont we create a aggressive for
 
 **Built with ❤️ for AI Safety Research**
 
+>keid0
