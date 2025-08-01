@@ -162,7 +162,7 @@ QDRANT_URL=http://qdrant:6333
 OLLAMA_URL=http://host.docker.internal:11434
 
 # LLM
-OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_BASE_URL=http://host.docker.internal:11434
 MODEL_NAME=llama3.1:8b
 
 # Simulation
